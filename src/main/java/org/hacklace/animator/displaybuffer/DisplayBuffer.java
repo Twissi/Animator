@@ -56,18 +56,19 @@ public abstract class DisplayBuffer {
 				gridData[column][row] = data[position + offset + column][row];
 			}
 		}
+		
 		return g;
 	}
 	
 	public Grid getPrevious() {
-		return getGrid(-getStepWidth());
+		return getGrid(-2 * getStepWidth());
 	}
 	public Grid getCurrent() {
-		return getGrid(0);
+		return getGrid(-getStepWidth());
 	}
 	
 	public Grid getNext() {
-		return getGrid(getStepWidth());
+		return getGrid(0);
 	}
 	
 	public int getPosition() {

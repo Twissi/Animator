@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class Grid {
 	
-	private boolean[][] data;
+	public boolean[][] data;
 	private final int rows;
 	private final int columns;
 	
