@@ -4,23 +4,9 @@ package org.hacklace.animator.displaybuffer;
 public class TextDisplayBuffer extends DisplayBuffer{
 
 	@Override
-	public Grid getPrevious() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Grid getCurrent() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Grid getNext() {
-		// TODO Auto-generated method stub
-		return null;
+	public int getStepWidth() {
+		return 1;
 	}
 	
-
 
 }
