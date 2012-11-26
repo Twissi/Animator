@@ -27,6 +27,26 @@ public abstract class DisplayBuffer {
 
 	public abstract int getStepWidth();
 	
+	/*
+	 * Real code
+	 */
+	
+	public void rewind() {
+		position = 0;
+	}
+	
+	public void moveLeft() {
+		position = Math.max(0, position - getStepWidth());
+	}
+	
+	public void moveRight() {
+		position = Math.min( position + getStepWidth(), MAX_COLUMNS - 1);
+	}
+	
+	/*
+	 * Getter/Setter
+	 */
+	
 	private Grid getGrid(int offset) {
 		Grid g = new Grid(ROWS, COLUMNS);
 		boolean[][] gridData = g.getData();
@@ -50,15 +70,35 @@ public abstract class DisplayBuffer {
 		return getGrid(getStepWidth());
 	}
 	
-	public void rewind() {
-		position = 0;
+	public int getPosition() {
+		return position;
 	}
 	
-	public void moveLeft() {
-		position = Math.max(0, position - getStepWidth());
+	public Direction getDirection() {
+		return direction;
+	}
+
+	public Speed getSpeed() {
+		return speed;
+	}
+
+	public Delay getDelay() {
+		return delay;
+	}
+
+	public void setDirection(Direction direction) {
+		this.direction = direction;
+	}
+
+	public void setSpeed(Speed speed) {
+		this.speed = speed;
+	}
+
+	public void setDelay(Delay delay) {
+		this.delay = delay;
 	}
 	
-	public void moveRight() {
-		position = Math.min( position + getStepWidth(), MAX_COLUMNS - 1);
-	}
+
+
+
 }
