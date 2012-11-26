@@ -21,8 +21,7 @@ public class GraphicsDisplayBufferTest extends TestCase {
 		
 		assertEquals(inGrid, outGrid);
 		
-		System.out.println(outGrid.toString());
-		
+		System.out.println(outGrid.toString());		
 	}
 	
 
