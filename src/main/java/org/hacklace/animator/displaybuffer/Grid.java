@@ -28,7 +28,7 @@ public class Grid {
 		
 		for(int row = 0; row < rows; row++) {
 			for(int column = 0; column < columns; column++ ) {
-				sb.append( data[column][row] ? "1" : "- ");
+				sb.append( data[column][row] ? "1 " : "- ");
 			}
 			sb.append("\n" );
 		}

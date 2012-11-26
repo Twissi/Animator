@@ -14,7 +14,6 @@ public class GraphicsDisplayBufferTest extends TestCase {
 		data[4][2] = true;
 		data[1][3] = true;
 		data[3][6] = true;
-		data[4][2] = true;		
 
 		gdb.addGrid(inGrid);
 		

@@ -13,13 +13,11 @@ public class GridTest extends TestCase {
 		
 		data[4][2] = true;
 		data[1][3] = true;
-		data[3][6] = true;
-		data[4][2] = true;		
+		data[3][6] = true;	
 		
 		assertTrue(data[4][2]);
 		assertTrue(data[1][3]);
-		assertTrue(data[3][6]);
-		assertTrue(data[4][2]);		
+		assertTrue(data[3][6]);	
 	}
 
 }
