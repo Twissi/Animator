@@ -106,12 +106,12 @@ public class HacklaceConfigManagerTest extends TestCase {
 		
 		Class<?> hcm = HacklaceConfigManager.class;
 		Method createByteArrayFromStringMethod = hcm.getDeclaredMethod(
-				"createStatusByteFromString", String.class, Integer.TYPE);
+				"createByteArrayFromString", String.class, Integer.TYPE);
 		createByteArrayFromStringMethod.setAccessible(true);
 		byte[] aniBytes = (byte[]) createByteArrayFromStringMethod
 				.invoke(null, "$FF $55 $2A $55 $2A $55 $2A $55 $2A $55 $2A $FF,", 0);
 		assertEquals(200, aniBytes.length);
-		assertEquals(85, aniBytes[0]);
+		assertEquals(0x55, aniBytes[0]);
 
 	}
 

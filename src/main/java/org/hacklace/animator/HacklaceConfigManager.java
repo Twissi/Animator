@@ -17,7 +17,6 @@ import org.hacklace.animator.enums.AnimationType;
 
 public class HacklaceConfigManager {
 
-	private final static String HEX_PATTERN = "^\\$[0-9A-F]{2}$";
 	private List<DisplayBuffer> list;
 
 	public HacklaceConfigManager() {
@@ -87,6 +86,7 @@ public class HacklaceConfigManager {
 
 	private static byte[] createByteArrayFromString(String aniString,
 			int lineNumber) throws IllegalHacklaceConfigFileException {
+		final String HEX_PATTERN = "^\\$[0-9A-F]{2}$";
 		byte[] aniBytes = new byte[200];
 		Scanner scanner = new Scanner(aniString);
 		int index = 0;
@@ -170,7 +170,7 @@ public class HacklaceConfigManager {
 	}
 
 	private static boolean isHexSequence(String potentialHexSequence) {
-		return potentialHexSequence.matches(HEX_PATTERN); // $nn
+		return potentialHexSequence.matches("^\\$[0-9A-F]{2}$"); // $nn (exactly 3 chars)
 	}
 
 }

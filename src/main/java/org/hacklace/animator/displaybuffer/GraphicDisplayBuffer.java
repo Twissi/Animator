@@ -24,9 +24,9 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 
 	public void setDataFromBytes(byte[] aniBytes) {
 		for (int column = 0; column < aniBytes.length; column++) {
-			byte mask = 0b1000000;
+			byte mask = 0b0100000;
 			byte maskResult = (byte) (mask & aniBytes[column]);
-			for (int i = 0; i <= 7; i++) {
+			for (int i = 0; i <= 6; i++) {
 				this.data[column][i] = ((maskResult != 0) ? true : false);
 				mask >>= 1;
 			}
