@@ -79,12 +79,11 @@ public class FlashExporter {
 		serialPort.close();		
 		close();		
 	}
-	
 
-//	public static void main(String[] args) throws UnsupportedCommOperationException, PortInUseException, IOException {
-//		FlashExporter e = new FlashExporter();
-//		File f = new File(e.getClass().getResource("/example.cfg").getFile());
-//		
-//		e.write(f );
-//	}
+	public static void main(String[] args) throws UnsupportedCommOperationException, PortInUseException, IOException {
+		FlashExporter e = new FlashExporter();
+		File f = new File(e.getClass().getResource("/example.cfg").getFile());
+		
+		e.write(f );
+	}
 }
