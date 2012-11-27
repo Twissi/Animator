@@ -13,7 +13,7 @@ public class AnimationListActions {
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// @TODO: implement
+			AnimatorGUI.appInstance.getHomePanel().add("New animation");
 		}
 	}
 		
@@ -24,7 +24,7 @@ public class AnimationListActions {
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// @TODO: implement
+			AnimatorGUI.appInstance.getHomePanel().removeCurrent();
 		}
 	}
 
@@ -35,7 +35,7 @@ public class AnimationListActions {
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// @TODO: implement
+			AnimatorGUI.appInstance.getHomePanel().moveUp();
 		}
 	}
 
@@ -46,7 +46,7 @@ public class AnimationListActions {
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// @TODO: implement
+			AnimatorGUI.appInstance.getHomePanel().moveDown();
 		}
 	}
 

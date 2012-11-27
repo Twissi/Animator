@@ -28,11 +28,14 @@ public class FileActions {
 			try {
 			    List<String> text = Files.readAllLines(Paths.get(openFile.toURI()), StandardCharsets.UTF_8);
 			    AnimatorGUI.appInstance.getHomePanel().updateList(text);
+			    AnimatorGUI.appInstance.setCurrentFile(openFile);
 			    // ...
 			    // @TODO do the rest...
 			    // ...
 			} catch (Exception ex) {
-				JOptionPane.showMessageDialog(null, "Error", "Cannot read from file.", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Cannot read from file.", "Error", JOptionPane.ERROR_MESSAGE);
+				AnimatorGUI.appInstance.getHomePanel().reset();
+				AnimatorGUI.appInstance.getEditAnimationPanel().reset();
 			}
 		}
 	}
