@@ -86,24 +86,23 @@ public class HacklaceConfigManager {
 
 	private static byte[] createByteArrayFromString(String aniString,
 			int lineNumber) throws IllegalHacklaceConfigFileException {
-		final String HEX_PATTERN = "^\\$[0-9A-F]{2}$";
+		final String separators = "[ ,;./:_+*]";
 		byte[] aniBytes = new byte[200];
-		Scanner scanner = new Scanner(aniString);
-		int index = 0;
-		try {
-			while (scanner.hasNext(HEX_PATTERN)) {
-				if (index >= 200)
-					throw new IllegalHacklaceConfigFileException(
-							"Illegal hacklace configuration file: More than 200 bytes in line "
-									+ lineNumber + ".");
-				String aniByteString = scanner.next(HEX_PATTERN);
-				byte aniByte = convertStringToByte(aniByteString);
-				aniBytes[index] = aniByte;
-				index++;
+		String[] aniByteStrings = aniString.split(separators);
+		if (aniBytes.length > 200) {
+			throw new IllegalHacklaceConfigFileException(
+					"Illegal hacklace configuration file: More than 200 bytes in line "
+							+ lineNumber + ".");
 
-			}
-		} finally {
-			scanner.close();
+		}
+		int index = 0;
+
+		for (String aniByteString : aniByteStrings) {
+
+			byte aniByte = convertStringToByte(aniByteString);
+			aniBytes[index] = aniByte;
+			index++;
+
 		}
 		return aniBytes;
 
@@ -170,7 +169,8 @@ public class HacklaceConfigManager {
 	}
 
 	private static boolean isHexSequence(String potentialHexSequence) {
-		return potentialHexSequence.matches("^\\$[0-9A-F]{2}$"); // $nn (exactly 3 chars)
+		return potentialHexSequence.matches("^\\$[0-9A-F]{2}$"); // $nn (exactly
+																	// 3 chars)
 	}
 
 }
