@@ -13,7 +13,8 @@ public class AnimationListActions {
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			AnimatorGUI.appInstance.getHomePanel().add("New animation");
+			// @TODO ask if we shall add text or graphic display buffer
+			AnimatorGUI.appInstance.getHacklaceConfigManager().addGraphicDisplayBuffer();
 		}
 	}
 		
@@ -35,7 +36,10 @@ public class AnimationListActions {
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			AnimatorGUI.appInstance.getHomePanel().moveUp();
+			int index = AnimatorGUI.appInstance.getHomePanel().moveUp();
+			if (index != -1) {
+				AnimatorGUI.appInstance.getHacklaceConfigManager().moveUp(index);
+			}
 		}
 	}
 
@@ -46,7 +50,10 @@ public class AnimationListActions {
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			AnimatorGUI.appInstance.getHomePanel().moveDown();
+			int index = AnimatorGUI.appInstance.getHomePanel().moveDown();
+			if (index != -1) {
+				AnimatorGUI.appInstance.getHacklaceConfigManager().moveDown(index);
+			}
 		}
 	}
 

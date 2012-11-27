@@ -8,15 +8,17 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.hacklace.animator.displaybuffer.DisplayBuffer;
+
 public class HomePanel extends JPanel {
 	private static final long serialVersionUID = 1045750321890262891L;
 
-	JList<String> animationList;
-	DefaultListModel<String> animationListData;
+	JList<DisplayBuffer> animationList;
+	DefaultListModel<DisplayBuffer> animationListData;
 
 	public HomePanel() {
-		animationListData = new DefaultListModel<String>();
-		animationList = new JList<String>(animationListData);
+		animationListData = new DefaultListModel<DisplayBuffer>();
+		animationList = new JList<DisplayBuffer>(animationListData);
 		JScrollPane animationListScrollPane = new JScrollPane(animationList);
 		// TODO: not working :( animationList.setMinimumSize(new Dimension(200, 50));
 		add(animationListScrollPane);
@@ -31,9 +33,9 @@ public class HomePanel extends JPanel {
 	 * Update the list contents
 	 * @param items list of strings to select from
 	 */
-	public void updateList(List<String> items) {
+	public void updateList(List<DisplayBuffer> items) {
 		animationListData.removeAllElements();
-		for (String item: items) {
+		for (DisplayBuffer item: items) {
 			animationListData.addElement(item);
 		}
 	}
@@ -54,28 +56,32 @@ public class HomePanel extends JPanel {
 	
 	/**
 	 * Moves the currently selected item 1 position up
+	 * @return int the old index
 	 */
-	public void moveUp() {
+	public int moveUp() {
 		int index = animationList.getSelectedIndex();
-		if (index < 1) return;
-		String tmp = (String)animationListData.get(index);
+		if (index < 1) return -1;
+		DisplayBuffer tmp = (DisplayBuffer)animationListData.get(index);
 		animationListData.remove(index);
 		animationListData.add(index - 1, tmp);
 		animationList.setSelectedIndex(index - 1);
 		animationList.ensureIndexIsVisible(index - 1);
+		return index;
 	}
 	
 	/**
 	 * Moves the currently selected item 1 position down
+	 * @return int the old index
 	 */
-	public void moveDown() {
+	public int moveDown() {
 		int index = animationList.getSelectedIndex();
-		if (index > animationListData.size() - 2) return;
-		String tmp = (String)animationListData.get(index);
+		if (index > animationListData.size() - 2) return -1;
+		DisplayBuffer tmp = (DisplayBuffer)animationListData.get(index);
 		animationListData.remove(index);
 		animationListData.add(index + 1, tmp);
 		animationList.setSelectedIndex(index + 1);
 		animationList.ensureIndexIsVisible(index + 1);
+		return index;
 	}
 	
 	public void removeCurrent() {
@@ -86,7 +92,7 @@ public class HomePanel extends JPanel {
 		animationList.ensureIndexIsVisible(index);
 	}
 	
-	public void add(String s) {
+	public void add(DisplayBuffer s) {
 		int index = animationList.getSelectedIndex();
 		animationListData.add(index + 1, s);
 		animationList.setSelectedIndex(index + 1);
