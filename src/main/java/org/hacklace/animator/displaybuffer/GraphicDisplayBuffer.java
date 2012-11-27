@@ -31,6 +31,7 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 				mask >>= 1;
 			}
 		}
+		moveRight();
 
 	}
 
