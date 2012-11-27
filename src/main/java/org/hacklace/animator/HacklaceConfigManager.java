@@ -69,14 +69,28 @@ public class HacklaceConfigManager {
 		DisplayBuffer buffer;
 		if (animationType == AnimationType.TEXT) {
 			TextDisplayBuffer textDisplayBuffer = new TextDisplayBuffer();
-			String text = cfgLine.substring(4);
-			textDisplayBuffer.setText(text);
+			String aniText = cfgLine.substring(4);
+			textDisplayBuffer.setText(aniText);
 			buffer = textDisplayBuffer;
 		} else {
 			GraphicDisplayBuffer graphicDisplayBuffer = new GraphicDisplayBuffer();
-			Scanner scanner = new Scanner(cfgLine.substring(4));
-			byte[] aniBytes = new byte[200];
-			int index = 0;
+			byte[] aniBytes = createByteArrayFromString(cfgLine.substring(4),
+					lineNumber);
+			graphicDisplayBuffer.setDataFromBytes(aniBytes);
+			buffer = graphicDisplayBuffer;
+		}
+		buffer.setDirection(statusByte.getDirection());
+		buffer.setSpeed(statusByte.getSpeed());
+		buffer.setDelay(statusByte.getDelay());
+		return buffer;
+	}
+
+	private static byte[] createByteArrayFromString(String aniString,
+			int lineNumber) throws IllegalHacklaceConfigFileException {
+		byte[] aniBytes = new byte[200];
+		Scanner scanner = new Scanner(aniString);
+		int index = 0;
+		try {
 			while (scanner.hasNext(HEX_PATTERN)) {
 				if (index >= 200)
 					throw new IllegalHacklaceConfigFileException(
@@ -88,21 +102,18 @@ public class HacklaceConfigManager {
 				index++;
 
 			}
+		} finally {
 			scanner.close();
-			graphicDisplayBuffer.setDataFromBytes(aniBytes);
-			buffer = graphicDisplayBuffer;
 		}
-		buffer.setDirection(statusByte.getDirection());
-		buffer.setSpeed(statusByte.getSpeed());
-		buffer.setDelay(statusByte.getDelay());
-		return buffer;
+		return aniBytes;
+
 	}
 
 	private static StatusByte createStatusByteFromString(String statusString,
 			int line) throws IllegalHacklaceConfigFileException {
 		if (!isHexSequence(statusString)) {
 			throw new IllegalHacklaceConfigFileException("Status string "
-					+ statusString + " is not hex ($xx) in line " + line + ".");
+					+ statusString + " is not hex ($nn) in line " + line + ".");
 		}
 		byte statusByte_ = convertStringToByte(statusString);
 		StatusByte statusByte = new StatusByte(statusByte_);
