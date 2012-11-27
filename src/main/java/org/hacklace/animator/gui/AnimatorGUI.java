@@ -6,6 +6,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JTabbedPane;
 
+import org.hacklace.animator.HacklaceConfigManager;
+
 import java.io.File;
 
 
@@ -23,7 +25,10 @@ public class AnimatorGUI extends JFrame {
 	private HomePanel homePanel;
 	private EditAnimationPanel editAnimationPanel;
 	
+	private HacklaceConfigManager hacklaceConfigManager;
+	
 	public AnimatorGUI() {
+		hacklaceConfigManager = new HacklaceConfigManager();
 		initComponents();
 		setVisible(true);
 	}
@@ -71,6 +76,10 @@ public class AnimatorGUI extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(400, 700);
 		
+	}
+	
+	public HacklaceConfigManager getHacklaceConfigManager() {
+		return hacklaceConfigManager;
 	}
 
 	public static void main(String[] args) {
