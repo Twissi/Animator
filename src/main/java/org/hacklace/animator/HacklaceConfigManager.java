@@ -86,7 +86,7 @@ public class HacklaceConfigManager {
 
 	private static byte[] createByteArrayFromString(String aniString,
 			int lineNumber) throws IllegalHacklaceConfigFileException {
-		final String separators = "[ ,;./:_+*]";
+		final String separators = "[ ,;./:_+*|]";
 		byte[] aniBytes = new byte[200];
 		String[] aniByteStrings = aniString.split(separators);
 		if (aniBytes.length > 200) {
