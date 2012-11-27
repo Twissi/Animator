@@ -1,6 +1,15 @@
 package org.hacklace.animator.gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.Action;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 
 public class AnimatorGUI extends JFrame {
@@ -15,12 +24,25 @@ public class AnimatorGUI extends JFrame {
 		setVisible(true);
 	}
 	
-	private void initComponents() {		
-		GridPanel gridPanel = new GridPanel(ROWS, COLUMNS);		
+	private void initComponents() {
+		
+		// main menu
+		JMenuBar menuBar = new JMenuBar();
+		JMenu menuFile = new JMenu("File");
+		menuFile.add(new JMenuItem(new FileActions.OpenAction()));
+		menuFile.add(new JMenuItem(new FileActions.SaveAction()));
+		menuFile.add(new JMenuItem(new FileActions.CloseAction()));
+		menuBar.add(menuFile);
+		setJMenuBar(menuBar);
+
+		// tabs
+		JTabbedPane tabs = new JTabbedPane();
+		tabs.addTab("Home", null, new HomePanel(), "Home");
+		tabs.addTab("Edit(Animation)", null, new EditAnimationPanel(), "Edit");		
+		tabs.addTab("Edit(Text)", null, new EditTextPanel(), "Edit");		
 		
 		// Add components
-		add(gridPanel );
-		
+		add(tabs);
 		
 		// Set stuff
 		setTitle( "The chosen Hacklace Animator Tool");
