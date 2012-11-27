@@ -6,8 +6,6 @@ import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -22,7 +20,6 @@ public class FileActions {
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			AnimatorGUI app = AnimatorGUI.appInstance;
 			FileChooser chooser = new FileChooser();
 			File openFile = chooser.inputFile();
 			try {
