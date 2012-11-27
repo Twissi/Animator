@@ -172,5 +172,13 @@ public class HacklaceConfigManager {
 		return potentialHexSequence.matches("^\\$[0-9A-F]{2}$"); // $nn (exactly
 																	// 3 chars)
 	}
+	
+	public List<DisplayBuffer> getList() {
+		return list;
+	}
+	
+	public DisplayBuffer getDisplayBuffer(int index) {
+		return list.get(index);
+	}
 
 }

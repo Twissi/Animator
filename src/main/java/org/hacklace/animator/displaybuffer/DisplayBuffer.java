@@ -23,7 +23,11 @@ public abstract class DisplayBuffer {
 		direction = Direction.FORWARD;
 		speed = Speed.ZERO;
 		delay = Delay.ZERO;
-	}	
+	}
+	
+	public boolean getValueAt(int x, int y) {
+		return data[x][y];
+	}
 
 	public abstract int getStepWidth();
 	

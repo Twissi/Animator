@@ -5,9 +5,12 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.hacklace.animator.HacklaceConfigManager;
 
+import java.awt.event.ActionEvent;
 import java.io.File;
 
 
@@ -24,6 +27,7 @@ public class AnimatorGUI extends JFrame {
 	
 	private HomePanel homePanel;
 	private EditAnimationPanel editAnimationPanel;
+	private JTabbedPane tabs; 
 	
 	private HacklaceConfigManager hacklaceConfigManager;
 	
@@ -31,6 +35,10 @@ public class AnimatorGUI extends JFrame {
 		hacklaceConfigManager = new HacklaceConfigManager();
 		initComponents();
 		setVisible(true);
+	}
+	
+	public int getCurrentTabIndex() {
+		return tabs.getSelectedIndex();
 	}
 	
 	public File getCurrentFile() {
@@ -61,12 +69,22 @@ public class AnimatorGUI extends JFrame {
 		setJMenuBar(menuBar);
 
 		// tabs
-		JTabbedPane tabs = new JTabbedPane();
+		tabs = new JTabbedPane();
 		homePanel = new HomePanel();
 		tabs.addTab("Home", null, homePanel, "Home");
 		editAnimationPanel = new EditAnimationPanel();
 		tabs.addTab("Edit(Animation)", null, editAnimationPanel, "Edit");		
-		tabs.addTab("Edit(Text)", null, new EditTextPanel(), "Edit");		
+		tabs.addTab("Edit(Text)", null, new EditTextPanel(), "Edit");
+		ChangeListener changeListener = new ChangeListener() {
+			public void stateChanged(ChangeEvent changeEvent) {
+				JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
+				int index = sourceTabbedPane.getSelectedIndex();
+				if (index > 0) {
+					new FileActions.StartEditAction().actionPerformed(new ActionEvent(this, ActionEvent.ACTION_FIRST, "Edit"));
+				}
+			}
+		};
+		tabs.addChangeListener(changeListener);
 		
 		// Add components
 		add(tabs);
