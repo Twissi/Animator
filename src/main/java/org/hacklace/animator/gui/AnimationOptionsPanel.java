@@ -1,7 +1,5 @@
 package org.hacklace.animator.gui;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 
 import javax.swing.ButtonGroup;
@@ -16,6 +14,11 @@ import org.hacklace.animator.enums.Speed;
 public class AnimationOptionsPanel extends JPanel {
 	private static final long serialVersionUID = -2625306373507959134L;
 	
+	public AnimationOptionsPanel() {
+		removeAll();
+		reset();
+	}
+
 	// grouped radio buttons with label
 	private JPanel getAnimationTypePanel() {
 		JPanel animationTypePanel = new JPanel();
@@ -29,8 +32,8 @@ public class AnimationOptionsPanel extends JPanel {
 		animationTypePanel.add(animationTypeAnimationButton);
 		return animationTypePanel;
 	}
-		
-	public AnimationOptionsPanel() {
+
+	public void reset() {
 		// one column grid layout
 		setLayout(new GridLayout(0,1));
 		add(new JLabel("Options"));
@@ -48,7 +51,9 @@ public class AnimationOptionsPanel extends JPanel {
 		JSlider delaySlider = new JSlider(
 				JSlider.HORIZONTAL, 
 				Delay.values().length - 1);
+		delaySlider.setPaintTicks(true);
+		delaySlider.setSnapToTicks(true);
 		delaySlider.setMinorTickSpacing(1);
 		add(delaySlider);
-	}	
+	}
 }

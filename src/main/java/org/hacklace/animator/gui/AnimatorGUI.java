@@ -1,9 +1,5 @@
 package org.hacklace.animator.gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -11,17 +7,42 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import java.io.File;
+
 
 public class AnimatorGUI extends JFrame {
 	
 	private static final long serialVersionUID = 2757544085601062109L;
 	
+	public static AnimatorGUI appInstance;
+	
 	public static final int ROWS = 7;
 	public static final int COLUMNS = 5;
+	
+	private File currentFile;
+	
+	private HomePanel homePanel;
+	private EditAnimationPanel editAnimationPanel;
 	
 	public AnimatorGUI() {
 		initComponents();
 		setVisible(true);
+	}
+	
+	public File getCurrentFile() {
+		return currentFile;
+	}
+	
+	public void setCurrentFile(File file) {
+		currentFile = file;
+	}
+	
+	public HomePanel getHomePanel() {
+		return homePanel;
+	}
+	
+	public EditAnimationPanel getEditAnimationPanel() {
+		return editAnimationPanel;
 	}
 	
 	private void initComponents() {
@@ -37,8 +58,10 @@ public class AnimatorGUI extends JFrame {
 
 		// tabs
 		JTabbedPane tabs = new JTabbedPane();
-		tabs.addTab("Home", null, new HomePanel(), "Home");
-		tabs.addTab("Edit(Animation)", null, new EditAnimationPanel(), "Edit");		
+		homePanel = new HomePanel();
+		tabs.addTab("Home", null, homePanel, "Home");
+		editAnimationPanel = new EditAnimationPanel();
+		tabs.addTab("Edit(Animation)", null, editAnimationPanel, "Edit");		
 		tabs.addTab("Edit(Text)", null, new EditTextPanel(), "Edit");		
 		
 		// Add components
@@ -52,7 +75,7 @@ public class AnimatorGUI extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new AnimatorGUI();
+		appInstance = new AnimatorGUI();
 	}
 	
 
