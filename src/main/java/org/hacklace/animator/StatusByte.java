@@ -31,6 +31,10 @@ public class StatusByte {
 		}
 	}
 
+	public boolean isEOF() {
+		return (this.bits == 0);
+	}
+	
 	public Direction getDirection() {
 		if (isBitSet(7)) {
 			return Direction.BIDIRECTIONAL;
