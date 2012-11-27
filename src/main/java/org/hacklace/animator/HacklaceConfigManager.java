@@ -176,5 +176,9 @@ public class HacklaceConfigManager {
 	public List<DisplayBuffer> getList() {
 		return list;
 	}
+	
+	public DisplayBuffer getDisplayBuffer(int index) {
+		return list.get(index);
+	}
 
 }

@@ -27,6 +27,7 @@ public class HomePanel extends JPanel {
 		add(new JButton(new AnimationListActions.RemoveAction()));
 		add(new JButton(new AnimationListActions.MoveUpAction()));
 		add(new JButton(new AnimationListActions.MoveDownAction()));
+		add(new JButton(new FileActions.StartEditAction()));
 	}
 	
 	/**
@@ -97,5 +98,9 @@ public class HomePanel extends JPanel {
 		animationListData.add(index + 1, s);
 		animationList.setSelectedIndex(index + 1);
 		animationList.ensureIndexIsVisible(index + 1);
+	}
+	
+	public int getSelectedIndex() {
+		return animationList.getSelectedIndex();
 	}
 }

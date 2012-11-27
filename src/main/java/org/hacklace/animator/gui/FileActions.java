@@ -66,4 +66,18 @@ public class FileActions {
 		}
 	}
 	
+	public static class StartEditAction extends AbstractAction {
+		private static final long serialVersionUID = 4960734373364680735L;
+		public StartEditAction() {
+			super("Edit");
+		}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			int tabIndex = AnimatorGUI.appInstance.getCurrentTabIndex();
+			if (tabIndex != 1) ; // @TODO AnimatorGUI.appInstance.setTabIndex(1);
+			int index = AnimatorGUI.appInstance.getHomePanel().getSelectedIndex();
+			HacklaceConfigManager cm = AnimatorGUI.appInstance.getHacklaceConfigManager();
+			AnimatorGUI.appInstance.getEditAnimationPanel().setFromDisplayBuffer(cm.getDisplayBuffer(index));
+		}
+	}
 }
