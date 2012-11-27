@@ -9,13 +9,14 @@ with open('Font_5x7_extended.h', 'r') as f:
         if not code:
             continue
         
-        code = code.group()
+        code = int( code.group())
         result[code] = []
         for matched in re.findall(r'0x[a-fA-F0-9]{2}', line):
             result[code].append(matched)
 
 s = ""
-for code, itemz in result.items():
+for code in sorted(result):
+    itemz = result[code] 
     s += "{{ {0}, {1}, {2}, {3}, {4} }},\n".format(itemz[0], itemz[1], itemz[2], itemz[3], itemz[4], code)
 
     

@@ -29,6 +29,14 @@ public class GridPanel extends JPanel {
 		setVisible(true);
 	}
 	
+	public void setPixel(int row, int column, boolean val) {
+		if( val) {
+			buttons[column][row].set();
+		} else {
+			buttons[column][row].unset();
+		}		
+	}
+	
 	private void initComponents() {		
 		GridLayout layout = new GridLayout(ROWS, COLUMNS);
 		setLayout(layout);		
@@ -55,17 +63,15 @@ public class GridPanel extends JPanel {
 			p.grid.setDataFromBytes( FontUtil.repr(i));
 			for(int row = 0; row < p.ROWS; row++) {
 				for(int column = 0; column < p.COLUMNS; column++ ) {
-					if(  p.grid.data[column][row] ) {
-						p.buttons[column][row].setBackground(Color.black);
-					} else {
-						p.buttons[column][row].setBackground(Color.white);
-					}
+					p.setPixel(row, column, p.grid.data[column][row]);
 				}
 				
 			}
 			Thread.sleep(1000);
 			
 		}
+		
+		
 
 	}
 }

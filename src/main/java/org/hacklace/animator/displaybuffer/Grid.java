@@ -2,6 +2,8 @@ package org.hacklace.animator.displaybuffer;
 
 import java.util.Arrays;
 
+import org.hacklace.animator.gui.FontUtil;
+
 public class Grid {
 	
 	public boolean[][] data;
@@ -23,16 +25,20 @@ public class Grid {
 		return data;
 	}
 	
-	public void setDataFromBytes(int[] aniBytes) throws InterruptedException {
-
-		for (int column = 0; column < aniBytes.length; column++) {
-			byte mask = 0b1000000;
-			byte maskResult = (byte) (mask & aniBytes[column]);
-			for (int i = 0; i < 7; i++) {
+	public void setDataFromBytes(int[] aniBytes) {
+		for (int column = 0; column < columns; column++) {
+			byte mask = 1;			
+			
+			for (int i = 0; i < rows; i++) {
+				byte maskResult = (byte) (mask & aniBytes[column]);
+				
 				this.data[column][i] = ((maskResult != 0) ? true : false);
-				mask >>= 1;
+				mask <<= 1;
+				
+
 			}
 		}
+
 	}
 	
 	public String toString() {
@@ -75,6 +81,12 @@ public class Grid {
 		if (rows != other.rows)
 			return false;
 		return true;
+	}
+	
+	public static void main(String[] args) {
+		Grid g = new Grid(7,5);
+		g.setDataFromBytes( FontUtil.repr(67));
+		System.out.println(g);
 	}
 
 

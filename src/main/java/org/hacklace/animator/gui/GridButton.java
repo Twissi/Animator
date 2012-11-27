@@ -10,6 +10,17 @@ public class GridButton extends JButton {
 	
 	public final int row;
 	public final int column;
+	protected boolean pressed;
+	
+	public void set() {
+		pressed = true;
+		setBackground(Color.BLACK);
+	}
+	
+	public void unset() {
+		pressed = false;
+		setBackground(Color.WHITE);
+	}
 	
 	public GridButton(int row, int column) {
 		setOpaque(true);

@@ -10,27 +10,22 @@ public class ToggleActionListener implements ActionListener {
 
 	private GridButton button;
 	private Grid grid;
-	private boolean pressed;
-	
 
 	public ToggleActionListener(Grid grid, GridButton button) {
 		this.button = button;
 		this.grid = grid;
-		pressed = false;
+		button.pressed = false;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		button.setOpaque(true);
-		if (pressed) {
-			button.setBackground(Color.WHITE);
+		if (button.pressed) {
+			button.unset();
 		} else {
-			button.setBackground(Color.BLACK);
+			button.set();
 		}
-
-		pressed = !pressed;
-
-		grid.data[button.column][button.row] = pressed;
+		grid.data[button.column][button.row] = button.pressed;
 
 	}
 
