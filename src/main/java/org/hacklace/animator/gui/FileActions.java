@@ -3,6 +3,15 @@ package org.hacklace.animator.gui;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.JOptionPane;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 
 public class FileActions {
 	
@@ -13,7 +22,15 @@ public class FileActions {
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("Performing OpenAction");
+			AnimatorGUI app = AnimatorGUI.appInstance;
+			FileChooser chooser = new FileChooser();
+			File openFile = chooser.inputFile();
+			try {
+			    List<String> text = Files.readAllLines(Paths.get(openFile.toURI()), StandardCharsets.UTF_8);
+			    AnimatorGUI.appInstance.getHomePanel().updateList(text);
+			} catch (Exception ex) {
+				JOptionPane.showMessageDialog(null, "Error", "Cannot read from file.", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	}
 	

@@ -1,5 +1,7 @@
 package org.hacklace.animator.gui;
 
+import java.util.List;
+
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -30,8 +32,8 @@ public class HomePanel extends JPanel {
 	 * Update the list contents
 	 * @param items list of strings to select from
 	 */
-	public void updateList(String[] items) {
-		animationList.setListData(items);
+	public void updateList(List items) {
+		animationList.setListData(items.toArray());
 	}
 	
 	/**
