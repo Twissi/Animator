@@ -28,6 +28,9 @@ public class FileActions {
 			try {
 			    List<String> text = Files.readAllLines(Paths.get(openFile.toURI()), StandardCharsets.UTF_8);
 			    AnimatorGUI.appInstance.getHomePanel().updateList(text);
+			    // ...
+			    // @TODO do the rest...
+			    // ...
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(null, "Error", "Cannot read from file.", JOptionPane.ERROR_MESSAGE);
 			}
