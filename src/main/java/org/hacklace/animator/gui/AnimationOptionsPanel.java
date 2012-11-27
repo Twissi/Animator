@@ -1,7 +1,5 @@
 package org.hacklace.animator.gui;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 
 import javax.swing.ButtonGroup;

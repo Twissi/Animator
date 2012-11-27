@@ -1,7 +1,5 @@
 package org.hacklace.animator.gui;
 
-import java.awt.Dimension;
-
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
