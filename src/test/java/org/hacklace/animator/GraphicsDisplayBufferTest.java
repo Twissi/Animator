@@ -134,5 +134,16 @@ public class GraphicsDisplayBufferTest extends TestCase {
 		assertEquals(g2, outGrid);
 	}
 	
+	public void testGraphicBufferFromBytes()
+	{
+		GraphicDisplayBuffer gdb = new GraphicDisplayBuffer();
+		byte[] aniBytes = new byte[200];
+		aniBytes[0] = (byte) 0xFF;
+		gdb.setDataFromBytes(aniBytes);
+		Grid grid = gdb.getCurrent();
+		boolean[][] boolArray = grid.getData();
+		assertTrue(boolArray[0][0]);
+	}
+	
 
 }
