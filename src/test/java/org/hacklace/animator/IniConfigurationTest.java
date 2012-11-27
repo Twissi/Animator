@@ -10,7 +10,7 @@ public class IniConfigurationTest extends TestCase {
 	private IniConf conf;
 	
 	protected void setUp() {
-		conf = new IniConf(); 
+		conf = new IniConf("/test_animatorconf.ini"); 
 	}
 	
 	protected void tearDown() {
@@ -29,6 +29,7 @@ public class IniConfigurationTest extends TestCase {
 	
 	public void testFlashConf() {
 		assertEquals("/sys/class/tty", conf.device());
+		assertEquals(2400, conf.baud());
 	}
 	
 	public void testAnimationConf() {

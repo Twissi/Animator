@@ -11,17 +11,21 @@ import org.apache.commons.configuration.HierarchicalINIConfiguration;
 
 public class IniConf {
 	
-	private final String configPath = "/animatorconf.ini";
+	private final static String configPath = "/animatorconf.ini";
 	private HierarchicalINIConfiguration conf;
 	
-	public IniConf() {		
-		URL url = this.getClass().getResource(configPath);
+	public IniConf(String path) {
+		URL url = this.getClass().getResource(path);
 		try {			
 			conf = new HierarchicalINIConfiguration(url);
 		} catch (ConfigurationException e) {
 			System.err.println("Loading the configuration failed: " + url);
 			System.exit(1);
 		}
+	}
+	
+	public IniConf() {		
+		this(configPath);
 	}
 	
 	public int rows() {
@@ -44,6 +48,10 @@ public class IniConf {
 		return conf.getString("flash.device");
 	}
 	
+	public int baud() {
+		return conf.getInt("flash.baud");
+	}
+	
 	// TODO: cache?
 	public List<Integer> speedList() {		
 		List<Object> data = conf.getList("animation.speed");
@@ -64,14 +72,5 @@ public class IniConf {
 		}
 		
 		return Collections.unmodifiableList(delayList);
-	}
-	
-	public static void main(String[] args) {
-		IniConf conf = new IniConf();
-		System.out.println( conf.rows());
-		System.out.println( conf.columns());
-		System.out.println( conf.speedList());
-	}
-	
-	
+	}	
 }

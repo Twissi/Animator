@@ -40,9 +40,4 @@ public class GridPanel extends JPanel {
 			}
 		}
 	}
-	
-	
-
-
-
 }

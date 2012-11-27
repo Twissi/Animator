@@ -31,7 +31,7 @@ public class ToggleActionListener implements ActionListener {
 		pressed = !pressed;
 
 		grid.data[button.column][button.row] = pressed;
-		System.out.println(grid);
+
 	}
 
 }
