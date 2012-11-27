@@ -13,7 +13,7 @@ public class ToggleActionListener implements ActionListener {
 	private boolean pressed;
 	
 
-	private ToggleActionListener(Grid grid, GridButton button) {
+	public ToggleActionListener(Grid grid, GridButton button) {
 		this.button = button;
 		this.grid = grid;
 		pressed = false;
