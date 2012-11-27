@@ -11,8 +11,8 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 		return 5;
 	}
 
-	public void addGrid(Grid grid) {		
-		
+	public void addGrid(Grid grid) {
+
 		boolean[][] gridData = grid.getData();
 		for (int column = 0; column < 5; column++) {
 			for (int row = 0; row < 7; row++) {
@@ -20,6 +20,18 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 			}
 		}
 		moveRight();
+	}
+
+	public void setDataFromBytes(byte[] aniBytes) {
+		for (int column = 0; column < aniBytes.length; column++) {
+			byte mask = 0b1000000;
+			byte maskResult = (byte) (mask & aniBytes[column]);
+			for (int i = 0; i <= 7; i++) {
+				this.data[column][i] = ((maskResult != 0) ? true : false);
+				mask >>= 1;
+			}
+		}
+
 	}
 
 }
