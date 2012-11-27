@@ -62,6 +62,7 @@ public class HomePanel extends JPanel {
 		animationListData.remove(index);
 		animationListData.add(index - 1, tmp);
 		animationList.setSelectedIndex(index - 1);
+		animationList.ensureIndexIsVisible(index - 1);
 	}
 	
 	/**
@@ -74,6 +75,7 @@ public class HomePanel extends JPanel {
 		animationListData.remove(index);
 		animationListData.add(index + 1, tmp);
 		animationList.setSelectedIndex(index + 1);
+		animationList.ensureIndexIsVisible(index + 1);
 	}
 	
 	public void removeCurrent() {
@@ -81,11 +83,13 @@ public class HomePanel extends JPanel {
 		if (index == -1) return; // @TODO check if actually "-1" means no selection
 		animationListData.remove(index);
 		animationList.setSelectedIndex(index);
+		animationList.ensureIndexIsVisible(index);
 	}
 	
 	public void add(String s) {
 		int index = animationList.getSelectedIndex();
 		animationListData.add(index + 1, s);
 		animationList.setSelectedIndex(index + 1);
+		animationList.ensureIndexIsVisible(index + 1);
 	}
 }
