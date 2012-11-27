@@ -111,7 +111,19 @@ public class HacklaceConfigManagerTest extends TestCase {
 		byte[] aniBytes = (byte[]) createByteArrayFromStringMethod
 				.invoke(null, "$FF $55 $2A $55 $2A $55 $2A $55 $2A $55 $2A $FF,", 0);
 		assertEquals(200, aniBytes.length);
-		assertEquals(0x55, aniBytes[0]);
+		assertEquals((byte)0xFF, aniBytes[0]);
+		assertEquals((byte)0x55, aniBytes[1]);
+		assertEquals((byte)0x2A, aniBytes[2]);
+		assertEquals((byte)0x55, aniBytes[3]);
+		assertEquals((byte)0x2A, aniBytes[4]);
+		assertEquals((byte)0x55, aniBytes[5]);
+		assertEquals((byte)0x2A, aniBytes[6]);
+		assertEquals((byte)0x55, aniBytes[7]);
+		assertEquals((byte)0x2A, aniBytes[8]);
+		assertEquals((byte)0x55, aniBytes[9]);
+		assertEquals((byte)0x2A, aniBytes[10]);
+		assertEquals((byte)0xFF, aniBytes[11]);
+		assertEquals((byte)0x00, aniBytes[12]);
 
 	}
 
