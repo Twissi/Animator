@@ -1,7 +1,9 @@
 package org.hacklace.animator.gui;
 
+import java.awt.Color;
 import java.awt.GridLayout;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.hacklace.animator.displaybuffer.Grid;
@@ -39,5 +41,31 @@ public class GridPanel extends JPanel {
 				add(b);
 			}
 		}
+	}	
+	
+	public static void main(String[] args) throws InterruptedException {
+		JFrame f = new JFrame("Test");
+		GridPanel p = new GridPanel(7,5 );
+		f.add(p);
+		f.pack();
+		f.setSize(500, 700);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setVisible(true);
+		for( int i = 0; i < 130; i++) {
+			p.grid.setDataFromBytes( FontUtil.repr(i));
+			for(int row = 0; row < p.ROWS; row++) {
+				for(int column = 0; column < p.COLUMNS; column++ ) {
+					if(  p.grid.data[column][row] ) {
+						p.buttons[column][row].setBackground(Color.black);
+					} else {
+						p.buttons[column][row].setBackground(Color.white);
+					}
+				}
+				
+			}
+			Thread.sleep(1000);
+			
+		}
+
 	}
 }

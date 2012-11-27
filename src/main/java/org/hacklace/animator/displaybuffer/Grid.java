@@ -23,6 +23,18 @@ public class Grid {
 		return data;
 	}
 	
+	public void setDataFromBytes(int[] aniBytes) throws InterruptedException {
+
+		for (int column = 0; column < aniBytes.length; column++) {
+			byte mask = 0b1000000;
+			byte maskResult = (byte) (mask & aniBytes[column]);
+			for (int i = 0; i < 7; i++) {
+				this.data[column][i] = ((maskResult != 0) ? true : false);
+				mask >>= 1;
+			}
+		}
+	}
+	
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		
