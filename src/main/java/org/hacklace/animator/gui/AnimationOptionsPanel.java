@@ -46,6 +46,8 @@ public class AnimationOptionsPanel extends JPanel {
 		JSlider delaySlider = new JSlider(
 				JSlider.HORIZONTAL, 
 				Delay.values().length - 1);
+		delaySlider.setPaintTicks(true);
+		delaySlider.setSnapToTicks(true);
 		delaySlider.setMinorTickSpacing(1);
 		add(delaySlider);
 	}	
