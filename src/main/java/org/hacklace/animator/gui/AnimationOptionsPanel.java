@@ -7,6 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
+import javax.swing.SwingConstants;
 
 import org.hacklace.animator.enums.Delay;
 import org.hacklace.animator.enums.Speed;
@@ -40,7 +41,7 @@ public class AnimationOptionsPanel extends JPanel {
 		add(getAnimationTypePanel());
 		add(new JLabel("Speed:"));
 		JSlider speedSlider = new JSlider(
-				JSlider.HORIZONTAL, 
+				SwingConstants.HORIZONTAL, 
 				Speed.values().length - 1
 				);
 		speedSlider.setPaintTicks(true);
@@ -49,7 +50,7 @@ public class AnimationOptionsPanel extends JPanel {
 		add(speedSlider);
 		add(new JLabel("Delay:"));
 		JSlider delaySlider = new JSlider(
-				JSlider.HORIZONTAL, 
+				SwingConstants.HORIZONTAL, 
 				Delay.values().length - 1);
 		delaySlider.setPaintTicks(true);
 		delaySlider.setSnapToTicks(true);

@@ -17,16 +17,16 @@ public class FileChooser extends JFileChooser {
 
 	/* variables */
 	private File file;
-	private FileFilter filterTXT = new FileFilter() {
+	private FileFilter hacklaceFileFilter = new FileFilter() {
 
 		@Override
 		public boolean accept(File f) {
-			return f.isDirectory() || f.getName().toLowerCase().endsWith(".txt");
+			return f.isDirectory() || f.getName().toLowerCase().endsWith(".hack");
 		}
 
 		@Override
 		public String getDescription() {
-			return ".txt";
+			return ".hack";
 		}
 	};
 
@@ -43,7 +43,7 @@ public class FileChooser extends JFileChooser {
 	 * @return returns the input-file
 	 */
 	public File inputFile() {
-		this.setFileFilter(filterTXT);
+		this.setFileFilter(hacklaceFileFilter);
 		this.setMultiSelectionEnabled(false);
 		int state = this.showOpenDialog(contentPane);
 		if (state == JFileChooser.APPROVE_OPTION) {
