@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.GraphicDisplayBuffer;
+import org.hacklace.animator.displaybuffer.ReferenceDisplayBuffer;
 import org.hacklace.animator.displaybuffer.TextDisplayBuffer;
 import org.hacklace.animator.enums.AnimationType;
 import org.hacklace.animator.enums.Delay;
@@ -43,7 +44,7 @@ public class HacklaceConfigManager {
 					continue loop;
 				}
 				DisplayBuffer displayBuffer = createBufferFromLine(cfgLine,
-						lineNumber);
+						lineNumber, list);
 				if (displayBuffer != null /* $00 = EOF */) {
 					list.add(displayBuffer);
 				} else {
@@ -66,7 +67,8 @@ public class HacklaceConfigManager {
 	 * @throws IllegalHacklaceConfigFileException
 	 */
 	private static DisplayBuffer createBufferFromLine(String cfgLine,
-			int lineNumber) throws IllegalHacklaceConfigFileException {
+			int lineNumber, List<DisplayBuffer> list)
+			throws IllegalHacklaceConfigFileException {
 		String statusString = cfgLine.substring(0, 3);
 		StatusByte statusByte = createStatusByteFromString(statusString,
 				lineNumber);
@@ -75,19 +77,33 @@ public class HacklaceConfigManager {
 		}
 		// text or graphic animation?
 		AnimationType animationType = statusByte.getAnimationType();
-		DisplayBuffer buffer;
+		DisplayBuffer buffer = null;
+		String restOfLine = cfgLine.substring(4);
 		if (animationType == AnimationType.TEXT) {
 			TextDisplayBuffer textDisplayBuffer = new TextDisplayBuffer();
-			String aniText = cfgLine.substring(4);
+			String aniText = restOfLine;
 			textDisplayBuffer.setText(aniText);
 			buffer = textDisplayBuffer;
-		} else {
+		} else if (restOfLine.startsWith("$FF")) {
 			GraphicDisplayBuffer graphicDisplayBuffer = new GraphicDisplayBuffer();
-			byte[] aniBytes = createByteArrayFromString(cfgLine.substring(4),
-					lineNumber);
+			byte[] aniBytes = createByteArrayFromString(
+					restOfLine.substring(4, restOfLine.length() - 4),
+					lineNumber); // cut off $FF in beginning and end
 			graphicDisplayBuffer.setDataFromBytes(aniBytes);
 			buffer = graphicDisplayBuffer;
+		} else if (restOfLine.startsWith("~")) {
+			char letter = restOfLine.charAt(1);
+
+			ReferenceDisplayBuffer referenceDisplayBuffer = new ReferenceDisplayBuffer(
+					letter, list);
+			buffer = referenceDisplayBuffer;
+		} else {
+			throw new IllegalHacklaceConfigFileException(
+					"Illegal hacklace configuration file, error in line "
+							+ lineNumber
+							+ ", modus is graphic, but neither ~ nor $FF is sent at beginning.");
 		}
+		assert (buffer != null);
 		buffer.setDirection(statusByte.getDirection());
 		buffer.setSpeed(statusByte.getSpeed());
 		buffer.setDelay(statusByte.getDelay());
@@ -144,6 +160,7 @@ public class HacklaceConfigManager {
 				Delay delay = displayBuffer.getDelay();
 				AnimationType animationType = displayBuffer.getAnimationType();
 				Speed speed = displayBuffer.getSpeed();
+				boolean isReferenceDisplayBuffer = displayBuffer.isReference();
 				StatusByte statusByte = new StatusByte(direction, delay,
 						animationType, speed);
 				StringBuilder stringBuilder = new StringBuilder();
@@ -153,19 +170,26 @@ public class HacklaceConfigManager {
 				if (animationType == AnimationType.TEXT) {
 					TextDisplayBuffer textDisplayBuffer = (TextDisplayBuffer) displayBuffer;
 					stringBuilder.append(textDisplayBuffer.getText());
-				} else if (animationType == AnimationType.GRAPHIC) {
+				} else if (animationType == AnimationType.GRAPHIC
+						&& !isReferenceDisplayBuffer) {
 					GraphicDisplayBuffer graphicDisplayBuffer = (GraphicDisplayBuffer) displayBuffer;
 					byte[] columns = graphicDisplayBuffer.getColumnsAsBytes();
+					stringBuilder.append("$FF ");
 					for (byte column : columns) {
-						stringBuilder.append(convertByteToString(column)).append(" ");
+						stringBuilder.append(convertByteToString(column))
+								.append(" ");
 					}
-					int length = stringBuilder.length();
-					stringBuilder.replace(length-1, length, ",");
+					stringBuilder.append("$FF,");
+				} else {
+					assert (isReferenceDisplayBuffer);
+					ReferenceDisplayBuffer referenceDisplayBuffer = (ReferenceDisplayBuffer) displayBuffer;
+					stringBuilder.append("~").append(
+							referenceDisplayBuffer.getLetter());
 				}
 				stringBuilder.append("\n");
 				out.write(stringBuilder.toString());
 			}
-			out.write("$00,\n");
+			out.write("$00,");
 		} finally {
 			if (out != null)
 				out.close();
@@ -174,7 +198,8 @@ public class HacklaceConfigManager {
 
 	private static String convertByteToString(byte number) {
 		int value = number;
-		if (value < 0) value += 256;
+		if (value < 0)
+			value += 256;
 		String leadingZero = (value < 0x10) ? "0" : "";
 		return "$" + leadingZero + Integer.toString(value, 16).toUpperCase();
 	}

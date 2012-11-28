@@ -105,6 +105,10 @@ public abstract class DisplayBuffer {
 	}
 	
     public abstract AnimationType getAnimationType();
+    
+    public boolean isReference() {
+    	return false;
+    }
 
 
 }
