@@ -1,19 +1,23 @@
 package org.hacklace.animator;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.GraphicDisplayBuffer;
 import org.hacklace.animator.displaybuffer.TextDisplayBuffer;
 import org.hacklace.animator.enums.AnimationType;
+import org.hacklace.animator.enums.Delay;
+import org.hacklace.animator.enums.Direction;
+import org.hacklace.animator.enums.Speed;
 
 public class HacklaceConfigManager {
 
@@ -32,12 +36,18 @@ public class HacklaceConfigManager {
 			br = new BufferedReader(new InputStreamReader(in));
 			String cfgLine;
 			int lineNumber = 0;
-			while ((cfgLine = br.readLine()) != null) {
+			loop: while ((cfgLine = br.readLine()) != null) {
 				lineNumber++;
+				if (cfgLine.trim().equals("")) {
+					// ignore empty lines (especially at end of file)
+					continue loop;
+				}
 				DisplayBuffer displayBuffer = createBufferFromLine(cfgLine,
 						lineNumber);
-				if (displayBuffer != null /* $FF = EOF */) {
+				if (displayBuffer != null /* $00 = EOF */) {
 					list.add(displayBuffer);
+				} else {
+					break loop;
 				}
 			}
 		} finally {
@@ -51,7 +61,7 @@ public class HacklaceConfigManager {
 	 * 
 	 * @param cfgLine
 	 * @param lineNumber
-	 * @return a DisplayBuffer for the inputline, or null for $00, (the last
+	 * @return a DisplayBuffer for the input line, or null for $00, (the last
 	 *         line)
 	 * @throws IllegalHacklaceConfigFileException
 	 */
@@ -123,8 +133,50 @@ public class HacklaceConfigManager {
 		return (byte) Integer.parseInt(statusString.substring(1), 16);
 	}
 
-	public void writeFile(File file) {
+	public void writeFile(File file) throws IOException {
+		BufferedWriter out = null;
+		try {
+			FileWriter fw = new FileWriter(file);
+			out = new BufferedWriter(fw);
 
+			for (DisplayBuffer displayBuffer : this.list) {
+				Direction direction = displayBuffer.getDirection();
+				Delay delay = displayBuffer.getDelay();
+				AnimationType animationType = displayBuffer.getAnimationType();
+				Speed speed = displayBuffer.getSpeed();
+				StatusByte statusByte = new StatusByte(direction, delay,
+						animationType, speed);
+				StringBuilder stringBuilder = new StringBuilder();
+				String statusByteString = convertByteToString(statusByte
+						.getByte());
+				stringBuilder.append(statusByteString).append(",");
+				if (animationType == AnimationType.TEXT) {
+					TextDisplayBuffer textDisplayBuffer = (TextDisplayBuffer) displayBuffer;
+					stringBuilder.append(textDisplayBuffer.getText());
+				} else if (animationType == AnimationType.GRAPHIC) {
+					GraphicDisplayBuffer graphicDisplayBuffer = (GraphicDisplayBuffer) displayBuffer;
+					byte[] columns = graphicDisplayBuffer.getColumnsAsBytes();
+					for (byte column : columns) {
+						stringBuilder.append(convertByteToString(column)).append(" ");
+					}
+					int length = stringBuilder.length();
+					stringBuilder.replace(length-1, length, ",");
+				}
+				stringBuilder.append("\n");
+				out.write(stringBuilder.toString());
+			}
+			out.write("$00,\n");
+		} finally {
+			if (out != null)
+				out.close();
+		}
+	}
+
+	private static String convertByteToString(byte number) {
+		int value = number;
+		if (value < 0) value += 256;
+		String leadingZero = (value < 0x10) ? "0" : "";
+		return "$" + leadingZero + Integer.toString(value, 16).toUpperCase();
 	}
 
 	private void addDisplayBuffer(DisplayBuffer buffer) {
@@ -172,11 +224,11 @@ public class HacklaceConfigManager {
 		return potentialHexSequence.matches("^\\$[0-9A-F]{2}$"); // $nn (exactly
 																	// 3 chars)
 	}
-	
+
 	public List<DisplayBuffer> getList() {
 		return list;
 	}
-	
+
 	public DisplayBuffer getDisplayBuffer(int index) {
 		return list.get(index);
 	}

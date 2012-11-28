@@ -15,6 +15,14 @@ public class StatusByte {
 	public StatusByte(byte b) {
 		this.bits = b;
 	}
+	
+	public StatusByte(Direction direction, Delay delay, AnimationType animationType, Speed speed) {
+		byte b = (byte) (direction.getValue() << 7);
+		b += (delay.getValue()  << 4);
+		b += (animationType.getValue() << 3);
+		b += (speed.getValue());
+		this.bits = b;
+	}
 
 	/**
 	 * 
@@ -66,4 +74,32 @@ public class StatusByte {
 		int delay = bitZero+bitOne+bitTwo;
 		return Delay.fromInt(delay);
 	}
+
+	public byte getByte() {
+		return this.bits;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + bits;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StatusByte other = (StatusByte) obj;
+		if (bits != other.bits)
+			return false;
+		return true;
+	}
+	
+	
 }

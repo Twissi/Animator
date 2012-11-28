@@ -1,5 +1,7 @@
 package org.hacklace.animator.displaybuffer;
 
+import org.hacklace.animator.enums.AnimationType;
+
 
 public class TextDisplayBuffer extends DisplayBuffer{
 	
@@ -16,6 +18,11 @@ public class TextDisplayBuffer extends DisplayBuffer{
 
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	@Override
+	public AnimationType getAnimationType() {
+		return AnimationType.TEXT;
 	}
 	
 

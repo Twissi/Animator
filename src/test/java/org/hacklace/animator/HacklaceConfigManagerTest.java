@@ -8,6 +8,7 @@ import java.net.URL;
 import java.nio.file.Files;
 
 import junit.framework.TestCase;
+import junitx.framework.FileAssert;
 
 import org.hacklace.animator.enums.AnimationType;
 import org.hacklace.animator.enums.Delay;
@@ -23,25 +24,29 @@ public class HacklaceConfigManagerTest extends TestCase {
 	protected void setUp() throws IOException {
 		manager = new HacklaceConfigManager();
 
-		output = Files.createTempFile("test", null).toFile();
+		output = Files.createTempFile("test.hack", null).toFile();
 		URL url = this.getClass().getResource("/configs/example.hack");
 		exampleConf = new File(url.getFile());
 	}
 
 	protected void tearDown() {
-		output.delete();
+		//output.delete();
 		exampleConf = null;
 	}
 
 	/**
 	 * Reads a config file into a ConfigManager object and writes it then to
 	 * disk. These files have to be binary equal.
+	 * 
+	 * @throws IOException
+	 * @throws IllegalHacklaceConfigFileException
 	 */
-	// public void testReadEqualsWrite() {
-	// manager.readFile(exampleConf);
-	// manager.writeFile(output);
-	// FileAssert.assertBinaryEquals(exampleConf, output);
-	// }
+	public void testReadEqualsWrite()
+			throws IllegalHacklaceConfigFileException, IOException {
+		manager.readFile(exampleConf);
+		manager.writeFile(output);
+		FileAssert.assertBinaryEquals(exampleConf, output);
+	}
 
 	/**
 	 * Test Hex-Sequence validation method
@@ -103,28 +108,42 @@ public class HacklaceConfigManagerTest extends TestCase {
 	public void testCreateByteArrayFromString() throws NoSuchMethodException,
 			SecurityException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
-		
+
 		Class<?> hcm = HacklaceConfigManager.class;
 		Method createByteArrayFromStringMethod = hcm.getDeclaredMethod(
 				"createByteArrayFromString", String.class, Integer.TYPE);
 		createByteArrayFromStringMethod.setAccessible(true);
-		byte[] aniBytes = (byte[]) createByteArrayFromStringMethod
-				.invoke(null, "$FF $55 $2A $55 $2A $55 $2A $55 $2A $55 $2A $FF,", 0);
+		byte[] aniBytes = (byte[]) createByteArrayFromStringMethod.invoke(null,
+				"$FF $55 $2A $55 $2A $55 $2A $55 $2A $55 $2A $FF,", 0);
 		assertEquals(200, aniBytes.length);
-		assertEquals((byte)0xFF, aniBytes[0]);
-		assertEquals((byte)0x55, aniBytes[1]);
-		assertEquals((byte)0x2A, aniBytes[2]);
-		assertEquals((byte)0x55, aniBytes[3]);
-		assertEquals((byte)0x2A, aniBytes[4]);
-		assertEquals((byte)0x55, aniBytes[5]);
-		assertEquals((byte)0x2A, aniBytes[6]);
-		assertEquals((byte)0x55, aniBytes[7]);
-		assertEquals((byte)0x2A, aniBytes[8]);
-		assertEquals((byte)0x55, aniBytes[9]);
-		assertEquals((byte)0x2A, aniBytes[10]);
-		assertEquals((byte)0xFF, aniBytes[11]);
-		assertEquals((byte)0x00, aniBytes[12]);
+		assertEquals((byte) 0xFF, aniBytes[0]);
+		assertEquals((byte) 0x55, aniBytes[1]);
+		assertEquals((byte) 0x2A, aniBytes[2]);
+		assertEquals((byte) 0x55, aniBytes[3]);
+		assertEquals((byte) 0x2A, aniBytes[4]);
+		assertEquals((byte) 0x55, aniBytes[5]);
+		assertEquals((byte) 0x2A, aniBytes[6]);
+		assertEquals((byte) 0x55, aniBytes[7]);
+		assertEquals((byte) 0x2A, aniBytes[8]);
+		assertEquals((byte) 0x55, aniBytes[9]);
+		assertEquals((byte) 0x2A, aniBytes[10]);
+		assertEquals((byte) 0xFF, aniBytes[11]);
+		assertEquals((byte) 0x00, aniBytes[12]);
 
+	}
+
+	public void testConvertByteToString() throws NoSuchMethodException,
+			SecurityException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException {
+
+		Class<?> hcm = HacklaceConfigManager.class;
+		Method convertByteToStringMethod = hcm.getDeclaredMethod(
+				"convertByteToString", Byte.TYPE);
+		convertByteToStringMethod.setAccessible(true);
+		byte aByte = 0x15;
+		String byteString = (String) convertByteToStringMethod.invoke(null,
+				aByte);
+		assertEquals("$15", byteString);
 	}
 
 }

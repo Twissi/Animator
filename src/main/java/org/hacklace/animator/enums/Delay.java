@@ -3,14 +3,19 @@ package org.hacklace.animator.enums;
 import java.security.InvalidParameterException;
 
 public enum Delay {
-	ZERO,
-	ONE,
-	TWO,
-	THREE,
-	FOUR,
-	FIVE,
-	SIX,
-	SEVEN;
+	ZERO(0),
+	ONE(1),
+	TWO(2),
+	THREE(3),
+	FOUR(4),
+	FIVE(5),
+	SIX(6),
+	SEVEN(7);
+	
+	public final int value;
+	private Delay(int value) {
+		this.value = value;
+	}
 	
 	public static Delay fromInt(int delay){
 		switch(delay){
@@ -24,5 +29,9 @@ public enum Delay {
 			case 7: return SEVEN;
 			default: throw new InvalidParameterException("There is no Delay assigned to value: " + delay);
 		}
+	}
+
+	public int getValue() {
+		return this.value;
 	}
 }

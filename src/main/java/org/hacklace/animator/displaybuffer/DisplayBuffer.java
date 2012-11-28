@@ -1,5 +1,6 @@
 package org.hacklace.animator.displaybuffer;
 
+import org.hacklace.animator.enums.AnimationType;
 import org.hacklace.animator.enums.Delay;
 import org.hacklace.animator.enums.Direction;
 import org.hacklace.animator.enums.Speed;
@@ -103,7 +104,7 @@ public abstract class DisplayBuffer {
 		this.delay = delay;
 	}
 	
-
+    public abstract AnimationType getAnimationType();
 
 
 }
