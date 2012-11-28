@@ -30,7 +30,7 @@ public class HacklaceConfigManagerTest extends TestCase {
 	}
 
 	protected void tearDown() {
-		//output.delete();
+		output.delete();
 		exampleConf = null;
 	}
 
