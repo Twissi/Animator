@@ -71,7 +71,10 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 		System.arraycopy(allByteColumns, 0, usedByteColumns, 0, numberOfUsedColumns);
 		return usedByteColumns;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "Grafische Animation";
+	}
 
 }

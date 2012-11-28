@@ -24,6 +24,10 @@ public class TextDisplayBuffer extends DisplayBuffer{
 	public AnimationType getAnimationType() {
 		return AnimationType.TEXT;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Text-Animation" + " "+ text;
+	}
 
 }

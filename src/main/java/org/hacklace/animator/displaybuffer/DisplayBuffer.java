@@ -116,4 +116,11 @@ public abstract class DisplayBuffer {
 		return false;
 	}
 
+	@Override
+	public String toString() {
+		return "DisplayBuffer";
+	}
+	
+	
+
 }

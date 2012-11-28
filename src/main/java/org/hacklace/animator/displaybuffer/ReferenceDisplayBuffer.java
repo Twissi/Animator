@@ -71,4 +71,9 @@ public class ReferenceDisplayBuffer extends DisplayBuffer {
 		return getReferencedDisplayBuffer().getNext();
 	}
 
+	@Override
+	public String toString() {
+		return "Animations-Referenz" + " ~" + letter;
+	}
+
 }
