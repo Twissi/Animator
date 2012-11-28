@@ -22,7 +22,7 @@ public class EditAnimationPanel extends JPanel {
 	}
 	
 	public void setFromDisplayBuffer(DisplayBuffer buffer) {
-		for (int x=0; x<buffer.COLUMNS; x++) {
+		for (int x=0; x<DisplayBuffer.COLUMNS; x++) {
 			for (int y=0; y<DisplayBuffer.ROWS; y++) {
 				gridPanel.setPixel(y, x, buffer.getValueAt(x, y));
 			}
