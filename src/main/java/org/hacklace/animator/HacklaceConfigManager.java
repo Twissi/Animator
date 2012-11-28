@@ -160,7 +160,7 @@ public class HacklaceConfigManager {
 				Delay delay = displayBuffer.getDelay();
 				AnimationType animationType = displayBuffer.getAnimationType();
 				Speed speed = displayBuffer.getSpeed();
-				boolean isReferenceDisplayBuffer = displayBuffer.isReference();
+				boolean isReferenceDisplayBuffer = displayBuffer.isReferenceBuffer();
 				StatusByte statusByte = new StatusByte(direction, delay,
 						animationType, speed);
 				StringBuilder stringBuilder = new StringBuilder();

@@ -31,7 +31,7 @@ public class ReferenceDisplayBuffer extends DisplayBuffer {
 	}
 	
 	@Override
-	public boolean isReference() {
+	public boolean isReferenceBuffer() {
 		return true;
 	}
 
