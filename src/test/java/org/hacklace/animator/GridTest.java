@@ -3,6 +3,7 @@ package org.hacklace.animator;
 import junit.framework.TestCase;
 
 import org.hacklace.animator.displaybuffer.Grid;
+import org.hacklace.animator.gui.FontUtil;
 
 public class GridTest extends TestCase {
 	
@@ -20,4 +21,11 @@ public class GridTest extends TestCase {
 		assertTrue(data[3][6]);	
 	}
 
+	public void testFontUtil() {
+		Grid g = new Grid(7,5);
+		g.setDataFromBytes( FontUtil.repr(67));
+		System.out.println(g);
+		assertFalse(g.data[0][6]);
+		assertTrue(g.data[0][5]);
+	}
 }

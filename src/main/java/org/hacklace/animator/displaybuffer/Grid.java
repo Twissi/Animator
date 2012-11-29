@@ -2,8 +2,6 @@ package org.hacklace.animator.displaybuffer;
 
 import java.util.Arrays;
 
-import org.hacklace.animator.gui.FontUtil;
-
 public class Grid {
 	
 	public boolean[][] data;
@@ -83,11 +81,4 @@ public class Grid {
 		return true;
 	}
 	
-	public static void main(String[] args) {
-		Grid g = new Grid(7,5);
-		g.setDataFromBytes( FontUtil.repr(67));
-		System.out.println(g);
-	}
-
-
 }

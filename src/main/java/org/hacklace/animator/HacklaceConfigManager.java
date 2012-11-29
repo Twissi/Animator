@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.GraphicDisplayBuffer;
+import org.hacklace.animator.displaybuffer.IllegalAnimationReferenceException;
 import org.hacklace.animator.displaybuffer.ReferenceDisplayBuffer;
 import org.hacklace.animator.displaybuffer.TextDisplayBuffer;
 import org.hacklace.animator.enums.AnimationType;
@@ -37,7 +38,7 @@ public class HacklaceConfigManager {
 			br = new BufferedReader(new InputStreamReader(in));
 			String cfgLine;
 			int lineNumber = 0;
-			loop: while ((cfgLine = br.readLine()) != null) {
+			loop : while ((cfgLine = br.readLine()) != null) {
 				lineNumber++;
 				if (cfgLine.trim().equals("")) {
 					// ignore empty lines (especially at end of file)
@@ -79,7 +80,18 @@ public class HacklaceConfigManager {
 		AnimationType animationType = statusByte.getAnimationType();
 		DisplayBuffer buffer = null;
 		String restOfLine = cfgLine.substring(4);
-		if (animationType == AnimationType.TEXT) {
+		if (restOfLine.startsWith("~")) {
+			char letter = restOfLine.charAt(1);
+			ReferenceDisplayBuffer referenceDisplayBuffer = null;
+			try {
+				referenceDisplayBuffer = new ReferenceDisplayBuffer(letter,list);
+			} catch (IllegalAnimationReferenceException ex) {
+				// do nothing 
+				// error status is set in the buffer and can be retrieved with
+				// referenceDisplayBuffer.getReferenceErrorStatus().getErrorMessage();
+			}
+			buffer = referenceDisplayBuffer;
+		} else if (animationType == AnimationType.TEXT) {
 			TextDisplayBuffer textDisplayBuffer = new TextDisplayBuffer();
 			String aniText = restOfLine;
 			textDisplayBuffer.setText(aniText);
@@ -91,13 +103,7 @@ public class HacklaceConfigManager {
 					lineNumber); // cut off $FF in beginning and end
 			graphicDisplayBuffer.setDataFromBytes(aniBytes);
 			buffer = graphicDisplayBuffer;
-		} else if (restOfLine.startsWith("~")) {
-			char letter = restOfLine.charAt(1);
-
-			ReferenceDisplayBuffer referenceDisplayBuffer = new ReferenceDisplayBuffer(
-					letter, list);
-			buffer = referenceDisplayBuffer;
-		} else {
+		} else  {
 			throw new IllegalHacklaceConfigFileException(
 					"Illegal hacklace configuration file, error in line "
 							+ lineNumber
@@ -160,7 +166,8 @@ public class HacklaceConfigManager {
 				Delay delay = displayBuffer.getDelay();
 				AnimationType animationType = displayBuffer.getAnimationType();
 				Speed speed = displayBuffer.getSpeed();
-				boolean isReferenceDisplayBuffer = displayBuffer.isReferenceBuffer();
+				boolean isReferenceDisplayBuffer = displayBuffer
+						.isReferenceBuffer();
 				StatusByte statusByte = new StatusByte(direction, delay,
 						animationType, speed);
 				StringBuilder stringBuilder = new StringBuilder();
