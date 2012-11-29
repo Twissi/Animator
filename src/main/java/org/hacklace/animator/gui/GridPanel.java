@@ -1,6 +1,5 @@
 package org.hacklace.animator.gui;
 
-import java.awt.Color;
 import java.awt.GridLayout;
 
 import javax.swing.JFrame;
