@@ -7,6 +7,7 @@ import org.hacklace.animator.displaybuffer.TextDisplayBuffer;
 
 public class TextDisplayBufferTest extends TestCase {
 	
+	@SuppressWarnings("unused")
 	private Grid g0;
 	private Grid g1;
 	private Grid g2;

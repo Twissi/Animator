@@ -77,4 +77,12 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 		return "Grafische Animation";
 	}
 
+	public void setColumnRow(int column, int row, boolean value) {
+		data[column][row] = value;
+	}
+	
+	public void toggleColumnRow(int column, int row) {
+		data[column][row] = !data[column][row];
+	}
+
 }

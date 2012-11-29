@@ -3,16 +3,15 @@ package org.hacklace.animator.displaybuffer;
 import java.util.Arrays;
 
 public class Grid {
-	
+
 	public boolean[][] data;
 	private final int rows;
 	private final int columns;
-	
+
 	public Grid() {
 		this(DisplayBuffer.ROWS, DisplayBuffer.COLUMNS); // default 7, 5
 	}
-	
-	
+
 	public Grid(int rows, int columns) {
 		data = new boolean[columns][rows];
 		this.rows = rows;
@@ -22,35 +21,33 @@ public class Grid {
 	public boolean[][] getData() {
 		return data;
 	}
-	
+
 	public void setDataFromBytes(int[] aniBytes) {
 		for (int column = 0; column < columns; column++) {
-			byte mask = 1;			
-			
+			byte mask = 1;
+
 			for (int i = 0; i < rows; i++) {
 				byte maskResult = (byte) (mask & aniBytes[column]);
-				
+
 				this.data[column][i] = ((maskResult != 0) ? true : false);
 				mask <<= 1;
-				
 
 			}
 		}
 
 	}
-	
+
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		
-		for(int row = 0; row < rows; row++) {
-			for(int column = 0; column < columns; column++ ) {
-				sb.append( data[column][row] ? "1 " : "- ");
+
+		for (int row = 0; row < rows; row++) {
+			for (int column = 0; column < columns; column++) {
+				sb.append(data[column][row] ? "1 " : "- ");
 			}
-			sb.append("\n" );
+			sb.append("\n");
 		}
 		return sb.toString();
 	}
-
 
 	@Override
 	public int hashCode() {
@@ -61,7 +58,6 @@ public class Grid {
 		result = prime * result + rows;
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -74,11 +70,12 @@ public class Grid {
 		Grid other = (Grid) obj;
 		if (columns != other.columns)
 			return false;
-		if (!Arrays.deepEquals(data, other.data))
-			return false;
 		if (rows != other.rows)
 			return false;
+		if (!Arrays.deepEquals(data, other.data))
+			return false;
+
 		return true;
 	}
-	
+
 }

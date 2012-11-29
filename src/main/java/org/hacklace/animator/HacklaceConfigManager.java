@@ -224,6 +224,16 @@ public class HacklaceConfigManager {
 		GraphicDisplayBuffer gdb = new GraphicDisplayBuffer();
 		addDisplayBuffer(gdb);
 	}
+	
+	public void addReferenceDisplayBuffer() {
+		ReferenceDisplayBuffer rdb = null;
+		try {
+			rdb = new ReferenceDisplayBuffer('A', list);
+		} catch (IllegalAnimationReferenceException e) {
+			// do nothing (but the error status has been set)
+		}
+		addDisplayBuffer(rdb);
+	}	
 
 	public void deleteDisplayBuffer(int index) {
 		list.remove(index);
@@ -251,10 +261,39 @@ public class HacklaceConfigManager {
 		list.set(index1, buffer2);
 		list.set(index2, buffer1);
 	}
-
+	
 	private static boolean isHexSequence(String potentialHexSequence) {
 		return potentialHexSequence.matches("^\\$[0-9A-F]{2}$"); // $nn (exactly
 																	// 3 chars)
+	}
+	
+	public static boolean isValidHacklaceChar(char c) {
+		// https://raumzeitlabor.de/w/images/d/da/Hacklace_Font_5x7_extended.bmp
+		
+		// ASCII (includes the special characters $ ^ and ~
+		if (0x20 <= c && c <= 0x79) {
+			return true;
+		}
+		
+		// other letters that can be entered on a German keyboard
+		if ("ÄäÖöÜüß€".indexOf(c) != -1) {
+			return true;
+		}
+		
+		// further special Hacklace characters are entered by ^B etc., so they are already covered by ASCII above
+		
+		return false;
+	}
+	
+	/**
+	 * copies the display buffer, inserts it at the end of the list and returns it
+	 * @param index
+	 * @return
+	 */
+	public DisplayBuffer copyDisplayBuffer(int index) {
+		DisplayBuffer copy = list.get(index).clone();
+		list.add(copy);
+		return copy;
 	}
 
 	public List<DisplayBuffer> getList() {

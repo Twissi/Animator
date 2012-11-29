@@ -5,7 +5,7 @@ import org.hacklace.animator.enums.Delay;
 import org.hacklace.animator.enums.Direction;
 import org.hacklace.animator.enums.Speed;
 
-public abstract class DisplayBuffer {
+public abstract class DisplayBuffer implements Cloneable {
 
 	protected boolean[][] data;
 
@@ -120,7 +120,26 @@ public abstract class DisplayBuffer {
 	public String toString() {
 		return "DisplayBuffer";
 	}
+
+	public DisplayBuffer clone()  {
+		try {
+			DisplayBuffer copy = (DisplayBuffer) super.clone();
+			copy.data = new boolean[MAX_COLUMNS][ROWS];
+			for (int colIndex = 0; colIndex < this.data.length; colIndex++) {
+				boolean[] column = this.data[colIndex];
+				copy.data[colIndex] = column.clone();
+			}
+			return copy;			
+		} catch (CloneNotSupportedException e) {
+			return null;
+		}
+
+	}
 	
+	public boolean getColumnRow(int column, int row) {
+		return data[column][row];
+	}
 	
 
+	
 }

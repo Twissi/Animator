@@ -141,5 +141,14 @@ public class ReferenceDisplayBuffer extends DisplayBuffer {
 	public String toString() {
 		return "Animations-Referenz" + " ~" + letter + " " + this.errorStatus.getErrorMessage();
 	}
+	
+	@Override
+	public boolean getColumnRow(int column, int row) {
+		try {
+			return getReferencedDisplayBuffer().data[column][row];
+		} catch (IllegalAnimationReferenceException e) {
+			return false;
+		}
+	}
 
 }
