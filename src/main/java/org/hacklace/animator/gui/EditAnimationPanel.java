@@ -7,12 +7,12 @@ import org.hacklace.animator.displaybuffer.DisplayBuffer;
 public class EditAnimationPanel extends JPanel {
 	private static final long serialVersionUID = -5137928768652375360L;
 	private AnimationOptionsPanel optionsPanel;
-	private GridPanel gridPanel;
+	private LedPanel gridPanel;
 
 	public EditAnimationPanel() {
 		optionsPanel = new AnimationOptionsPanel();
 		add(optionsPanel);
-		gridPanel = new GridPanel(AnimatorGUI.ROWS, AnimatorGUI.COLUMNS);
+		gridPanel = new LedPanel(AnimatorGUI.ROWS, AnimatorGUI.COLUMNS);
 		add(gridPanel);
 		reset();
 	}
