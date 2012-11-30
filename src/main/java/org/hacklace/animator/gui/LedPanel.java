@@ -2,7 +2,6 @@ package org.hacklace.animator.gui;
 
 import java.awt.GridLayout;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
@@ -55,25 +54,25 @@ public class LedPanel extends JPanel {
 		}
 	}
 
-	public static void main(String[] args) throws InterruptedException {
-		JFrame f = new JFrame("Test");
-		LedPanel p = new LedPanel(7, 5);
-		f.add(p);
-		f.pack();
-		f.setSize(500, 700);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setVisible(true);
-		for (int i = FontUtil.LOWEST_INDEX; i < FontUtil.HIGHEST_INDEX + 1; i++) {
-			p.grid.setDataFromBytes(FontUtil.getFiveBytesForIndex(i));
-			for (int row = 0; row < p.ROWS; row++) {
-				for (int column = 0; column < p.COLUMNS; column++) {
-					p.setLed(row, column, p.grid.getColumnRow(column,row));
-				}
-
-			}
-			Thread.sleep(1000);
-
-		}
-
-	}
+//	public static void main(String[] args) throws InterruptedException {
+//		JFrame f = new JFrame("Test");
+//		LedPanel p = new LedPanel(7, 5);
+//		f.add(p);
+//		f.pack();
+//		f.setSize(500, 700);
+//		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		f.setVisible(true);
+//		for (int i = FontUtil.LOWEST_INDEX; i < FontUtil.HIGHEST_INDEX + 1; i++) {
+//			p.grid.setDataFromBytes(FontUtil.getFiveBytesForIndex(i));
+//			for (int row = 0; row < p.ROWS; row++) {
+//				for (int column = 0; column < p.COLUMNS; column++) {
+//					p.setLed(row, column, p.grid.getColumnRow(column,row));
+//				}
+//
+//			}
+//			Thread.sleep(1000);
+//
+//		}
+//
+//	}
 }

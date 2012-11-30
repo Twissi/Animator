@@ -12,7 +12,7 @@ public class EditAnimationPanel extends JPanel {
 	public EditAnimationPanel() {
 		optionsPanel = new AnimationOptionsPanel();
 		add(optionsPanel);
-		ledPanel = new LedPanel(AnimatorGUI.ROWS, AnimatorGUI.COLUMNS);
+		ledPanel = new LedPanel(AnimatorGui.ROWS, AnimatorGui.COLUMNS);
 		add(ledPanel);
 		reset();
 	}

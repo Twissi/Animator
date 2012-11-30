@@ -19,16 +19,16 @@ public class FileActions {
 		public void actionPerformed(ActionEvent e) {
 			FileChooser chooser = new FileChooser();
 			File openFile = chooser.inputFile();
-			AnimatorGUI app = AnimatorGUI.appInstance;
+			AnimatorGui app = AnimatorGui.getInstance();
 			HacklaceConfigManager cm = app.getHacklaceConfigManager(); 
 			try {
 				cm.readFile(openFile);
-			    AnimatorGUI.appInstance.getHomePanel().updateList(cm.getList());
-			    AnimatorGUI.appInstance.setCurrentFile(openFile);
+			    AnimatorGui.getInstance().getHomePanel().updateList(cm.getList());
+			    AnimatorGui.getInstance().setCurrentFile(openFile);
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(null, "Cannot read from file.", "Error", JOptionPane.ERROR_MESSAGE);
-				AnimatorGUI.appInstance.getHomePanel().reset();
-				AnimatorGUI.appInstance.getEditAnimationPanel().reset();
+				AnimatorGui.getInstance().getHomePanel().reset();
+				AnimatorGui.getInstance().getEditAnimationPanel().reset();
 			}
 			/*
 			    List<String> text = Files.readAllLines(Paths.get(openFile.toURI()), StandardCharsets.UTF_8);
@@ -68,11 +68,11 @@ public class FileActions {
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			int tabIndex = AnimatorGUI.appInstance.getCurrentTabIndex();
-			if (tabIndex != 1) ; // @TODO AnimatorGUI.appInstance.setTabIndex(1);
-			int index = AnimatorGUI.appInstance.getHomePanel().getSelectedIndex();
-			HacklaceConfigManager cm = AnimatorGUI.appInstance.getHacklaceConfigManager();
-			AnimatorGUI.appInstance.getEditAnimationPanel().setFromDisplayBuffer(cm.getDisplayBuffer(index));
+			int tabIndex = AnimatorGui.getInstance().getCurrentTabIndex();
+			if (tabIndex != 1) ; // @TODO AnimatorGUI.getInstance().setTabIndex(1);
+			int index = AnimatorGui.getInstance().getHomePanel().getSelectedIndex();
+			HacklaceConfigManager cm = AnimatorGui.getInstance().getHacklaceConfigManager();
+			AnimatorGui.getInstance().getEditAnimationPanel().setFromDisplayBuffer(cm.getDisplayBuffer(index));
 		}
 	}
 }
