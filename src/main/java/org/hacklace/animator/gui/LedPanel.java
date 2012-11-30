@@ -33,7 +33,7 @@ public class LedPanel extends JPanel {
 		this(DisplayBuffer.ROWS, DisplayBuffer.COLUMNS);
 	}
 
-	public void setPixel(int row, int column, boolean val) {
+	public void setLed(int row, int column, boolean val) {
 		if (val) {
 			buttons[column][row].set();
 		} else {
@@ -48,7 +48,7 @@ public class LedPanel extends JPanel {
 		for (int row = 0; row < ROWS; row++) {
 			for (int column = 0; column < COLUMNS; column++) {
 				Led b = new Led(row, column);
-				b.addActionListener(new ToggleActionListener(grid, b));
+				b.addActionListener(new ToggleLedActionListener(grid, b));
 				buttons[column][row] = b;
 				add(b);
 			}
@@ -67,7 +67,7 @@ public class LedPanel extends JPanel {
 			p.grid.setDataFromBytes(FontUtil.getFiveBytesForIndex(i));
 			for (int row = 0; row < p.ROWS; row++) {
 				for (int column = 0; column < p.COLUMNS; column++) {
-					p.setPixel(row, column, p.grid.getColumnRow(column,row));
+					p.setLed(row, column, p.grid.getColumnRow(column,row));
 				}
 
 			}
