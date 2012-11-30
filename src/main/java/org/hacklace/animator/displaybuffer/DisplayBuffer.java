@@ -58,16 +58,15 @@ public abstract class DisplayBuffer implements Cloneable {
 	 */
 
 	private Grid getGrid(int offset) {
-		Grid g = new Grid(ROWS, COLUMNS);
-		boolean[][] gridData = g.getData();
+		Grid newGrid = new Grid(ROWS, COLUMNS);
 
 		for (int column = 0; column < COLUMNS; column++) {
 			for (int row = 0; row < ROWS; row++) {
-				gridData[column][row] = data[position + offset + column][row];
+				newGrid.setColumnRow(column, row, data[position + offset + column][row]);
 			}
 		}
 
-		return g;
+		return newGrid;
 	}
 
 	public Grid getPrevious() {

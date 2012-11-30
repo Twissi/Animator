@@ -14,17 +14,20 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 	}
 
 	public void addGrid(Grid grid) {
-		boolean[][] gridData = grid.getData();
-		for (int column = 0; column < 5; column++) {
-			for (int row = 0; row < 7; row++) {
-				this.data[position + column][row] = gridData[column][row];
+		for (int column = 0; column < COLUMNS; column++) {
+			for (int row = 0; row < ROWS; row++) {
+				this.data[position + column][row] = grid.getColumnRow(column, row);
 			}
 		}
 		moveRight();
 	}
 	
 	public void deleteLastGrid() {
-		// TODO
+		for (int column = 0; column < COLUMNS; column++) {
+			for (int row = 0; row < ROWS; row++) {
+				this.data[position + column][row] = false;
+			}
+		}
 		moveLeft();
 	}
 

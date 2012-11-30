@@ -1,12 +1,12 @@
 package org.hacklace.animator.gui;
 
+
 public class FontUtil {
 	
-	public static int[] repr(int code) {
-		return codeArray[code];
-	}	
+    public final static int LOWEST_INDEX = 0x20;
+    public final static int HIGHEST_INDEX = 0xAF;
 
-	private static int[][] codeArray = {
+	private final static int[][] HACKLACE_CHARSET = {
 		{ 0x00, 0x00, 0x00, 0x80, 0x80 },
 		{ 0x5F, 0x80, 0x80, 0x80, 0x80 },
 		{ 0x03, 0x00, 0x03, 0x80, 0x80 },
@@ -151,4 +151,44 @@ public class FontUtil {
 		{ 0x06, 0x29, 0x79, 0x29, 0x06 },
 		{ 0x08, 0x1C, 0x2A, 0x08, 0x08 },
 		{ 0x08, 0x08, 0x2A, 0x1C, 0x08 }};
+	
+	public static int[] getFiveBytesForIndex(int index) {
+		return HACKLACE_CHARSET[index-LOWEST_INDEX];
+	}
+	
+	public static int[] getFiveBytesForChar(char c) {
+		int n = (int) '?';
+		// ASCII
+		if (c >= 0x20 && c < 0x80) {
+			n = (int) c;
+		}
+		switch (c) {
+			case '€' : n = 0x80;break;
+			case 'ä' : n = 0x84;break;
+			case 'Ä' : n = 0x85;break;
+			case 'ö' : n = 0x86;break;
+			case 'Ö' : n = 0x87;break;
+			case 'ü' : n = 0x88;break;
+			case 'Ü' : n = 0x89;break;
+			case 'ß' : n = 0x8A;break;
+		}
+		return getFiveBytesForIndex(n);
+	}
+	
+	/**
+	 * 
+	 * @param special two-character String, first char is ^
+	 * @return € for ^A etc.
+	 */
+	public static int[] getFiveBytesForSpecial(String special) {
+		assert(special.length() == 2);
+		char c = special.charAt(1);
+		return getFiveBytesForSpecial(c);
+	}
+
+	public static int[] getFiveBytesForSpecial(char c) {
+		int index = c + 63;
+		return getFiveBytesForIndex(index);
+	}	
+
 }

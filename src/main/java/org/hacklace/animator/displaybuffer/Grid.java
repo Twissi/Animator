@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class Grid {
 
-	public boolean[][] data;
+	private boolean[][] data;
 	private final int rows;
 	private final int columns;
 
@@ -18,8 +18,16 @@ public class Grid {
 		this.columns = columns;
 	}
 
-	public boolean[][] getData() {
-		return data;
+//	public boolean[][] getData() {
+//		return data;
+//	}
+	
+	public void setColumnRow(int column, int row, boolean status) {
+		data[column][row] = status;
+	}
+	
+	public boolean getColumnRow(int column, int row) {
+		return data[column][row];
 	}
 
 	public void setDataFromBytes(int[] aniBytes) {
@@ -34,7 +42,6 @@ public class Grid {
 
 			}
 		}
-
 	}
 
 	public String toString() {
