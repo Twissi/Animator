@@ -13,13 +13,11 @@ import java.util.List;
 
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.GraphicDisplayBuffer;
-import org.hacklace.animator.displaybuffer.IllegalAnimationReferenceException;
+import org.hacklace.animator.displaybuffer.MixedDisplayBuffer;
 import org.hacklace.animator.displaybuffer.ReferenceDisplayBuffer;
 import org.hacklace.animator.displaybuffer.TextDisplayBuffer;
 import org.hacklace.animator.enums.AnimationType;
-import org.hacklace.animator.enums.Delay;
-import org.hacklace.animator.enums.Direction;
-import org.hacklace.animator.enums.Speed;
+import org.hacklace.animator.enums.StepWidth;
 
 public class HacklaceConfigManager {
 
@@ -38,7 +36,7 @@ public class HacklaceConfigManager {
 			br = new BufferedReader(new InputStreamReader(in));
 			String cfgLine;
 			int lineNumber = 0;
-			loop : while ((cfgLine = br.readLine()) != null) {
+			loop: while ((cfgLine = br.readLine()) != null) {
 				lineNumber++;
 				if (cfgLine.trim().equals("")) {
 					// ignore empty lines (especially at end of file)
@@ -77,24 +75,18 @@ public class HacklaceConfigManager {
 			return null;
 		}
 		// text or graphic animation?
-		AnimationType animationType = statusByte.getAnimationType();
+		StepWidth stepWidth = statusByte.getStepWidth();
 		DisplayBuffer buffer = null;
 		String restOfLine = cfgLine.substring(4);
 		if (restOfLine.startsWith("~")) {
 			char letter = restOfLine.charAt(1);
-			ReferenceDisplayBuffer referenceDisplayBuffer = null;
-			try {
-				referenceDisplayBuffer = new ReferenceDisplayBuffer(letter,list);
-			} catch (IllegalAnimationReferenceException ex) {
-				// do nothing 
-				// error status is set in the buffer and can be retrieved with
-				// referenceDisplayBuffer.getReferenceErrorStatus().getErrorMessage();
-			}
+			ReferenceDisplayBuffer referenceDisplayBuffer = new ReferenceDisplayBuffer(
+					letter);
+
 			buffer = referenceDisplayBuffer;
-		} else if (animationType == AnimationType.TEXT) {
-			TextDisplayBuffer textDisplayBuffer = new TextDisplayBuffer();
-			String aniText = restOfLine;
-			textDisplayBuffer.setText(aniText);
+		} else if (stepWidth == StepWidth.ONE) {
+			TextDisplayBuffer textDisplayBuffer = new TextDisplayBuffer(
+					restOfLine);
 			buffer = textDisplayBuffer;
 		} else if (restOfLine.startsWith("$FF")) {
 			GraphicDisplayBuffer graphicDisplayBuffer = new GraphicDisplayBuffer();
@@ -103,15 +95,15 @@ public class HacklaceConfigManager {
 					lineNumber); // cut off $FF in beginning and end
 			graphicDisplayBuffer.setDataFromBytes(aniBytes);
 			buffer = graphicDisplayBuffer;
-		} else  {
-			throw new IllegalHacklaceConfigFileException(
-					"Illegal hacklace configuration file, error in line "
-							+ lineNumber
-							+ ", modus is graphic, but neither ~ nor $FF is sent at beginning.");
+		} else {
+			MixedDisplayBuffer mixedDisplayBuffer = new MixedDisplayBuffer(
+					restOfLine);
+			buffer = mixedDisplayBuffer;
 		}
 		assert (buffer != null);
 		buffer.setDirection(statusByte.getDirection());
 		buffer.setSpeed(statusByte.getSpeed());
+		buffer.setStepWidth(stepWidth);
 		buffer.setDelay(statusByte.getDelay());
 		return buffer;
 	}
@@ -162,23 +154,16 @@ public class HacklaceConfigManager {
 			out = new BufferedWriter(fw);
 
 			for (DisplayBuffer displayBuffer : this.list) {
-				Direction direction = displayBuffer.getDirection();
-				Delay delay = displayBuffer.getDelay();
-				AnimationType animationType = displayBuffer.getAnimationType();
-				Speed speed = displayBuffer.getSpeed();
-				boolean isReferenceDisplayBuffer = displayBuffer
-						.isReferenceBuffer();
-				StatusByte statusByte = new StatusByte(direction, delay,
-						animationType, speed);
+				StatusByte statusByte = displayBuffer.getStatusByte();
 				StringBuilder stringBuilder = new StringBuilder();
 				String statusByteString = convertByteToString(statusByte
 						.getByte());
 				stringBuilder.append(statusByteString).append(",");
+				AnimationType animationType = displayBuffer.getAnimationType();
 				if (animationType == AnimationType.TEXT) {
 					TextDisplayBuffer textDisplayBuffer = (TextDisplayBuffer) displayBuffer;
 					stringBuilder.append(textDisplayBuffer.getText());
-				} else if (animationType == AnimationType.GRAPHIC
-						&& !isReferenceDisplayBuffer) {
+				} else if (animationType == AnimationType.GRAPHIC) {
 					GraphicDisplayBuffer graphicDisplayBuffer = (GraphicDisplayBuffer) displayBuffer;
 					byte[] columns = graphicDisplayBuffer.getColumnsAsBytes();
 					stringBuilder.append("$FF ");
@@ -187,11 +172,13 @@ public class HacklaceConfigManager {
 								.append(" ");
 					}
 					stringBuilder.append("$FF,");
-				} else {
-					assert (isReferenceDisplayBuffer);
+				} else if (animationType == AnimationType.REFERENCE) {
 					ReferenceDisplayBuffer referenceDisplayBuffer = (ReferenceDisplayBuffer) displayBuffer;
 					stringBuilder.append("~").append(
 							referenceDisplayBuffer.getLetter());
+				} else {
+					MixedDisplayBuffer mixedDisplayBuffer = (MixedDisplayBuffer) displayBuffer;
+					stringBuilder.append(mixedDisplayBuffer.getStringValue());
 				}
 				stringBuilder.append("\n");
 				out.write(stringBuilder.toString());
@@ -224,16 +211,11 @@ public class HacklaceConfigManager {
 		GraphicDisplayBuffer gdb = new GraphicDisplayBuffer();
 		addDisplayBuffer(gdb);
 	}
-	
+
 	public void addReferenceDisplayBuffer() {
-		ReferenceDisplayBuffer rdb = null;
-		try {
-			rdb = new ReferenceDisplayBuffer('A', list);
-		} catch (IllegalAnimationReferenceException e) {
-			// do nothing (but the error status has been set)
-		}
+		ReferenceDisplayBuffer rdb = new ReferenceDisplayBuffer('A');
 		addDisplayBuffer(rdb);
-	}	
+	}
 
 	public void deleteDisplayBuffer(int index) {
 		list.remove(index);
@@ -261,32 +243,35 @@ public class HacklaceConfigManager {
 		list.set(index1, buffer2);
 		list.set(index2, buffer1);
 	}
-	
+
 	private static boolean isHexSequence(String potentialHexSequence) {
 		return potentialHexSequence.matches("^\\$[0-9A-F]{2}$"); // $nn (exactly
 																	// 3 chars)
 	}
-	
+
 	public static boolean isValidHacklaceChar(char c) {
 		// https://raumzeitlabor.de/w/images/d/da/Hacklace_Font_5x7_extended.bmp
-		
+
 		// ASCII (includes the special characters $ ^ and ~
 		if (0x20 <= c && c <= 0x79) {
 			return true;
 		}
-		
+
 		// other letters that can be entered on a German keyboard
 		if ("ÄäÖöÜüß€".indexOf(c) != -1) {
 			return true;
 		}
-		
-		// further special Hacklace characters are entered by ^B etc., so they are already covered by ASCII above
-		
+
+		// further special Hacklace characters are entered by ^B etc., so they
+		// are already covered by ASCII above
+
 		return false;
 	}
-	
+
 	/**
-	 * copies the display buffer, inserts it at the end of the list and returns it
+	 * copies the display buffer, inserts it at the end of the list and returns
+	 * it
+	 * 
 	 * @param index
 	 * @return
 	 */

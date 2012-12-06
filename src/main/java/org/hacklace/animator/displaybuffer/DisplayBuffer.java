@@ -1,9 +1,11 @@
 package org.hacklace.animator.displaybuffer;
 
+import org.hacklace.animator.StatusByte;
 import org.hacklace.animator.enums.AnimationType;
 import org.hacklace.animator.enums.Delay;
 import org.hacklace.animator.enums.Direction;
 import org.hacklace.animator.enums.Speed;
+import org.hacklace.animator.enums.StepWidth;
 
 public abstract class DisplayBuffer implements Cloneable {
 
@@ -17,25 +19,31 @@ public abstract class DisplayBuffer implements Cloneable {
 
 	protected int position;
 
-	protected Direction direction;
+	protected StatusByte statusByte;
 
-	protected Speed speed;
-
-	protected Delay delay;
-
-	public DisplayBuffer() {
+	protected DisplayBuffer() {
 		data = new boolean[MAX_COLUMNS][ROWS];
 		position = 0;
-		direction = Direction.FORWARD;
-		speed = Speed.ZERO;
-		delay = Delay.ZERO;
+		statusByte = new StatusByte();
+	}
+	
+	protected DisplayBuffer(StatusByte statusByte) {
+		this.statusByte = statusByte;
 	}
 
+	/**
+	 * Top left corner is (0,0)
+	 * @param x right (column)
+	 * @param y down (row)
+	 * @return
+	 */
 	public boolean getValueAt(int x, int y) {
 		return data[x][y];
 	}
 
-	public abstract int getStepWidth();
+	public int getStepWidth() {
+		return statusByte.getStepWidth().getValue();
+	}
 
 	/*
 	 * Real code
@@ -86,34 +94,34 @@ public abstract class DisplayBuffer implements Cloneable {
 	}
 
 	public Direction getDirection() {
-		return direction;
+		return this.statusByte.getDirection();
 	}
 
 	public Speed getSpeed() {
-		return speed;
+		return this.statusByte.getSpeed();
 	}
 
 	public Delay getDelay() {
-		return delay;
+		return this.statusByte.getDelay();
 	}
 
 	public void setDirection(Direction direction) {
-		this.direction = direction;
-	}
-
-	public void setSpeed(Speed speed) {
-		this.speed = speed;
+		this.statusByte.setDirection(direction);
 	}
 
 	public void setDelay(Delay delay) {
-		this.delay = delay;
+		this.statusByte.setDelay(delay);
+	}
+	
+	public void setStepWidth(StepWidth stepWidth) {
+		this.statusByte.setStepWidth(stepWidth);
+	}
+	
+	public void setSpeed(Speed speed) {
+		this.statusByte.setSpeed(speed);
 	}
 
 	public abstract AnimationType getAnimationType();
-
-	public boolean isReferenceBuffer() {
-		return false;
-	}
 
 	@Override
 	public String toString() {
@@ -123,6 +131,7 @@ public abstract class DisplayBuffer implements Cloneable {
 	public DisplayBuffer clone()  {
 		try {
 			DisplayBuffer copy = (DisplayBuffer) super.clone();
+			copy.statusByte = this.statusByte.clone();
 			copy.data = new boolean[MAX_COLUMNS][ROWS];
 			for (int colIndex = 0; colIndex < this.data.length; colIndex++) {
 				boolean[] column = this.data[colIndex];
@@ -138,7 +147,12 @@ public abstract class DisplayBuffer implements Cloneable {
 	public boolean getColumnRow(int column, int row) {
 		return data[column][row];
 	}
-	
 
-	
+	/**
+	 * 
+	 * @return reference to status byte
+	 */
+	public StatusByte getStatusByte() {
+		return this.statusByte;
+	}
 }

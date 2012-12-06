@@ -10,10 +10,10 @@ import java.nio.file.Files;
 import junit.framework.TestCase;
 import junitx.framework.FileAssert;
 
-import org.hacklace.animator.enums.AnimationType;
 import org.hacklace.animator.enums.Delay;
 import org.hacklace.animator.enums.Direction;
 import org.hacklace.animator.enums.Speed;
+import org.hacklace.animator.enums.StepWidth;
 
 public class HacklaceConfigManagerTest extends TestCase {
 
@@ -97,9 +97,8 @@ public class HacklaceConfigManagerTest extends TestCase {
 				.invoke(null, "$45", 0);
 		assertEquals(Direction.FORWARD, statusByte.getDirection());
 		assertEquals(Speed.FIVE, statusByte.getSpeed());
+		assertEquals(StepWidth.ONE, statusByte.getStepWidth());
 		assertEquals(Delay.FOUR, statusByte.getDelay());
-		assertEquals(AnimationType.TEXT, statusByte.getAnimationType());
-
 		statusByte = (StatusByte) createStatusByteFromStringMethod.invoke(null,
 				"$00", 0);
 		assertTrue(statusByte.isEOF());
@@ -145,7 +144,7 @@ public class HacklaceConfigManagerTest extends TestCase {
 				aByte);
 		assertEquals("$15", byteString);
 	}
-	
+
 	public void testIValidHacklaceChar() {
 		assertTrue(HacklaceConfigManager.isValidHacklaceChar('a'));
 		assertTrue(HacklaceConfigManager.isValidHacklaceChar('A'));

@@ -8,20 +8,16 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 		super();
 	}
 
-	@Override
-	public int getStepWidth() {
-		return 5;
-	}
-
 	public void addGrid(Grid grid) {
 		for (int column = 0; column < COLUMNS; column++) {
 			for (int row = 0; row < ROWS; row++) {
-				this.data[position + column][row] = grid.getColumnRow(column, row);
+				this.data[position + column][row] = grid.getColumnRow(column,
+						row);
 			}
 		}
 		moveRight();
 	}
-	
+
 	public void deleteLastGrid() {
 		for (int column = 0; column < COLUMNS; column++) {
 			for (int row = 0; row < ROWS; row++) {
@@ -33,19 +29,28 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 
 	public void setDataFromBytes(byte[] aniBytes) {
 		for (int column = 0; column < aniBytes.length; column++) {
-			byte mask = 64; // 0b1000000; -- manuel; sorry, not working in my JDK7 :(
 			byte aniByte = aniBytes[column];
-			for (int row = 0; row <= 6; row++) {
-				byte maskResult = (byte) (mask & aniByte);
-				this.data[column][row] = ((maskResult != 0) ? true : false);
-				mask >>= 1;
-			}
+			this.data[column] = booleanArray7FromByte(aniByte);
 		}
 		moveRight(); // set position to 5
-		// make sure this.usedBytes is divisible by 5 (number of COLUMNS)
-//		if (usedBytes % 5 != 0) {
-//		  usedBytes = ((usedBytes / 5) + 1) * 5;
-//		}
+	}
+
+	/**
+	 * The first bit (bit 7) is assumed to be 0 (should be the case for
+	 * animation bytes)
+	 * 
+	 * @param bits
+	 * @return array with 7 booleans
+	 */
+	public static boolean[] booleanArray7FromByte(byte aniByte) {
+		byte mask = 64; // 0100 0000
+		boolean[] returnArray = new boolean[7];
+		for (int row = 0; row <= 6; row++) {
+			byte maskResult = (byte) (mask & aniByte);
+			returnArray[row] = ((maskResult != 0) ? true : false);
+			mask >>= 1;
+		}
+		return returnArray;
 	}
 
 	@Override
@@ -55,24 +60,31 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 
 	public byte[] getColumnsAsBytes() {
 		byte[] allByteColumns = new byte[MAX_COLUMNS];
-		for (int c = 0; c < MAX_COLUMNS; c++) {
-			boolean[] bools = this.data[c];
-			assert (bools.length == 7);
-			int value = 0;
-			for (boolean bool : bools) {
-				value <<= 1; // shift left
-				if (bool) value += 1; // set next bit 
-			}
-			allByteColumns[c] = (byte) value;
-		}
 		// must avoid trailing $00
-		int numberOfUsedColumns = MAX_COLUMNS;
-		while (allByteColumns[numberOfUsedColumns-1] == 0) {
-			numberOfUsedColumns--;
+		int numberOfUsedColumns = 0;
+		for (int colIndex = 0; colIndex < MAX_COLUMNS; colIndex++) {
+			boolean[] bools = this.data[colIndex];
+			assert (bools.length == 7);
+			byte value = (byte) booleanArrayAsInt(bools);
+			allByteColumns[colIndex] = value;
+			if (value != 0) {
+			  numberOfUsedColumns = colIndex+1;	
+			}
 		}
 		byte[] usedByteColumns = new byte[numberOfUsedColumns];
-		System.arraycopy(allByteColumns, 0, usedByteColumns, 0, numberOfUsedColumns);
+		System.arraycopy(allByteColumns, 0, usedByteColumns, 0,
+				numberOfUsedColumns);
 		return usedByteColumns;
+	}
+	
+	public static int booleanArrayAsInt(boolean[] array) {
+		int value = 0;
+		for (boolean bool : array) {
+			value <<= 1; // shift left
+			if (bool)
+				value += 1; // set next bit
+		}
+		return value;
 	}
 
 	@Override
@@ -83,7 +95,7 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 	public void setColumnRow(int column, int row, boolean value) {
 		data[column][row] = value;
 	}
-	
+
 	public void toggleColumnRow(int column, int row) {
 		data[column][row] = !data[column][row];
 	}
