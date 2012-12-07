@@ -33,7 +33,7 @@ public class FileActions {
 			/*
 			    List<String> text = Files.readAllLines(Paths.get(openFile.toURI()), StandardCharsets.UTF_8);
 			    // ...
-			    // @TODO do the rest...
+			    // TODO do the rest...
 			    // ...
 			*/
 		}
@@ -69,7 +69,7 @@ public class FileActions {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			int tabIndex = AnimatorGui.getInstance().getCurrentTabIndex();
-			if (tabIndex != 1) ; // @TODO AnimatorGUI.getInstance().setTabIndex(1);
+			if (tabIndex != 1) ; // TODO AnimatorGUI.getInstance().setTabIndex(1);
 			int index = AnimatorGui.getInstance().getHomePanel().getSelectedIndex();
 			HacklaceConfigManager cm = AnimatorGui.getInstance().getHacklaceConfigManager();
 			AnimatorGui.getInstance().getEditAnimationPanel().setFromDisplayBuffer(cm.getDisplayBuffer(index));

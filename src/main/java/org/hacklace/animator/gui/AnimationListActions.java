@@ -13,7 +13,7 @@ public class AnimationListActions {
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// @TODO ask if we shall add text or graphic display buffer
+			// TODO ask if we shall add text or graphic display buffer
 			AnimatorGui.getInstance().getHacklaceConfigManager().addGraphicDisplayBuffer();
 		}
 	}

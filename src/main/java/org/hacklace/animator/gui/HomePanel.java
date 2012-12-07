@@ -87,7 +87,7 @@ public class HomePanel extends JPanel {
 	
 	public void removeCurrent() {
 		int index = animationList.getSelectedIndex();
-		if (index == -1) return; // @TODO check if actually "-1" means no selection
+		if (index == -1) return; // TODO check if actually "-1" means no selection
 		animationListData.remove(index);
 		animationList.setSelectedIndex(index);
 		animationList.ensureIndexIsVisible(index);
