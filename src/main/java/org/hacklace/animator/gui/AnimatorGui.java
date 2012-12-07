@@ -4,14 +4,18 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.hacklace.animator.HacklaceConfigManager;
+import org.hacklace.animator.IllegalHacklaceConfigFileException;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
 
 
 public class AnimatorGui extends JFrame {
@@ -37,10 +41,25 @@ public class AnimatorGui extends JFrame {
 		setVisible(true);
 	}
 	
+	public AnimatorGui(final String fileName) {
+		this();
+		SwingUtilities.invokeLater(
+				new Runnable() {
+					public void run() {
+						loadFile(fileName);
+					}
+				}
+		);
+	}
+	
 	public int getCurrentTabIndex() {
 		return tabs.getSelectedIndex();
 	}
-	
+
+	public void setCurrentTabIndex(int index) {
+		tabs.setSelectedIndex(index);
+	}
+
 	public File getCurrentFile() {
 		return currentFile;
 	}
@@ -111,8 +130,37 @@ public class AnimatorGui extends JFrame {
 	  return instance;
 	}
 
+	/**
+	 * Singleton which can be used to directly load an animation file whose name was passed on the command line
+	 * @param fileName
+	 * @return
+	 */
+	public static AnimatorGui getInstance(String fileName) {
+		if (instance == null) {
+			instance = new AnimatorGui(fileName);
+		}
+		return instance;
+	}
+	
+	public void loadFile(String fileName) {
+		try {
+			File file = new File(fileName);
+			hacklaceConfigManager.readFile(file);
+			homePanel.updateList(hacklaceConfigManager.getList());
+		    setCurrentFile(file);
+		} catch (IOException ex) {
+			JOptionPane.showMessageDialog(null, "Cannot read from file. Message: " + ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+		}  catch (IllegalHacklaceConfigFileException ex) {
+			JOptionPane.showMessageDialog(null, "Illegal hacklace config file. Message: " + ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
 	public static void main(String[] args) {
-		getInstance();
+		if (args.length > 0) {
+			getInstance(args[0]);
+		} else {
+			getInstance();
+		}
 	}
 	
 

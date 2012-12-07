@@ -289,4 +289,10 @@ public class HacklaceConfigManager {
 		return list.get(index);
 	}
 
+	
+	public boolean isText() {
+		// there are no mixed text/graphics animations so we can just check the first display buffer
+		return list.get(0).getClass().getName().equals("TextDisplayBuffer");
+	}
+	
 }

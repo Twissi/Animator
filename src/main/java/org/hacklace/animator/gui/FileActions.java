@@ -68,11 +68,15 @@ public class FileActions {
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			int tabIndex = AnimatorGui.getInstance().getCurrentTabIndex();
-			if (tabIndex != 1) ; // TODO AnimatorGUI.getInstance().setTabIndex(1);
 			int index = AnimatorGui.getInstance().getHomePanel().getSelectedIndex();
-			HacklaceConfigManager cm = AnimatorGui.getInstance().getHacklaceConfigManager();
-			AnimatorGui.getInstance().getEditAnimationPanel().setFromDisplayBuffer(cm.getDisplayBuffer(index));
+            HacklaceConfigManager cm = AnimatorGui.getInstance().getHacklaceConfigManager();
+			if (index == -1 || index >= cm.getList().size()) return ; // do nothing if nothing valid selected
+			AnimatorGui.getInstance().getEditAnimationPanel().setFromDisplayBuffer(cm.getList().get(index));
+			if (cm.isText()) {
+				AnimatorGui.getInstance().setCurrentTabIndex(2);
+			} else {
+				AnimatorGui.getInstance().setCurrentTabIndex(1);
+			}
 		}
 	}
 }
