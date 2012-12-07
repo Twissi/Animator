@@ -35,6 +35,8 @@ public class AnimatorGui extends JFrame {
 	
 	private HacklaceConfigManager hacklaceConfigManager;
 	
+	private String title = "The chosen Hacklace Animator Tool";
+	
 	public AnimatorGui() {
 		hacklaceConfigManager = new HacklaceConfigManager();
 		initComponents();
@@ -66,6 +68,10 @@ public class AnimatorGui extends JFrame {
 	
 	public void setCurrentFile(File file) {
 		currentFile = file;
+		if (currentFile != null && currentFile.getName() != "") {
+			setTitle(currentFile.getName() + " - " + title);
+		}
+		
 	}
 	
 	public HomePanel getHomePanel() {
@@ -109,7 +115,7 @@ public class AnimatorGui extends JFrame {
 		add(tabs);
 		
 		// Set stuff
-		setTitle( "The chosen Hacklace Animator Tool");
+		setTitle(title);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(400, 700);
 		
