@@ -43,7 +43,7 @@ public class HacklaceConfigManager {
 					continue loop;
 				}
 				DisplayBuffer displayBuffer = createBufferFromLine(cfgLine,
-						lineNumber, list);
+						lineNumber);
 				if (displayBuffer != null /* $00 = EOF */) {
 					list.add(displayBuffer);
 				} else {
@@ -66,7 +66,7 @@ public class HacklaceConfigManager {
 	 * @throws IllegalHacklaceConfigFileException
 	 */
 	private static DisplayBuffer createBufferFromLine(String cfgLine,
-			int lineNumber, List<DisplayBuffer> list)
+			int lineNumber)
 			throws IllegalHacklaceConfigFileException {
 		String statusString = cfgLine.substring(0, 3);
 		StatusByte statusByte = createStatusByteFromString(statusString,

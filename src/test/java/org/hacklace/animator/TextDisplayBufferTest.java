@@ -29,7 +29,7 @@ public class TextDisplayBufferTest extends TestCase {
 		g3 = null;
 	}
 	
-	@SuppressWarnings("unused")
+	
 	public void testCurrent() {
 		TextDisplayBuffer tdb = new TextDisplayBuffer();
 		
