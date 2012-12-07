@@ -18,9 +18,13 @@ public class Grid {
 		this.columns = columns;
 	}
 
-//	public boolean[][] getData() {
-//		return data;
-//	}
+	/**
+	 * raw access to the data. used by the unit tests
+	 * @return boolean[][] the data array
+	 */
+	public boolean[][] getData() {
+		return data;
+	}
 	
 	public void setColumnRow(int column, int row, boolean status) {
 		data[column][row] = status;
