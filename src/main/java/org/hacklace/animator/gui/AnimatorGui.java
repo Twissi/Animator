@@ -91,6 +91,9 @@ public class AnimatorGui extends JFrame {
 		menuFile.add(new JMenuItem(new FileActions.SaveAction()));
 		menuFile.add(new JMenuItem(new FileActions.CloseAction()));
 		menuBar.add(menuFile);
+		JMenu menuHelp = new JMenu("Help");
+		menuBar.add(menuHelp);
+		menuFile.add(new JMenuItem("Launch Help"));
 		setJMenuBar(menuBar);
 
 		// tabs

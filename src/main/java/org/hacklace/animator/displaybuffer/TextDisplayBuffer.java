@@ -1,7 +1,7 @@
 package org.hacklace.animator.displaybuffer;
 
+import org.hacklace.animator.FontUtil;
 import org.hacklace.animator.enums.AnimationType;
-import org.hacklace.animator.gui.FontUtil;
 
 public class TextDisplayBuffer extends DisplayBuffer {
 
