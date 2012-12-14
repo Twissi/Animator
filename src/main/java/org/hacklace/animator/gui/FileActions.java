@@ -7,6 +7,8 @@ import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
 import org.hacklace.animator.HacklaceConfigManager;
+import org.hacklace.animator.displaybuffer.DisplayBuffer;
+import org.hacklace.animator.enums.AnimationType;
 
 public class FileActions {
 	
@@ -71,8 +73,9 @@ public class FileActions {
 			int index = AnimatorGui.getInstance().getHomePanel().getSelectedIndex();
             HacklaceConfigManager cm = AnimatorGui.getInstance().getHacklaceConfigManager();
 			if (index == -1 || index >= cm.getList().size()) return ; // do nothing if nothing valid selected
-			AnimatorGui.getInstance().getEditAnimationPanel().setFromDisplayBuffer(cm.getList().get(index));
-			if (cm.isText()) {
+			DisplayBuffer bufferRef = cm.getList().get(index);
+			AnimatorGui.getInstance().getEditAnimationPanel().setFromDisplayBuffer(bufferRef);
+			if (bufferRef.getAnimationType() == AnimationType.TEXT) {
 				AnimatorGui.getInstance().setCurrentTabIndex(2);
 			} else {
 				AnimatorGui.getInstance().setCurrentTabIndex(1);

@@ -45,8 +45,10 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 				o.onSpeedChanged(Speed.fromInt(intSpeed));
 			}
 		} else if (e.getSource().equals(delaySlider)) {
-			for (OptionsObserver o: observerList)
-				o.onDelayChanged(Delay.fromInt(((JSlider)e.getSource()).getValue()));
+			for (OptionsObserver o: observerList) {
+				int intDelay = ((JSlider)e.getSource()).getValue();
+				o.onDelayChanged(Delay.fromInt(intDelay));
+			}
 		}
 	}
 
