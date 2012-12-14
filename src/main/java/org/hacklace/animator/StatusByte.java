@@ -105,10 +105,11 @@ public class StatusByte implements Cloneable {
 	}
 	
 	public void setDelay(Delay delay) {
-		int bit654 = delay.getValue() >> 4;
-		int mask = bit654 | 0x47; //1000 1111
+		int bit654 = delay.getValue() << 4;
+		// clear bits
+		this.bits &= 0x8F;  //1000 1111
 		// set bits 654 to the desired value, leave rest unchanged
-		this.bits |= mask;		
+		this.bits |= bit654;
 	}
 	
 	public void setStepWidth(StepWidth stepWidth) {
@@ -119,10 +120,10 @@ public class StatusByte implements Cloneable {
 	}
 	
 	public void setSpeed(Speed speed) {
-		int bit210 = speed.getValue();
-		int mask = bit210 | 0xF8; // 1111 1000
-		// set last three bits (bits 2, 1, 0) to the desired value, leave rest unchanged
-		this.bits |= mask;		
+		// clear bits 0-2
+		this.bits &= 0xF8; // 1111 1000
+		// set bits 0-2
+		this.bits |= speed.value;
 	}
 	
 	public StatusByte clone() {
