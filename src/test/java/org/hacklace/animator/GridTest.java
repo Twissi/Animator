@@ -2,6 +2,7 @@ package org.hacklace.animator;
 
 import junit.framework.TestCase;
 
+import org.hacklace.animator.displaybuffer.FontUtil;
 import org.hacklace.animator.displaybuffer.Grid;
 
 public class GridTest extends TestCase {

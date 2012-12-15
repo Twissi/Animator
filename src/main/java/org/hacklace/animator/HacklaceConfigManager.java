@@ -253,24 +253,7 @@ public class HacklaceConfigManager {
 																	// 3 chars)
 	}
 
-	public static boolean isValidHacklaceChar(char c) {
-		// https://raumzeitlabor.de/w/images/d/da/Hacklace_Font_5x7_extended.bmp
 
-		// ASCII (includes the special characters $ ^ and ~
-		if (0x20 <= c && c <= 0x79) {
-			return true;
-		}
-
-		// other letters that can be entered on a German keyboard
-		if ("ÄäÖöÜüß€".indexOf(c) != -1) {
-			return true;
-		}
-
-		// further special Hacklace characters are entered by ^B etc., so they
-		// are already covered by ASCII above
-
-		return false;
-	}
 
 	/**
 	 * copies the display buffer, inserts it at the end of the list and returns

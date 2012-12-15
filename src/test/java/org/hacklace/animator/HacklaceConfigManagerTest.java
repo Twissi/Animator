@@ -145,13 +145,6 @@ public class HacklaceConfigManagerTest extends TestCase {
 		assertEquals("$15", byteString);
 	}
 
-	public void testIValidHacklaceChar() {
-		assertTrue(HacklaceConfigManager.isValidHacklaceChar('a'));
-		assertTrue(HacklaceConfigManager.isValidHacklaceChar('A'));
-		assertTrue(HacklaceConfigManager.isValidHacklaceChar('1'));
-		assertTrue(HacklaceConfigManager.isValidHacklaceChar('0'));
-		assertTrue(HacklaceConfigManager.isValidHacklaceChar('€'));
-		assertFalse(HacklaceConfigManager.isValidHacklaceChar('à'));
-	}
+
 
 }
