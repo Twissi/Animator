@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 
 import org.hacklace.animator.HacklaceConfigManager;
 
-public class FileActions {
+public class MenuActions {
 	
 	public static class SaveAsAction extends AbstractAction {
 		private static final long serialVersionUID = 3973336765387195380L;
@@ -68,4 +68,22 @@ public class FileActions {
 			System.exit(0);
 		}
 	}
+	
+	public static class HelpAction extends AbstractAction {
+
+		private static final long serialVersionUID = 6474820875394474686L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+//			   try {
+//			      HelpSet hs = new HelpSet(null, hsURL);
+//			   } catch (Exception ee) {
+//			      // Say what the exception really is
+//			      System.out.println( "HelpSet " + ee.getMessage());
+//			      System.out.println("HelpSet "+ helpHS +" not found")
+//			      return;
+//			   }
+		}
+	}
+
 }
