@@ -12,6 +12,18 @@ import org.hacklace.animator.enums.AnimationType;
 
 public class FileActions {
 	
+	public static class SaveAsAction extends AbstractAction {
+		private static final long serialVersionUID = 3973336765387195380L;
+		public SaveAsAction() {
+			super("Save as");
+		}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("Performing SaveAsAction");
+		}
+	}
+	
+
 	public static class OpenAction extends AbstractAction {
 		private static final long serialVersionUID = 6197663976216625203L;
 		public OpenAction() {
