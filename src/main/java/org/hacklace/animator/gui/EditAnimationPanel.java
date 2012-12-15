@@ -1,13 +1,18 @@
 package org.hacklace.animator.gui;
 
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
+import org.hacklace.animator.displaybuffer.TextDisplayBuffer;
+import org.hacklace.animator.enums.AnimationType;
 import org.hacklace.animator.enums.Delay;
 import org.hacklace.animator.enums.Direction;
 import org.hacklace.animator.enums.Speed;
@@ -15,6 +20,8 @@ import org.hacklace.animator.enums.Speed;
 public class EditAnimationPanel extends JPanel implements OptionsObserver, LedObserver {
 	private static final long serialVersionUID = -5137928768652375360L;
 	private AnimationOptionsPanel optionsPanel;
+	private JPanel editTextPanel;
+	private JTextField editTextField;
 	private LedPanel prevLedPanel; // display of the previous frame
 	private LedPanel ledPanel; // display/edit of the current frame
 	private LedPanel nextLedPanel; // display of the next frame
@@ -29,6 +36,7 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 		optionsPanel = new AnimationOptionsPanel();
 		add(optionsPanel);
 		add(createLedPanelPanel());
+		add(createEditTextPanel());
 		reset();
 		optionsPanel.addObserver(this);
 	}
@@ -60,6 +68,20 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 		nextLabel = new JLabel("-", null, JLabel.CENTER);
 		ledPanelPanel.add(nextLabel);
 		return ledPanelPanel;
+	}
+	
+	private JPanel createEditTextPanel() {
+		editTextPanel = new JPanel();
+		editTextField = new JTextField(DisplayBuffer.getNumGrids());
+		editTextField.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				HacklaceConfigManager cm = AnimatorGui.getInstance().getHacklaceConfigManager();
+				((TextDisplayBuffer)bufferRef).setText(editTextField.getText());
+			}
+		});
+		editTextPanel.add(editTextField);
+		return editTextPanel;
 	}
 	
 	/* see note below...
@@ -114,7 +136,7 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 		}
 		copyBufferToPanel(currentPosition, ledPanel);
 		currentLabel.setText(Integer.toString(currentPosition));
-		if (currentPosition < bufferRef.getNumGrids() - 1) {
+		if (currentPosition < DisplayBuffer.getNumGrids() - 1) {
 			copyBufferToPanel(currentPosition + 1, nextLedPanel);
 			nextLabel.setText(Integer.toString(currentPosition + 1));
 		} else {
@@ -123,6 +145,15 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 		}
 		// set speed and delay
 		optionsPanel.setOptions(buffer.getSpeed().getValue(), buffer.getDelay().getValue(), buffer.getDirection().getValue());
+		// treat text buffers different from graphics buffers
+		if (buffer.getAnimationType() == AnimationType.TEXT) {
+			ledPanel.setEnabled(false);
+			editTextPanel.setVisible(true);
+			editTextField.setText(((TextDisplayBuffer)buffer).getText());
+		} else {
+			ledPanel.setEnabled(true);
+			editTextPanel.setVisible(false);
+		}
 	}
 	
 	public void reset() {
@@ -140,6 +171,8 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 		list.set(list.indexOf(origBuffer), bufferRef);
 		bufferRef = null;
 		origBuffer = null;
+		// refresh list on home page because it contains the text for TextDisplayBuffers
+		AnimatorGui.getInstance().getHomePanel().updateList(cm.getList());
 	}
 	
 	public void setMaxPosition(int maxPosition) {

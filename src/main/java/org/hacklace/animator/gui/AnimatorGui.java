@@ -13,6 +13,7 @@ import javax.swing.event.ChangeListener;
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.IllegalHacklaceConfigFileException;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -122,7 +123,7 @@ public class AnimatorGui extends JFrame {
 		// Set stuff
 		setTitle(title);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(400, 700);
+		setPreferredSize(new Dimension(600, 600));
 
 		pack();
 

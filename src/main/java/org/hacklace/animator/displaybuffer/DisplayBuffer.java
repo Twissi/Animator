@@ -15,7 +15,7 @@ public abstract class DisplayBuffer implements Cloneable {
 
 	public static final int COLUMNS = 5;
 
-	protected static final int MAX_COLUMNS = 200;
+	public static final int MAX_COLUMNS = 200;
 
 	protected int position;
 
@@ -164,7 +164,7 @@ public abstract class DisplayBuffer implements Cloneable {
 	 * returns the total number of grids
 	 * @return
 	 */
-	public int getNumGrids() {
+	public static int getNumGrids() {
 		return MAX_COLUMNS / COLUMNS;
 	}
 }

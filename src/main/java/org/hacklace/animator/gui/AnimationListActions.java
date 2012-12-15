@@ -108,7 +108,7 @@ public class AnimationListActions {
 			EditAnimationPanel panel = AnimatorGui.getInstance().getEditAnimationPanel();
 			panel.reset();
 			panel.setFromDisplayBuffer(bufferRef, true);
-			panel.setMaxPosition(bufferRef.getNumGrids() - 1);
+			panel.setMaxPosition(DisplayBuffer.getNumGrids() - 1);
 			if (bufferRef.getAnimationType() == AnimationType.TEXT || bufferRef.getAnimationType() == AnimationType.GRAPHIC) {
 				AnimatorGui.getInstance().setCurrentTabIndex(1);
 			} else {
