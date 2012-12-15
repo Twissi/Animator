@@ -33,14 +33,7 @@ public class FileActions {
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(null, "Cannot read from file.", "Error", JOptionPane.ERROR_MESSAGE);
 				AnimatorGui.getInstance().getHomePanel().reset();
-				// TODO do we need such a function? AnimatorGui.getInstance().getEditAnimationPanel().reset();
 			}
-			/*
-			    List<String> text = Files.readAllLines(Paths.get(openFile.toURI()), StandardCharsets.UTF_8);
-			    // ...
-			    // TODO do the rest...
-			    // ...
-			*/
 		}
 	}
 	
