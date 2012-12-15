@@ -23,7 +23,7 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 	public EditAnimationPanel() {
 		optionsPanel = new AnimationOptionsPanel();
 		add(optionsPanel);
-		add(getLedPanelPanel());
+		add(createLedPanelPanel());
 		reset();
 		optionsPanel.addObserver(this);
 	}
@@ -32,7 +32,7 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 	 * Generate the panel of LedPanels for the edit view
 	 * @return
 	 */
-	private JPanel getLedPanelPanel() {
+	private JPanel createLedPanelPanel() {
 		JPanel ledPanelPanel = new JPanel();
 		prevLedPanel = new LedPanel(AnimatorGui.ROWS, AnimatorGui.COLUMNS);
 		prevLedPanel.setEnabled(false);
