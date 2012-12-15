@@ -152,10 +152,22 @@ public class FontUtil {
 		{ 0x08, 0x1C, 0x2A, 0x08, 0x08 },
 		{ 0x08, 0x08, 0x2A, 0x1C, 0x08 }};
 	
+	/**
+	 * 
+	 * @param index  a number between LOWEST_INDEX (0x20 i.e. decimal 32) 
+	 * and HIGHEST_INDEX (0xAF i.e. decimal 175)
+	 * @return the five animation bytes (including trailing empty columns)
+	 */
 	public static int[] getFiveBytesForIndex(int index) {
 		return HACKLACE_CHARSET[index-LOWEST_INDEX];
 	}
 	
+	/**
+	 * 
+	 * @param c an individual character like a, A, ä, ~, $, €, ., !
+	 * @return the five animation bytes (including trailing empty columns) for this character, 
+	 * the five bytes for ? (a question mark) for unknown characters
+	 */
 	public static int[] getFiveBytesForChar(char c) {
 		int n = (int) '?';
 		// ASCII
@@ -178,7 +190,7 @@ public class FontUtil {
 	/**
 	 * 
 	 * @param special two-character String, first char is ^
-	 * @return € for ^A etc.
+	 * @return returns the five animation bytes for € for ^A etc.
 	 */
 	public static int[] getFiveBytesForSpecial(String special) {
 		assert(special.length() == 2);
@@ -186,9 +198,70 @@ public class FontUtil {
 		return getFiveBytesForSpecial(c);
 	}
 
+	/**
+	 * 
+	 * @param c the ASCII char after the ^
+	 * @return returns the five animation bytes for € for ^A etc.
+	 */
 	public static int[] getFiveBytesForSpecial(char c) {
 		int index = c + 63;
 		return getFiveBytesForIndex(index);
+	}	
+	
+	/**
+	 * 
+	 * @param fiveAnimationBytes an int[5] array with animation bytes, possibly 1 to 4 "empty" columns with value 0x80
+	 * @return an array of one to five bytes, no trailing 0x80 (empty columns)
+	 */
+	private static int[] removeTrailingEmptyColumns(int[] fiveAnimationBytes) {
+		int countNonEmptyColumns = 0;
+		for (int i=0; i<5; i++) { 
+			if (fiveAnimationBytes[i] != 0x80) 
+				countNonEmptyColumns = i;	
+		}
+		int[] newAnimationBytes = new int[countNonEmptyColumns];
+		for (int i=0; i<countNonEmptyColumns; i++) {
+			newAnimationBytes[i] = fiveAnimationBytes[i];
+		}
+		return newAnimationBytes;
+	}
+	
+	/**
+	 * 
+	 * @param index  a number between LOWEST_INDEX (0x20 i.e. decimal 32) 
+	 * and HIGHEST_INDEX (0xAF i.e. decimal 175)
+	 * @return the one to five animation bytes (no trailing empty columns)
+	 */
+	public static int[] getMinimumBytesForIndex(int index) {
+		return removeTrailingEmptyColumns(getFiveBytesForIndex(index));
+	}
+	
+	/**
+	 * 
+	 * @param c an individual character like a, A, ä, ~, $, €, ., !
+	 * @return the one five animation bytes (no trailing empty columns) for this character, 
+	 * the five bytes for ? (a question mark) for unknown characters
+	 */
+	public static int[] getMinimumBytesForChar(char c) {
+		return removeTrailingEmptyColumns(getFiveBytesForChar(c));
+	}
+	
+	/**
+	 * 
+	 * @param special two-character String, first char is ^
+	 * @return returns the one to five animation bytes for € for ^A etc.
+	 */
+	public static int[] getFiveMinimumBytesForSpecial(String special) {
+		return removeTrailingEmptyColumns(getFiveBytesForSpecial(special));
+	}
+
+	/**
+	 * 
+	 * @param c the ASCII char after the ^
+	 * @return returns the one to five animation bytes for € for ^A etc.
+	 */
+	public static int[] getMinimumBytesForSpecial(char c) {
+		return removeTrailingEmptyColumns(getFiveBytesForSpecial(c));
 	}	
 
 }
