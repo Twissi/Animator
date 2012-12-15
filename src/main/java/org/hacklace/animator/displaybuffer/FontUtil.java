@@ -264,5 +264,29 @@ public class FontUtil {
 	public static int[] getMinimumBytesForSpecial(char c) {
 		return removeTrailingEmptyColumns(getFiveBytesForSpecial(c));
 	}	
+	
+	/**
+	 * 
+	 * @param c
+	 * @return true for ASCII (0x20 to 0x79), umlauts, ß and € (euro sign)
+	 */
+	public static boolean isValidHacklaceChar(char c) {
+		// https://raumzeitlabor.de/w/images/d/da/Hacklace_Font_5x7_extended.bmp
+
+		// ASCII (includes the special characters $ ^ and ~
+		if (0x20 <= c && c <= 0x79) {
+			return true;
+		}
+
+		// other letters that can be entered on a German keyboard
+		if ("ÄäÖöÜüß€".indexOf(c) != -1) {
+			return true;
+		}
+
+		// further special Hacklace characters are entered by ^B etc., so they
+		// are already covered by ASCII above
+
+		return false;
+	}
 
 }
