@@ -17,7 +17,7 @@ public class FileActions {
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("Performing SaveAsAction");
+			System.out.println("Performing SaveAsAction - doesn't do anything right now");
 		}
 	}
 	
@@ -54,7 +54,7 @@ public class FileActions {
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("Performing SaveAction");
+			System.out.println("Performing SaveAction - doesn't do anything right now");
 		}
 	}
 	
