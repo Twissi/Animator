@@ -6,7 +6,6 @@ import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
 import org.hacklace.animator.HacklaceConfigManager;
-import org.hacklace.animator.enums.AnimationType;
 
 public class AnimationListActions {
 

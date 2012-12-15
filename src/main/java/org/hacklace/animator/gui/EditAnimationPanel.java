@@ -6,7 +6,6 @@ import javax.swing.JPanel;
 
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
-import org.hacklace.animator.displaybuffer.Grid;
 import org.hacklace.animator.enums.Delay;
 import org.hacklace.animator.enums.Speed;
 

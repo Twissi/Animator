@@ -1,12 +1,9 @@
 package org.hacklace.animator.gui;
 
-import java.awt.Color;
 import java.awt.GridLayout;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import org.hacklace.animator.FontUtil;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.Grid;
 
