@@ -21,7 +21,6 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 	private JSlider speedSlider;
 	private JSlider delaySlider;
 	private JSlider positionSlider;
-	private ButtonGroup animationType;
 	private List<OptionsObserver> observerList;
 	
 	public AnimationOptionsPanel() {
@@ -66,25 +65,10 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 		}
 	}
 
-	// grouped radio buttons with label
-	private JPanel getAnimationTypePanel() {
-		JPanel animationTypePanel = new JPanel();
-		animationTypePanel.add(new JLabel("Type:"));
-		animationType = new ButtonGroup();
-		JRadioButton animationTypeTextButton = new JRadioButton("Text");
-		animationType.add(animationTypeTextButton);
-		animationTypePanel.add(animationTypeTextButton);
-		JRadioButton animationTypeAnimationButton = new JRadioButton("Animation");
-		animationType.add(animationTypeAnimationButton);
-		animationTypePanel.add(animationTypeAnimationButton);
-		return animationTypePanel;
-	}
-
 	private void initComponents() {
 		// one column grid layout
 		setLayout(new GridLayout(0,1));
 		add(new JLabel("Options"));
-		add(getAnimationTypePanel());
 		add(new JLabel("Speed:"));
 		speedSlider = new JSlider(
 				SwingConstants.HORIZONTAL, 
