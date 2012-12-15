@@ -72,12 +72,11 @@ public class FileActions {
 			DisplayBuffer bufferRef = cm.getList().get(index);
 			// Start at first frame
 			bufferRef.rewind();
-			AnimatorGui.getInstance().getEditAnimationPanel().reset();
-			AnimatorGui.getInstance().getEditAnimationPanel().setFromDisplayBuffer(bufferRef, true);
-			AnimatorGui.getInstance().getEditAnimationPanel().setMaxPosition(bufferRef.getNumGrids() - 1);
-			if (bufferRef.getAnimationType() == AnimationType.TEXT) {
-				AnimatorGui.getInstance().setCurrentTabIndex(2);
-			} else if (bufferRef.getAnimationType() == AnimationType.GRAPHIC) {
+			EditAnimationPanel panel = AnimatorGui.getInstance().getEditAnimationPanel();
+			panel.reset();
+			panel.setFromDisplayBuffer(bufferRef, true);
+			panel.setMaxPosition(bufferRef.getNumGrids() - 1);
+			if (bufferRef.getAnimationType() == AnimationType.TEXT || bufferRef.getAnimationType() == AnimationType.GRAPHIC) {
 				AnimatorGui.getInstance().setCurrentTabIndex(1);
 			} else {
 				JOptionPane.showMessageDialog(null, "This type of animation cannot be edited or is not supported yet.", "Error", JOptionPane.ERROR_MESSAGE);
