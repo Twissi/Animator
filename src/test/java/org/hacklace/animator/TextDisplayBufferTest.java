@@ -30,7 +30,6 @@ public class TextDisplayBufferTest extends TestCase {
 	}
 	
 	
-	@SuppressWarnings("unused")
 	public void testCurrent() {
 		TextDisplayBuffer tdb = new TextDisplayBuffer();
 		
