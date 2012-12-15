@@ -81,8 +81,10 @@ public class FileActions {
 			AnimatorGui.getInstance().getEditAnimationPanel().setMaxPosition(bufferRef.getNumGrids() - 1);
 			if (bufferRef.getAnimationType() == AnimationType.TEXT) {
 				AnimatorGui.getInstance().setCurrentTabIndex(2);
-			} else {
+			} else if (bufferRef.getAnimationType() == AnimationType.GRAPHIC) {
 				AnimatorGui.getInstance().setCurrentTabIndex(1);
+			} else {
+				JOptionPane.showMessageDialog(null, "This type of animation cannot be edited or is not supported yet.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
