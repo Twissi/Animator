@@ -1,5 +1,6 @@
 package org.hacklace.animator.gui;
 
+import java.awt.Dimension;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -20,7 +21,7 @@ public class HomePanel extends JPanel {
 		animationListData = new DefaultListModel<DisplayBuffer>();
 		animationList = new JList<DisplayBuffer>(animationListData);
 		JScrollPane animationListScrollPane = new JScrollPane(animationList);
-		// TODO: not working :( animationList.setMinimumSize(new Dimension(200, 50));
+		animationListScrollPane.setPreferredSize(new Dimension(400, 200));
 		add(animationListScrollPane);
 		
 		add(new JButton(new AnimationListActions.AddAction()));
