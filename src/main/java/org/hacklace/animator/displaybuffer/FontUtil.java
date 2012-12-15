@@ -1,4 +1,4 @@
-package org.hacklace.animator;
+package org.hacklace.animator.displaybuffer;
 
 
 public class FontUtil {
