@@ -163,7 +163,7 @@ public class AnimatorGui extends JFrame {
 		try {
 			File file = new File(fileName);
 			hacklaceConfigManager.readFile(file);
-			homePanel.updateList(hacklaceConfigManager.getList());
+			homePanel.updateList(hacklaceConfigManager.getList(), false);
 			setCurrentFile(file);
 		} catch (IOException ex) {
 			JOptionPane.showMessageDialog(null,

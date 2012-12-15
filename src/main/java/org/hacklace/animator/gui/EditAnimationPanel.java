@@ -183,7 +183,7 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 		bufferRef = null;
 		origBuffer = null;
 		// refresh list on home page because it contains the text for TextDisplayBuffers
-		AnimatorGui.getInstance().getHomePanel().updateList(cm.getList());
+		AnimatorGui.getInstance().getHomePanel().updateList(cm.getList(), true);
 	}
 	
 	public void setMaxPosition(int maxPosition) {

@@ -38,7 +38,7 @@ public class MenuActions {
 				cm.clear();
 				cm.readFile(openFile);
 				homePanel.clear();
-			    homePanel.updateList(cm.getList());
+			    homePanel.updateList(cm.getList(), false);
 			    AnimatorGui.getInstance().setCurrentFile(openFile);
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(null, "Cannot read from file.", "Error", JOptionPane.ERROR_MESSAGE);

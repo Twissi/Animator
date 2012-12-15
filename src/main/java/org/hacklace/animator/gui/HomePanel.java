@@ -35,11 +35,13 @@ public class HomePanel extends JPanel {
 	 * Update the list contents
 	 * @param items list of strings to select from
 	 */
-	public void updateList(List<DisplayBuffer> items) {
+	public void updateList(List<DisplayBuffer> items, boolean keepIndex) {
+		int index = animationList.getSelectedIndex();
 		animationListData.removeAllElements();
 		for (DisplayBuffer item: items) {
 			animationListData.addElement(item);
 		}
+		if (keepIndex) animationList.setSelectedIndex(index); 
 	}
 	
 	/**
