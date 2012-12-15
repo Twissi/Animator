@@ -151,6 +151,6 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 	
 	public void onLedChange(int row, int column, boolean newValue) {
 		// System.out.println("LED Changed: " + row + "/" + column + " to " + newValue);
-		bufferRef.setValueAt(column + bufferRef.getStepWidth() * currentPosition, row, newValue);
+		bufferRef.setValueAt(column + DisplayBuffer.COLUMNS * currentPosition, row, newValue);
 	}
 }

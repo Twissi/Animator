@@ -102,7 +102,6 @@ public class AnimatorGui extends JFrame {
 		tabs.addTab("Home", null, homePanel, "Home");
 		editAnimationPanel = new EditAnimationPanel();
 		tabs.addTab("Edit(Animation)", null, editAnimationPanel, "Edit");
-		tabs.addTab("Edit(Text)", null, new EditTextPanel(), "Edit");
 		ChangeListener changeListener = new ChangeListener() {
 			public void stateChanged(ChangeEvent changeEvent) {
 				JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent
