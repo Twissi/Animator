@@ -77,7 +77,7 @@ public class FileActions {
 			// Start at first frame
 			bufferRef.rewind();
 			AnimatorGui.getInstance().getEditAnimationPanel().reset();
-			AnimatorGui.getInstance().getEditAnimationPanel().setFromDisplayBuffer(bufferRef);
+			AnimatorGui.getInstance().getEditAnimationPanel().setFromDisplayBuffer(bufferRef, true);
 			AnimatorGui.getInstance().getEditAnimationPanel().setMaxPosition(bufferRef.getNumGrids() - 1);
 			if (bufferRef.getAnimationType() == AnimationType.TEXT) {
 				AnimatorGui.getInstance().setCurrentTabIndex(2);
@@ -85,6 +85,8 @@ public class FileActions {
 				AnimatorGui.getInstance().setCurrentTabIndex(1);
 			} else {
 				JOptionPane.showMessageDialog(null, "This type of animation cannot be edited or is not supported yet.", "Error", JOptionPane.ERROR_MESSAGE);
+				// required if edit mode was started by clicking tabs:
+				AnimatorGui.getInstance().setCurrentTabIndex(0);
 			}
 		}
 	}

@@ -1,10 +1,13 @@
 package org.hacklace.animator.gui;
 
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -97,5 +100,33 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 		positionSlider.setMinorTickSpacing(1);
 		positionSlider.addChangeListener(this);
 		add(positionSlider);
+		JButton saveButton = new JButton(new SaveAnimationAction());
+		add(saveButton);
+		JButton cancelButton = new JButton(new CancelEditAction());
+		add(cancelButton);
+	}
+	
+	class SaveAnimationAction extends AbstractAction {
+		private static final long serialVersionUID = -5813301123661228603L;
+		public SaveAnimationAction() {
+			super("Save");
+		}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			for (OptionsObserver o: observerList) {
+				o.onSaveAnimation();
+			}
+		}
+	}
+
+	class CancelEditAction extends AbstractAction {
+		private static final long serialVersionUID = 8730578405697706858L;
+		public CancelEditAction() {
+			super("Cancel");
+		}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			AnimatorGui.getInstance().setCurrentTabIndex(0);
+		}
 	}
 }

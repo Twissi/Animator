@@ -1,7 +1,10 @@
 package org.hacklace.animator.gui;
 
+import java.util.List;
+
 import javax.swing.JPanel;
 
+import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.Grid;
 import org.hacklace.animator.enums.Delay;
@@ -13,7 +16,8 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver {
 	private LedPanel prevLedPanel; // display of the previous frame
 	private LedPanel ledPanel; // display/edit of the current frame
 	private LedPanel nextLedPanel; // display of the next frame
-	private DisplayBuffer bufferRef;
+	private DisplayBuffer bufferRef; // our internal temporary displayBuffer for editing
+	private DisplayBuffer origBuffer; // keep a reference to the original buffer for overwriting on save
 	private int currentPosition = 0;
 
 	public EditAnimationPanel() {
@@ -59,9 +63,12 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver {
 		}
 	}
 	
-	public void setFromDisplayBuffer(DisplayBuffer buffer) {
-		// save reference to buffer for later use
-		bufferRef = buffer;
+	public void setFromDisplayBuffer(DisplayBuffer buffer, boolean clone) {
+		if (clone) {
+			// clone the display buffer so we can edit and cancel without changing the original data
+			bufferRef = buffer.clone();
+			origBuffer = buffer;
+		}
 		/* The buffer implementation is not working or at least very much unintuitive.
 		 * I'll implement direct access to the data until I've talked to the team.
 		 * TODO: Fix this!
@@ -105,6 +112,18 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver {
 		optionsPanel.setPosition(currentPosition);
 	}
 	
+	/**
+	 * Switch our temporary DisplayBuffer to the original passed on startEdit
+	 * The buffer must not be touched anymore after this because we switch them(!)
+	 */
+	public void saveBuffer() {
+		HacklaceConfigManager cm = AnimatorGui.getInstance().getHacklaceConfigManager();
+		List <DisplayBuffer> list = cm.getList();
+		list.set(list.indexOf(origBuffer), bufferRef);
+		bufferRef = null;
+		origBuffer = null;
+	}
+	
 	public void setMaxPosition(int maxPosition) {
 		optionsPanel.setMaxPosition(maxPosition);
 	}
@@ -120,7 +139,12 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver {
 	public void onPositionChanged(int newPosition) {
 		// TODO ... bufferRef.setPosition...
 		currentPosition = newPosition;
-		setFromDisplayBuffer(bufferRef);
+		setFromDisplayBuffer(bufferRef, false);
+	}
+	
+	public void onSaveAnimation() {
+		saveBuffer();
+		AnimatorGui.getInstance().setCurrentTabIndex(0);
 	}
 	
 }
