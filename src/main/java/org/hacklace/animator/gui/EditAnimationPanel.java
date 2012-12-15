@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.enums.Delay;
+import org.hacklace.animator.enums.Direction;
 import org.hacklace.animator.enums.Speed;
 
 public class EditAnimationPanel extends JPanel implements OptionsObserver, LedObserver {
@@ -100,7 +101,7 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 			nextLedPanel.clear();
 		}
 		// set speed and delay
-		optionsPanel.setOptions(buffer.getSpeed().getValue(), buffer.getDelay().getValue());
+		optionsPanel.setOptions(buffer.getSpeed().getValue(), buffer.getDelay().getValue(), buffer.getDirection().getValue());
 	}
 	
 	public void reset() {
@@ -137,6 +138,10 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 		if (bufferRef == null) return;
 		currentPosition = newPosition;
 		setFromDisplayBuffer(bufferRef, false);
+	}
+	
+	public void onDirectionChanged(Direction newDirection) {
+		bufferRef.setDirection(newDirection);
 	}
 	
 	public void onSaveAnimation() {
