@@ -22,10 +22,13 @@ public class FileActions {
 			FileChooser chooser = new FileChooser();
 			File openFile = chooser.inputFile();
 			AnimatorGui app = AnimatorGui.getInstance();
-			HacklaceConfigManager cm = app.getHacklaceConfigManager(); 
+			HacklaceConfigManager cm = app.getHacklaceConfigManager();
+			HomePanel homePanel = AnimatorGui.getInstance().getHomePanel();
 			try {
+				cm.clear();
 				cm.readFile(openFile);
-			    AnimatorGui.getInstance().getHomePanel().updateList(cm.getList());
+				homePanel.clear();
+			    homePanel.updateList(cm.getList());
 			    AnimatorGui.getInstance().setCurrentFile(openFile);
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(null, "Cannot read from file.", "Error", JOptionPane.ERROR_MESSAGE);
