@@ -26,13 +26,15 @@ public class TextDisplayBuffer extends DisplayBuffer {
 	 */
 	public void setText(String text) {
 		this.text = text;
+		int col = 0;
 		for (char c : text.toCharArray()) {
 			int[] animationBytes = FontUtil.getMinimumBytesForChar(c);
 			for (int i = 0; i < animationBytes.length; i++) {
 				for (int bit = 0; bit < 7; bit++) {
-					data[i][bit] = (animationBytes[i] & (int)Math.pow(2, bit)) != 0;
+					data[i + DisplayBuffer.COLUMNS * col][bit] = (animationBytes[i] & (int)Math.pow(2, bit)) != 0;
 				}
 			}
+			col++;
 		}
 
 	}
