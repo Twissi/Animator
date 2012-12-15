@@ -88,11 +88,15 @@ public class AnimatorGui extends JFrame {
 		menuFile.add(new JMenuItem(new MenuActions.OpenAction()));
 		menuFile.add(new JMenuItem(new MenuActions.SaveAction()));
 	 	menuFile.add(new JMenuItem(new MenuActions.SaveAsAction()));
+		menuFile.add(new JMenuItem(new MenuActions.FlashAction()));
+		menuFile.add(new JMenuItem(new MenuActions.ExportGifAction()));
 		menuFile.add(new JMenuItem(new MenuActions.CloseAction()));
 		menuBar.add(menuFile);
 		// help menu
 		JMenu menuHelp = new JMenu("Help");
-		menuHelp.add(new JMenuItem("Launch Help"));
+		menuHelp.add(new JMenuItem(new MenuActions.HelpAction()));
+		menuHelp.add(new JMenuItem(new MenuActions.LoadExampleAction()));
+		menuHelp.add(new JMenuItem(new MenuActions.LoadDefaultAction()));
 		menuBar.add(menuHelp);
 		// 
 		setJMenuBar(menuBar);
