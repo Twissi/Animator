@@ -44,7 +44,14 @@ public class AnimationListActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			AnimatorGui.getInstance().getHomePanel().removeCurrent();
+			int n = JOptionPane.showConfirmDialog(
+				    AnimatorGui.getInstance(),
+				    "Do you really want to delete this animation?",
+				    "Confirm delete",
+				    JOptionPane.YES_NO_OPTION);
+			if (n == JOptionPane.YES_OPTION) {
+				AnimatorGui.getInstance().getHomePanel().removeCurrent();
+			}
 		}
 	}
 
