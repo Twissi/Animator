@@ -1,7 +1,9 @@
 package org.hacklace.animator.gui;
 
+import java.awt.GridLayout;
 import java.util.List;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.hacklace.animator.HacklaceConfigManager;
@@ -16,6 +18,9 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 	private LedPanel prevLedPanel; // display of the previous frame
 	private LedPanel ledPanel; // display/edit of the current frame
 	private LedPanel nextLedPanel; // display of the next frame
+	private JLabel prevLabel;
+	private JLabel currentLabel;
+	private JLabel nextLabel;
 	private DisplayBuffer bufferRef; // our internal temporary displayBuffer for editing
 	private DisplayBuffer origBuffer; // keep a reference to the original buffer for overwriting on save
 	private int currentPosition = 0;
@@ -33,7 +38,11 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 	 * @return
 	 */
 	private JPanel createLedPanelPanel() {
+		GridLayout gridLayout = new GridLayout(2, 3);
+		gridLayout.setHgap(5);
 		JPanel ledPanelPanel = new JPanel();
+		ledPanelPanel.setLayout(gridLayout);
+		// first row: 3 LedPanels
 		prevLedPanel = new LedPanel(AnimatorGui.ROWS, AnimatorGui.COLUMNS);
 		prevLedPanel.setEnabled(false);
 		ledPanelPanel.add(prevLedPanel);
@@ -43,6 +52,13 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 		nextLedPanel = new LedPanel(AnimatorGui.ROWS, AnimatorGui.COLUMNS);
 		nextLedPanel.setEnabled(false);
 		ledPanelPanel.add(nextLedPanel);
+		// second row: 3 labels for frame number
+		prevLabel = new JLabel("-", null, JLabel.CENTER);
+		ledPanelPanel.add(prevLabel);
+		currentLabel = new JLabel("-", null, JLabel.CENTER);
+		ledPanelPanel.add(currentLabel);
+		nextLabel = new JLabel("-", null, JLabel.CENTER);
+		ledPanelPanel.add(nextLabel);
 		return ledPanelPanel;
 	}
 	
@@ -91,14 +107,19 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 		 */
 		if (currentPosition > 0) {
 			copyBufferToPanel(currentPosition - 1, prevLedPanel);
+			prevLabel.setText(Integer.toString(currentPosition - 1));
 		} else {
 			prevLedPanel.clear();
+			prevLabel.setText("-");
 		}
 		copyBufferToPanel(currentPosition, ledPanel);
+		currentLabel.setText(Integer.toString(currentPosition));
 		if (currentPosition < bufferRef.getNumGrids() - 1) {
 			copyBufferToPanel(currentPosition + 1, nextLedPanel);
+			nextLabel.setText(Integer.toString(currentPosition + 1));
 		} else {
 			nextLedPanel.clear();
+			nextLabel.setText("-");
 		}
 		// set speed and delay
 		optionsPanel.setOptions(buffer.getSpeed().getValue(), buffer.getDelay().getValue(), buffer.getDirection().getValue());
