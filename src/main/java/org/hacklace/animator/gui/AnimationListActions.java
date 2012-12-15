@@ -97,7 +97,11 @@ public class AnimationListActions {
 		public void actionPerformed(ActionEvent e) {
 			int index = AnimatorGui.getInstance().getHomePanel().getSelectedIndex();
 	        HacklaceConfigManager cm = AnimatorGui.getInstance().getHacklaceConfigManager();
-			if (index == -1 || index >= cm.getList().size()) return ; // do nothing if nothing valid selected
+			if (index == -1 || index >= cm.getList().size()) {
+				// Stay at first tab and do nothing if no valid selection
+				AnimatorGui.getInstance().setCurrentTabIndex(0);
+				return ;
+			}
 			DisplayBuffer bufferRef = cm.getList().get(index);
 			// Start at first frame
 			bufferRef.rewind();
