@@ -46,7 +46,7 @@ public class HacklaceConfigManager {
 					// ignore empty lines (especially at end of file)
 					continue loop;
 				}
-				DisplayBuffer displayBuffer = createBufferFromLine(cfgLine,
+				DisplayBuffer displayBuffer = HacklaceConfigManager.createBufferFromLine(cfgLine,
 						lineNumber);
 				if (displayBuffer != null /* $00 = EOF */) {
 					list.add(displayBuffer);
@@ -61,96 +61,6 @@ public class HacklaceConfigManager {
 		}
 	}
 
-	/**
-	 * 
-	 * @param cfgLine
-	 * @param lineNumber
-	 * @return a DisplayBuffer for the input line, or null for $00, (the last
-	 *         line)
-	 * @throws IllegalHacklaceConfigFileException
-	 */
-	private static DisplayBuffer createBufferFromLine(String cfgLine,
-			int lineNumber)
-			throws IllegalHacklaceConfigFileException {
-		String statusString = cfgLine.substring(0, 3);
-		StatusByte statusByte = createStatusByteFromString(statusString,
-				lineNumber);
-		if (statusByte.isEOF()) {
-			return null;
-		}
-		// text or graphic animation?
-		StepWidth stepWidth = statusByte.getStepWidth();
-		DisplayBuffer buffer = null;
-		String restOfLine = cfgLine.substring(4);
-		if (restOfLine.startsWith("~")) {
-			char letter = restOfLine.charAt(1);
-			ReferenceDisplayBuffer referenceDisplayBuffer = new ReferenceDisplayBuffer(
-					letter);
-
-			buffer = referenceDisplayBuffer;
-		} else if (stepWidth == StepWidth.ONE) {
-			TextDisplayBuffer textDisplayBuffer = new TextDisplayBuffer(
-					restOfLine);
-			buffer = textDisplayBuffer;
-		} else if (restOfLine.startsWith("$FF")) {
-			GraphicDisplayBuffer graphicDisplayBuffer = new GraphicDisplayBuffer();
-			byte[] aniBytes = createByteArrayFromString(
-					restOfLine.substring(4, restOfLine.length() - 4),
-					lineNumber); // cut off $FF in beginning and end
-			graphicDisplayBuffer.setDataFromBytes(aniBytes);
-			buffer = graphicDisplayBuffer;
-		} else {
-			MixedDisplayBuffer mixedDisplayBuffer = new MixedDisplayBuffer(
-					restOfLine);
-			buffer = mixedDisplayBuffer;
-		}
-		assert (buffer != null);
-		buffer.setDirection(statusByte.getDirection());
-		buffer.setSpeed(statusByte.getSpeed());
-		buffer.setStepWidth(stepWidth);
-		buffer.setDelay(statusByte.getDelay());
-		return buffer;
-	}
-
-	private static byte[] createByteArrayFromString(String aniString,
-			int lineNumber) throws IllegalHacklaceConfigFileException {
-		final String separators = "[ ,;./:_+*|]";
-		byte[] aniBytes = new byte[200];
-		String[] aniByteStrings = aniString.split(separators);
-		if (aniBytes.length > 200) {
-			throw new IllegalHacklaceConfigFileException(
-					"Illegal hacklace configuration file: More than 200 bytes in line "
-							+ lineNumber + ".");
-
-		}
-		int index = 0;
-
-		for (String aniByteString : aniByteStrings) {
-
-			byte aniByte = convertStringToByte(aniByteString);
-			aniBytes[index] = aniByte;
-			index++;
-
-		}
-		return aniBytes;
-
-	}
-
-	private static StatusByte createStatusByteFromString(String statusString,
-			int line) throws IllegalHacklaceConfigFileException {
-		if (!isHexSequence(statusString)) {
-			throw new IllegalHacklaceConfigFileException("Status string "
-					+ statusString + " is not hex ($nn) in line " + line + ".");
-		}
-		byte statusByte_ = convertStringToByte(statusString);
-		StatusByte statusByte = new StatusByte(statusByte_);
-		return statusByte;
-	}
-
-	private static byte convertStringToByte(String statusString) {
-		return (byte) Integer.parseInt(statusString.substring(1), 16);
-	}
-
 	public void writeFile(File file) throws IOException {
 		BufferedWriter out = null;
 		try {
@@ -160,7 +70,7 @@ public class HacklaceConfigManager {
 			for (DisplayBuffer displayBuffer : this.list) {
 				StatusByte statusByte = displayBuffer.getStatusByte();
 				StringBuilder stringBuilder = new StringBuilder();
-				String statusByteString = convertByteToString(statusByte
+				String statusByteString = ConversionUtil.convertByteToString(statusByte
 						.getByte());
 				stringBuilder.append(statusByteString).append(",");
 				AnimationType animationType = displayBuffer.getAnimationType();
@@ -172,7 +82,7 @@ public class HacklaceConfigManager {
 					byte[] columns = graphicDisplayBuffer.getColumnsAsBytes();
 					stringBuilder.append("$FF ");
 					for (byte column : columns) {
-						stringBuilder.append(convertByteToString(column))
+						stringBuilder.append(ConversionUtil.convertByteToString(column))
 								.append(" ");
 					}
 					stringBuilder.append("$FF,");
@@ -194,14 +104,6 @@ public class HacklaceConfigManager {
 		}
 	}
 
-	private static String convertByteToString(byte number) {
-		int value = number;
-		if (value < 0)
-			value += 256;
-		String leadingZero = (value < 0x10) ? "0" : "";
-		return "$" + leadingZero + Integer.toString(value, 16).toUpperCase();
-	}
-
 	private void addDisplayBuffer(DisplayBuffer buffer) {
 		list.add(buffer);
 	}
@@ -219,6 +121,11 @@ public class HacklaceConfigManager {
 	public void addReferenceDisplayBuffer() {
 		ReferenceDisplayBuffer rdb = new ReferenceDisplayBuffer('A');
 		addDisplayBuffer(rdb);
+	}
+	
+	public void addMixedDisplayBuffer() {
+		MixedDisplayBuffer mdb = new MixedDisplayBuffer();
+		addDisplayBuffer(mdb);
 	}
 
 	public void deleteDisplayBuffer(int index) {
@@ -248,13 +155,6 @@ public class HacklaceConfigManager {
 		list.set(index2, buffer1);
 	}
 
-	private static boolean isHexSequence(String potentialHexSequence) {
-		return potentialHexSequence.matches("^\\$[0-9A-F]{2}$"); // $nn (exactly
-																	// 3 chars)
-	}
-
-
-
 	/**
 	 * copies the display buffer, inserts it at the end of the list and returns
 	 * it
@@ -274,6 +174,57 @@ public class HacklaceConfigManager {
 
 	public DisplayBuffer getDisplayBuffer(int index) {
 		return list.get(index);
+	}
+
+	/**
+	 * 
+	 * @param cfgLine
+	 * @param lineNumber
+	 * @return a DisplayBuffer for the input line, or null for $00, (the last
+	 *         line)
+	 * @throws IllegalHacklaceConfigFileException
+	 */
+	protected static DisplayBuffer createBufferFromLine(String cfgLine,
+			int lineNumber)
+			throws IllegalHacklaceConfigFileException {
+		String statusByteString = cfgLine.substring(0, 3);
+		StatusByte statusByte = new StatusByte(statusByteString, lineNumber);
+		if (statusByte.isEOF()) {
+			return null;
+		}
+		
+		// text or graphic animation?
+		StepWidth stepWidth = statusByte.getStepWidth();
+		DisplayBuffer buffer = null;
+		String restOfLine = cfgLine.substring(4);
+		if (restOfLine.startsWith("~")) {
+			char letter = restOfLine.charAt(1);
+			ReferenceDisplayBuffer referenceDisplayBuffer = new ReferenceDisplayBuffer(
+					letter);
+	
+			buffer = referenceDisplayBuffer;
+		} else if (stepWidth == StepWidth.ONE) {
+			TextDisplayBuffer textDisplayBuffer = new TextDisplayBuffer(
+					restOfLine);
+			buffer = textDisplayBuffer;
+		} else if (restOfLine.startsWith("$FF")) {
+			GraphicDisplayBuffer graphicDisplayBuffer = new GraphicDisplayBuffer();
+			byte[] aniBytes = ConversionUtil.createByteArrayFromString(
+					restOfLine.substring(4, restOfLine.length() - 4),
+					lineNumber); // cut off $FF in beginning and end
+			graphicDisplayBuffer.setDataFromBytes(aniBytes);
+			buffer = graphicDisplayBuffer;
+		} else {
+			MixedDisplayBuffer mixedDisplayBuffer = new MixedDisplayBuffer(
+					restOfLine);
+			buffer = mixedDisplayBuffer;
+		}
+		assert (buffer != null);
+		buffer.setDirection(statusByte.getDirection());
+		buffer.setSpeed(statusByte.getSpeed());
+		buffer.setStepWidth(stepWidth);
+		buffer.setDelay(statusByte.getDelay());
+		return buffer;
 	}
 
 }
