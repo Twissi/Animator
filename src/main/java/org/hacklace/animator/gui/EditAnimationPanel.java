@@ -89,18 +89,14 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver {
 		 */
 		if (currentPosition > 0) {
 			copyBufferToPanel(currentPosition - 1, prevLedPanel);
-			prevLedPanel.setEnabled(true);
 		} else {
 			prevLedPanel.clear();
-			prevLedPanel.setEnabled(false);
 		}
 		copyBufferToPanel(currentPosition, ledPanel);
 		if (currentPosition < bufferRef.getNumGrids() - 1) {
 			copyBufferToPanel(currentPosition + 1, nextLedPanel);
-			nextLedPanel.setEnabled(true);
 		} else {
 			nextLedPanel.clear();
-			nextLedPanel.setEnabled(false);
 		}
 		// set speed and delay
 		optionsPanel.setOptions(buffer.getSpeed().getValue(), buffer.getDelay().getValue());
