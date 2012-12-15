@@ -6,6 +6,7 @@ public class FontUtil {
     public final static int LOWEST_INDEX = 0x20;
     public final static int HIGHEST_INDEX = 0xAF;
 
+    // warum int für die Bytes? Weil byte nicht von 0 bis 255, sondern von -128 bis 127 geht, also 0x80 ein Problem macht   
 	private final static int[][] HACKLACE_CHARSET = {
 		{ 0x00, 0x00, 0x00, 0x80, 0x80 },
 		{ 0x5F, 0x80, 0x80, 0x80, 0x80 },
