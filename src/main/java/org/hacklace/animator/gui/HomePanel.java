@@ -88,12 +88,13 @@ public class HomePanel extends JPanel {
 		return index;
 	}
 	
-	public void removeCurrent() {
+	public int removeCurrent() {
 		int index = animationList.getSelectedIndex();
-		if (index == -1) return;
+		if (index == -1) return -1;
 		animationListData.remove(index);
 		animationList.setSelectedIndex(index);
 		animationList.ensureIndexIsVisible(index);
+		return index;
 	}
 	
 	public void add(DisplayBuffer s) {

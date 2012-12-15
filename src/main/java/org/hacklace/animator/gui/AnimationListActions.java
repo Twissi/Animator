@@ -26,13 +26,15 @@ public class AnimationListActions {
 					"Animation type", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 			HacklaceConfigManager cm = AnimatorGui.getInstance().getHacklaceConfigManager();
 			if (result == null) return; // cancel
-			else if (result.equals((String)options[0])) {
+			HomePanel homePanel = AnimatorGui.getInstance().getHomePanel();
+			if (result.equals((String)options[0])) {
 				cm.addGraphicDisplayBuffer();
-				AnimatorGui.getInstance().getHomePanel().add(cm.getDisplayBuffer(cm.getList().size() - 1));
+				homePanel.add(cm.getDisplayBuffer(cm.getList().size() - 1));
 			} else if (result.equals((String)options[1])) {
 				cm.addTextDisplayBuffer();
-				AnimatorGui.getInstance().getHomePanel().add(cm.getDisplayBuffer(cm.getList().size() - 1));
+				homePanel.add(cm.getDisplayBuffer(cm.getList().size() - 1));
 			}
+			homePanel.updateList(AnimatorGui.getInstance().getHacklaceConfigManager().getList(), true);
 		}
 	}
 
@@ -51,7 +53,13 @@ public class AnimationListActions {
 				    "Confirm delete",
 				    JOptionPane.YES_NO_OPTION);
 			if (n == JOptionPane.YES_OPTION) {
-				AnimatorGui.getInstance().getHomePanel().removeCurrent();
+				HomePanel homePanel = AnimatorGui.getInstance().getHomePanel();
+				HacklaceConfigManager cm = AnimatorGui.getInstance().getHacklaceConfigManager();
+				int index = homePanel.removeCurrent();
+				if (index > -1 ) {
+					cm.getList().remove(index);
+					homePanel.updateList(AnimatorGui.getInstance().getHacklaceConfigManager().getList(), true);
+				}
 			}
 		}
 	}
@@ -65,10 +73,13 @@ public class AnimationListActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			int index = AnimatorGui.getInstance().getHomePanel().moveUp();
+			HacklaceConfigManager cm = AnimatorGui.getInstance().getHacklaceConfigManager();
+			HomePanel homePanel = AnimatorGui.getInstance().getHomePanel();
+			int index = homePanel.moveUp();
 			if (index != -1) {
-				AnimatorGui.getInstance().getHacklaceConfigManager().moveUp(index);
+				cm.moveUp(index);
 			}
+			homePanel.updateList(cm.getList(), true);
 		}
 	}
 
@@ -81,10 +92,13 @@ public class AnimationListActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			int index = AnimatorGui.getInstance().getHomePanel().moveDown();
+			HacklaceConfigManager cm = AnimatorGui.getInstance().getHacklaceConfigManager();
+			HomePanel homePanel = AnimatorGui.getInstance().getHomePanel();
+			int index = homePanel.moveDown();
 			if (index != -1) {
-				AnimatorGui.getInstance().getHacklaceConfigManager().moveDown(index);
+				cm.moveDown(index);
 			}
+			homePanel.updateList(cm.getList(), true);
 		}
 	}
 
