@@ -1,5 +1,6 @@
 package org.hacklace.animator.gui;
 
+import java.awt.Color;
 import java.awt.GridLayout;
 
 import javax.swing.JFrame;
@@ -52,6 +53,24 @@ public class LedPanel extends JPanel {
 				b.addActionListener(new ToggleLedActionListener(grid, b));
 				buttons[column][row] = b;
 				add(b);
+			}
+		}
+	}
+	
+	public void clear() {
+		for (int x = 0; x < DisplayBuffer.COLUMNS; x++) {
+			for (int y = 0; y < DisplayBuffer.ROWS; y++) {
+				setLed(y, x, false);
+			}
+		}
+	}
+	
+	@Override
+	public void setEnabled(boolean enabled) {
+		super.setEnabled(enabled);
+		for (int x = 0; x < DisplayBuffer.COLUMNS; x++) {
+			for (int y = 0; y < DisplayBuffer.ROWS; y++) {
+				buttons[x][y].setEnabled(enabled);
 			}
 		}
 	}

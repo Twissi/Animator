@@ -30,7 +30,7 @@ public class FileActions {
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(null, "Cannot read from file.", "Error", JOptionPane.ERROR_MESSAGE);
 				AnimatorGui.getInstance().getHomePanel().reset();
-				AnimatorGui.getInstance().getEditAnimationPanel().reset();
+				// TODO do we need such a function? AnimatorGui.getInstance().getEditAnimationPanel().reset();
 			}
 			/*
 			    List<String> text = Files.readAllLines(Paths.get(openFile.toURI()), StandardCharsets.UTF_8);
@@ -74,7 +74,11 @@ public class FileActions {
             HacklaceConfigManager cm = AnimatorGui.getInstance().getHacklaceConfigManager();
 			if (index == -1 || index >= cm.getList().size()) return ; // do nothing if nothing valid selected
 			DisplayBuffer bufferRef = cm.getList().get(index);
+			// Start at first frame
+			bufferRef.rewind();
+			AnimatorGui.getInstance().getEditAnimationPanel().reset();
 			AnimatorGui.getInstance().getEditAnimationPanel().setFromDisplayBuffer(bufferRef);
+			AnimatorGui.getInstance().getEditAnimationPanel().setMaxPosition(bufferRef.getNumGrids() - 1);
 			if (bufferRef.getAnimationType() == AnimationType.TEXT) {
 				AnimatorGui.getInstance().setCurrentTabIndex(2);
 			} else {

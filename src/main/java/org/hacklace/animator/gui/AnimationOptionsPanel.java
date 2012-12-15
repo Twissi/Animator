@@ -20,6 +20,7 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 	private static final long serialVersionUID = -2625306373507959134L;
 	private JSlider speedSlider;
 	private JSlider delaySlider;
+	private JSlider positionSlider;
 	private ButtonGroup animationType;
 	private List<OptionsObserver> observerList;
 	
@@ -32,6 +33,14 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 	public void setOptions(int speed, int delay) {
 		speedSlider.setValue(speed);
 		delaySlider.setValue(delay);
+	}
+	
+	public void setPosition(int position) {
+		positionSlider.setValue(position);
+	}
+	
+	public void setMaxPosition(int maxPosition) {
+		positionSlider.setMaximum(maxPosition);
 	}
 	
 	public void addObserver(OptionsObserver o) {
@@ -48,6 +57,11 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 			for (OptionsObserver o: observerList) {
 				int intDelay = ((JSlider)e.getSource()).getValue();
 				o.onDelayChanged(Delay.fromInt(intDelay));
+			}
+		} else if (e.getSource().equals(positionSlider)) {
+			for (OptionsObserver o: observerList) {
+				int position = ((JSlider)e.getSource()).getValue();
+				o.onPositionChanged(position);
 			}
 		}
 	}
@@ -90,5 +104,14 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 		delaySlider.setMinorTickSpacing(1);
 		delaySlider.addChangeListener(this);
 		add(delaySlider);
+		add(new JLabel("Frame:"));
+		positionSlider = new JSlider(
+				SwingConstants.HORIZONTAL, 
+				1);
+		positionSlider.setPaintTicks(true);
+		positionSlider.setSnapToTicks(true);
+		positionSlider.setMinorTickSpacing(1);
+		positionSlider.addChangeListener(this);
+		add(positionSlider);
 	}
 }

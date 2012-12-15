@@ -155,4 +155,12 @@ public abstract class DisplayBuffer implements Cloneable {
 	public StatusByte getStatusByte() {
 		return this.statusByte;
 	}
+	
+	/**
+	 * returns the total number of grids
+	 * @return
+	 */
+	public int getNumGrids() {
+		return MAX_COLUMNS / COLUMNS;
+	}
 }

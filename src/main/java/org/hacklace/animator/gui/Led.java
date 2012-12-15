@@ -48,5 +48,13 @@ public class Led extends JButton implements LedInterface {
 		this.row = row;
 		this.column = column;
 	}
+	@Override
+	public void setEnabled(boolean enabled) {
+		super.setEnabled(enabled);
+		if (!enabled) {
+			setBackground(new Color(128, 128, 128, 128));
+		}
+	}
+	
 
 }
