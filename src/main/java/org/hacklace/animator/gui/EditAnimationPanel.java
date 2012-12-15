@@ -1,8 +1,8 @@
 package org.hacklace.animator.gui;
 
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.List;
 
 import javax.swing.JLabel;
@@ -73,11 +73,22 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 	private JPanel createEditTextPanel() {
 		editTextPanel = new JPanel();
 		editTextField = new JTextField(DisplayBuffer.getNumGrids());
-		editTextField.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				HacklaceConfigManager cm = AnimatorGui.getInstance().getHacklaceConfigManager();
+		editTextField.addKeyListener(new KeyListener() {
+			private void updateText() {
 				((TextDisplayBuffer)bufferRef).setText(editTextField.getText());
+				setFromDisplayBuffer(bufferRef, false);
+			}
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				updateText();
+			}
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				updateText();
+			}
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				updateText();
 			}
 		});
 		editTextPanel.add(editTextField);
