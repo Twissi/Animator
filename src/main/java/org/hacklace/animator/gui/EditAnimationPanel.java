@@ -8,6 +8,7 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
@@ -61,11 +62,11 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 		nextLedPanel.setEnabled(false);
 		ledPanelPanel.add(nextLedPanel);
 		// second row: 3 labels for frame number
-		prevLabel = new JLabel("-", null, JLabel.CENTER);
+		prevLabel = new JLabel("-", null, SwingConstants.CENTER);
 		ledPanelPanel.add(prevLabel);
-		currentLabel = new JLabel("-", null, JLabel.CENTER);
+		currentLabel = new JLabel("-", null, SwingConstants.CENTER);
 		ledPanelPanel.add(currentLabel);
-		nextLabel = new JLabel("-", null, JLabel.CENTER);
+		nextLabel = new JLabel("-", null, SwingConstants.CENTER);
 		ledPanelPanel.add(nextLabel);
 		return ledPanelPanel;
 	}
@@ -156,10 +157,10 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 		}
 		// set speed and delay
 		optionsPanel.setOptions(buffer.getSpeed().getValue(), buffer.getDelay().getValue(), buffer.getDirection().getValue());
-		switchMode(buffer.getAnimationType());
+		switchMode();
 	}
 	
-	public void switchMode(AnimationType animationType) {
+	public void switchMode() {
 		// treat text buffers different from graphics buffers
 		if (bufferRef.getAnimationType() == AnimationType.TEXT) {
 			ledPanel.setEnabled(false);
