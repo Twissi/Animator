@@ -29,9 +29,14 @@ public class TextDisplayBuffer extends DisplayBuffer {
 		int col = 0;
 		for (char c : text.toCharArray()) {
 			int[] animationBytes = FontUtil.getMinimumBytesForChar(c);
-			for (int i = 0; i < animationBytes.length; i++) {
+			for (int i = 0; i < DisplayBuffer.COLUMNS; i++) {
 				for (int bit = 0; bit < 7; bit++) {
-					data[i + DisplayBuffer.COLUMNS * col][bit] = (animationBytes[i] & (int)Math.pow(2, bit)) != 0;
+					if (i < animationBytes.length) {
+						data[i + DisplayBuffer.COLUMNS * col][bit] = (animationBytes[i] & (int)Math.pow(2, bit)) != 0;
+					} else {
+						// clear all bits after the last column from the font
+						data[i + DisplayBuffer.COLUMNS * col][bit] = false;
+					}
 				}
 			}
 			col++;
