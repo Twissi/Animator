@@ -10,6 +10,10 @@ public class MixedDisplayBuffer extends DisplayBuffer {
 		this.stringValue = value;
 	}
 
+	public MixedDisplayBuffer() {
+		this.stringValue = "";
+	}
+
 	public String getStringValue() {
 		return stringValue;
 	}
