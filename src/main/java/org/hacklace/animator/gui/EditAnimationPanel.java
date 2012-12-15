@@ -9,7 +9,7 @@ import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.enums.Delay;
 import org.hacklace.animator.enums.Speed;
 
-public class EditAnimationPanel extends JPanel implements OptionsObserver {
+public class EditAnimationPanel extends JPanel implements OptionsObserver, LedObserver {
 	private static final long serialVersionUID = -5137928768652375360L;
 	private AnimationOptionsPanel optionsPanel;
 	private LedPanel prevLedPanel; // display of the previous frame
@@ -37,6 +37,7 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver {
 		prevLedPanel.setEnabled(false);
 		ledPanelPanel.add(prevLedPanel);
 		ledPanel = new LedPanel(AnimatorGui.ROWS, AnimatorGui.COLUMNS);
+		ledPanel.addObserver(this);
 		ledPanelPanel.add(ledPanel);
 		nextLedPanel = new LedPanel(AnimatorGui.ROWS, AnimatorGui.COLUMNS);
 		nextLedPanel.setEnabled(false);
@@ -142,4 +143,8 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver {
 		AnimatorGui.getInstance().setCurrentTabIndex(0);
 	}
 	
+	public void onLedChange(int row, int column, boolean newValue) {
+		// System.out.println("LED Changed: " + row + "/" + column + " to " + newValue);
+		bufferRef.setValueAt(column + bufferRef.getStepWidth() * currentPosition, row, newValue);
+	}
 }

@@ -11,15 +11,18 @@ public class Led extends JButton implements LedInterface {
 	public final int row;
 	public final int column;
 	protected boolean on;
+	private LedObserver observer;
 
 	public void set() {
 		on = true;
 		setBackground(Color.BLACK);
+		observer.onLedChange(row, column, true);
 	}
 
 	public void unset() {
 		on = false;
 		setBackground(Color.WHITE);
+		observer.onLedChange(row, column, false);
 	}
 
 	public void toggle() {
@@ -42,11 +45,12 @@ public class Led extends JButton implements LedInterface {
 		return column;
 	}
 
-	public Led(int row, int column) {
+	public Led(int row, int column, LedObserver o) {
 		setOpaque(true);
 		setBackground(Color.WHITE);
 		this.row = row;
 		this.column = column;
+		this.observer = o;
 	}
 
 }

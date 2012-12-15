@@ -40,6 +40,10 @@ public abstract class DisplayBuffer implements Cloneable {
 	public boolean getValueAt(int x, int y) {
 		return data[x][y];
 	}
+	
+	public void setValueAt(int x, int y, boolean value) {
+		data[x][y] = value;
+	}
 
 	public int getStepWidth() {
 		return statusByte.getStepWidth().getValue();

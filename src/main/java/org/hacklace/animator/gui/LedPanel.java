@@ -1,13 +1,15 @@
 package org.hacklace.animator.gui;
 
 import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
 
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.Grid;
 
-public class LedPanel extends JPanel {
+public class LedPanel extends JPanel implements LedObserver {
 
 	private static final long serialVersionUID = 3966890869284361505L;
 
@@ -16,6 +18,8 @@ public class LedPanel extends JPanel {
 
 	private Led[][] buttons;
 	private Grid grid;
+	
+	private List<LedObserver> observerList;
 
 	public LedPanel(int rows, int columns) {
 		this.ROWS = rows;
@@ -23,6 +27,7 @@ public class LedPanel extends JPanel {
 
 		buttons = new Led[COLUMNS][ROWS];
 		grid = new Grid(ROWS, COLUMNS);
+		observerList = new ArrayList<LedObserver>();
 
 		initComponents();
 		setVisible(true);
@@ -38,6 +43,9 @@ public class LedPanel extends JPanel {
 		} else {
 			buttons[column][row].unset();
 		}
+		for (LedObserver o: observerList) {
+			o.onLedChange(row, column, val);
+		}
 	}
 
 	private void initComponents() {
@@ -46,7 +54,7 @@ public class LedPanel extends JPanel {
 
 		for (int row = 0; row < ROWS; row++) {
 			for (int column = 0; column < COLUMNS; column++) {
-				Led b = new Led(row, column);
+				Led b = new Led(row, column, this);
 				b.addActionListener(new ToggleLedActionListener(grid, b));
 				buttons[column][row] = b;
 				add(b);
@@ -71,6 +79,20 @@ public class LedPanel extends JPanel {
 			}
 		}
 	}
+	
+	public void addObserver(LedObserver o) {
+		observerList.add(o);
+	}
+	
+	/**
+	 * This bubbles the change events from leds to the ledPanel's registered observers
+	 */
+	public void onLedChange(int row, int column, boolean newValue) {
+		for (LedObserver o: observerList) {
+			o.onLedChange(row, column, newValue);
+		}
+	}
+
 
 //	public static void main(String[] args) throws InterruptedException {
 //		JFrame f = new JFrame("Test");
