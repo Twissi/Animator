@@ -109,7 +109,7 @@ public class AnimatorGui extends JFrame {
 						.getSource();
 				int index = sourceTabbedPane.getSelectedIndex();
 				if (index > 0) {
-					new FileActions.StartEditAction()
+					new AnimationListActions.StartEditAction()
 							.actionPerformed(new ActionEvent(this,
 									ActionEvent.ACTION_FIRST, "Edit"));
 				}

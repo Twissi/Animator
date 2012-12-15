@@ -28,7 +28,7 @@ public class HomePanel extends JPanel {
 		add(new JButton(new AnimationListActions.RemoveAction()));
 		add(new JButton(new AnimationListActions.MoveUpAction()));
 		add(new JButton(new AnimationListActions.MoveDownAction()));
-		add(new JButton(new FileActions.StartEditAction()));
+		add(new JButton(new AnimationListActions.StartEditAction()));
 	}
 	
 	/**
