@@ -218,7 +218,7 @@ public class FontUtil {
 		int countNonEmptyColumns = 0;
 		for (int i=0; i<5; i++) { 
 			if (fiveAnimationBytes[i] != 0x80) 
-				countNonEmptyColumns = i;	
+				countNonEmptyColumns = i + 1;	
 		}
 		int[] newAnimationBytes = new int[countNonEmptyColumns];
 		for (int i=0; i<countNonEmptyColumns; i++) {

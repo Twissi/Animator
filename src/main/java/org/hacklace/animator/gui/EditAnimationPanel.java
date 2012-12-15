@@ -59,7 +59,7 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 	public void copyBufferToPanel(int position, LedPanel panel) {
 		for (int x=0; x<DisplayBuffer.COLUMNS; x++) {
 			for (int y=0; y<DisplayBuffer.ROWS; y++) {
-				panel.setLed(y, x, bufferRef.getValueAt(x + bufferRef.getStepWidth() * position, y));
+				panel.setLed(y, x, bufferRef.getValueAt(x + DisplayBuffer.COLUMNS * position, y));
 			}
 		}
 	}
