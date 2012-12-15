@@ -133,7 +133,8 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 	}
 	
 	public void onPositionChanged(int newPosition) {
-		// TODO ... bufferRef.setPosition...
+		// ignore the event if we don't have a valid buffer yet
+		if (bufferRef == null) return;
 		currentPosition = newPosition;
 		setFromDisplayBuffer(bufferRef, false);
 	}
