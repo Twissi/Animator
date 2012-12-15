@@ -28,7 +28,12 @@ public class TextDisplayBuffer extends DisplayBuffer {
 	public void setText(String text) {
 		this.text = text;
 		for (char c : text.toCharArray()) {
-			FontUtil.getFiveBytesForChar(c); // TODO byte to boolean array, set data	
+			int[] animationBytes = FontUtil.getFiveBytesForChar(c);
+			for (int i = 0; i < animationBytes.length; i++) {
+				for (int bit = 0; bit < 7; bit++) {
+					data[i][bit] = (animationBytes[i] & (int)Math.pow(2, bit)) != 0;
+				}
+			}
 		}
 
 	}
