@@ -125,6 +125,8 @@ public class AnimatorGui extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(400, 700);
 
+		pack();
+
 	}
 
 	public HacklaceConfigManager getHacklaceConfigManager() {
