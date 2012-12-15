@@ -26,6 +26,10 @@ public class HacklaceConfigManager {
 	public HacklaceConfigManager() {
 		list = new ArrayList<DisplayBuffer>();
 	}
+	
+	public void clear() {
+		list.clear();
+	}
 
 	public void readFile(File file) throws IllegalHacklaceConfigFileException,
 			IOException {
