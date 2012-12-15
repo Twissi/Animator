@@ -94,7 +94,16 @@ public class HomePanel extends JPanel {
 	}
 	
 	public void add(DisplayBuffer s) {
-		int index = animationList.getSelectedIndex();
+		add(s, true);
+	}
+	
+	public void add(DisplayBuffer s, boolean atEnd) {
+		int index;
+		if (atEnd) {
+			 index = animationListData.getSize() - 1;
+		} else {
+			index = animationList.getSelectedIndex();
+		}
 		animationListData.add(index + 1, s);
 		animationList.setSelectedIndex(index + 1);
 		animationList.ensureIndexIsVisible(index + 1);
