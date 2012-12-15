@@ -6,15 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.hacklace.animator.enums.Delay;
+import org.hacklace.animator.enums.Direction;
 import org.hacklace.animator.enums.Speed;
 
 public class AnimationOptionsPanel extends JPanel implements ChangeListener {
@@ -22,6 +25,9 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 	private JSlider speedSlider;
 	private JSlider delaySlider;
 	private JSlider positionSlider;
+	private JRadioButton directionUni;
+	private JRadioButton directionBi;
+	private ButtonGroup directionButtons;
 	private List<OptionsObserver> observerList;
 	
 	public AnimationOptionsPanel() {
@@ -30,9 +36,30 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 		initComponents();
 	}
 	
-	public void setOptions(int speed, int delay) {
+	private JPanel createDirectionPanel() {
+		JPanel directionPanel = new JPanel();
+		directionPanel.add(new JLabel("Direction:"));
+		directionButtons = new ButtonGroup();
+		directionUni = new JRadioButton("Unidirectional");
+		directionUni.addChangeListener(this);
+		directionButtons.add(directionUni);
+		directionPanel.add(directionUni);
+		directionBi = new JRadioButton("Bidirectional");
+		directionBi.addChangeListener(this);
+		directionButtons.add(directionBi);
+		directionPanel.add(directionBi);
+		return directionPanel;
+	}
+	
+	
+	public void setOptions(int speed, int delay, int direction) {
 		speedSlider.setValue(speed);
 		delaySlider.setValue(delay);
+		if (direction == 0) {
+			directionUni.setSelected(true);
+		} else {
+			directionBi.setSelected(true);
+		}
 	}
 	
 	public void setPosition(int position) {
@@ -63,6 +90,14 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 				int position = ((JSlider)e.getSource()).getValue();
 				o.onPositionChanged(position);
 			}
+		} else if (e.getSource().equals(directionUni) || e.getSource().equals(directionBi)) {
+			for (OptionsObserver o: observerList) {
+				if (directionUni.isSelected()) {
+					o.onDirectionChanged(Direction.FORWARD);
+				} else {
+					o.onDirectionChanged(Direction.BIDIRECTIONAL);
+				}
+			}
 		}
 	}
 
@@ -89,6 +124,7 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 		delaySlider.setMinorTickSpacing(1);
 		delaySlider.addChangeListener(this);
 		add(delaySlider);
+		add(createDirectionPanel());
 		add(new JLabel("Frame:"));
 		positionSlider = new JSlider(
 				SwingConstants.HORIZONTAL, 
