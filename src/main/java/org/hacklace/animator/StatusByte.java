@@ -98,10 +98,11 @@ public class StatusByte implements Cloneable {
 	}
 
 	public void setDirection(Direction direction) {
-		int bit7 = direction.getValue() >> 7;
-		int mask = bit7 | 0x7F; // 0111 1111
+		int bit7 = direction.getValue() << 7;
+		// clear bit 7
+		this.bits &= 0x7F; // 0111 1111
 		// set first bit (bit 7) to the desired value, leave rest unchanged
-		this.bits |= mask;		
+		this.bits |= bit7;		
 	}
 	
 	public void setDelay(Delay delay) {
