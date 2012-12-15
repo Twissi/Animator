@@ -156,11 +156,19 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 		}
 		// set speed and delay
 		optionsPanel.setOptions(buffer.getSpeed().getValue(), buffer.getDelay().getValue(), buffer.getDirection().getValue());
+		switchMode(buffer.getAnimationType());
+	}
+	
+	public void switchMode(AnimationType animationType) {
 		// treat text buffers different from graphics buffers
-		if (buffer.getAnimationType() == AnimationType.TEXT) {
+		if (bufferRef.getAnimationType() == AnimationType.TEXT) {
 			ledPanel.setEnabled(false);
 			editTextPanel.setVisible(true);
-			editTextField.setText(((TextDisplayBuffer)buffer).getText());
+			String text = ((TextDisplayBuffer)bufferRef).getText();
+			// note: conditional to prevent the cursor jumping
+			if (!editTextField.getText().equals(text)) {
+				editTextField.setText(text);
+			}
 		} else {
 			ledPanel.setEnabled(true);
 			editTextPanel.setVisible(false);
