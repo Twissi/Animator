@@ -103,7 +103,7 @@ public class AnimatorGui extends JFrame {
 
 		// tabs
 		tabs = new JTabbedPane();
-		homePanel = new HomePanel();
+		homePanel = new HomePanel(hacklaceConfigManager, this);
 		tabs.addTab("Home", null, homePanel, "Home");
 		editAnimationPanel = new EditAnimationPanel();
 		tabs.addTab("Edit(Animation)", null, editAnimationPanel, "Edit");
@@ -113,7 +113,7 @@ public class AnimatorGui extends JFrame {
 						.getSource();
 				int index = sourceTabbedPane.getSelectedIndex();
 				if (index > 0) {
-					new AnimationListActions.StartEditAction()
+					new AnimationListActions.StartEditAction(homePanel, hacklaceConfigManager, AnimatorGui.this)
 							.actionPerformed(new ActionEvent(this,
 									ActionEvent.ACTION_FIRST, "Edit"));
 				}

@@ -4,6 +4,13 @@ import org.hacklace.animator.enums.AnimationType;
 
 public class MixedDisplayBuffer extends DisplayBuffer {
 
+	@Override
+	public String toString() {
+		return "Mixed Animation " + stringValue;
+	}
+
+
+
 	protected String stringValue;
 
 	public MixedDisplayBuffer(String value) {

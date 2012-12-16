@@ -108,24 +108,29 @@ public class HacklaceConfigManager {
 		list.add(buffer);
 	}
 
-	public void addTextDisplayBuffer() {
+	public TextDisplayBuffer addTextDisplayBuffer() {
 		TextDisplayBuffer tdb = new TextDisplayBuffer();
 		addDisplayBuffer(tdb);
+		return tdb;
 	}
 
-	public void addGraphicDisplayBuffer() {
+	public GraphicDisplayBuffer addGraphicDisplayBuffer() {
 		GraphicDisplayBuffer gdb = new GraphicDisplayBuffer();
 		addDisplayBuffer(gdb);
+		return gdb;
 	}
 
-	public void addReferenceDisplayBuffer() {
+	public ReferenceDisplayBuffer addReferenceDisplayBuffer() {
 		ReferenceDisplayBuffer rdb = new ReferenceDisplayBuffer('A');
 		addDisplayBuffer(rdb);
+		return rdb;
 	}
 	
-	public void addMixedDisplayBuffer() {
+	public MixedDisplayBuffer addMixedDisplayBuffer() {
 		MixedDisplayBuffer mdb = new MixedDisplayBuffer();
 		addDisplayBuffer(mdb);
+		return mdb;
+		
 	}
 
 	public void deleteDisplayBuffer(int index) {

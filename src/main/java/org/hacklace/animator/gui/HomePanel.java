@@ -9,6 +9,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 
 public class HomePanel extends JPanel {
@@ -17,18 +18,19 @@ public class HomePanel extends JPanel {
 	JList<DisplayBuffer> animationList;
 	DefaultListModel<DisplayBuffer> animationListData;
 
-	public HomePanel() {
+
+	public HomePanel(HacklaceConfigManager hacklaceConfigManager, AnimatorGui animatorGui) {
 		animationListData = new DefaultListModel<DisplayBuffer>();
 		animationList = new JList<DisplayBuffer>(animationListData);
 		JScrollPane animationListScrollPane = new JScrollPane(animationList);
 		animationListScrollPane.setPreferredSize(new Dimension(400, 200));
 		add(animationListScrollPane);
 		
-		add(new JButton(new AnimationListActions.AddAction()));
-		add(new JButton(new AnimationListActions.RemoveAction()));
-		add(new JButton(new AnimationListActions.MoveUpAction()));
-		add(new JButton(new AnimationListActions.MoveDownAction()));
-		add(new JButton(new AnimationListActions.StartEditAction()));
+		add(new JButton(new AnimationListActions.AddAction(this, hacklaceConfigManager)));
+		add(new JButton(new AnimationListActions.RemoveAction(this, hacklaceConfigManager)));
+		add(new JButton(new AnimationListActions.MoveUpAction(this, hacklaceConfigManager)));
+		add(new JButton(new AnimationListActions.MoveDownAction(this, hacklaceConfigManager)));
+		add(new JButton(new AnimationListActions.StartEditAction(this, hacklaceConfigManager, animatorGui)));
 	}
 	
 	/**
