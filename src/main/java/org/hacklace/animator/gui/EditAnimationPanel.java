@@ -23,6 +23,7 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 	private AnimationOptionsPanel optionsPanel;
 	private JPanel editTextPanel;
 	private JTextField editTextField;
+	private JTextField rawInputTextField;
 	private LedPanel prevLedPanel; // display of the previous frame
 	private LedPanel ledPanel; // display/edit of the current frame
 	private LedPanel nextLedPanel; // display of the next frame
@@ -38,6 +39,7 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 		add(optionsPanel);
 		add(createLedPanelPanel());
 		add(createEditTextPanel());
+		add(createRawInputPanel());
 		reset();
 		optionsPanel.addObserver(this);
 	}
@@ -94,6 +96,33 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 		});
 		editTextPanel.add(editTextField);
 		return editTextPanel;
+	}
+	
+	public JPanel createRawInputPanel() {
+		JPanel rawInputPanel = new JPanel();
+		JLabel label = new JLabel("Raw data:");
+		rawInputPanel.add(label);
+		rawInputTextField = new JTextField(DisplayBuffer.getNumGrids());
+		rawInputTextField.addKeyListener(new KeyListener() {
+			private void updateText() {
+				((TextDisplayBuffer)bufferRef).setText(rawInputTextField.getText());
+				setFromDisplayBuffer(bufferRef, false);
+			}
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				updateText();
+			}
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				updateText();
+			}
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				updateText();
+			}
+		});
+		rawInputPanel.add(rawInputTextField);
+		return rawInputPanel;
 	}
 	
 	/* see note below...
@@ -169,6 +198,9 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 			// note: conditional to prevent the cursor jumping
 			if (!editTextField.getText().equals(text)) {
 				editTextField.setText(text);
+			}
+			if (!rawInputTextField.getText().equals(text)) {
+				rawInputTextField.setText(text);
 			}
 		} else {
 			ledPanel.setEnabled(true);
