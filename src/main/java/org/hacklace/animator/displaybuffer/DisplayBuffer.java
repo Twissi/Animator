@@ -1,5 +1,7 @@
 package org.hacklace.animator.displaybuffer;
 
+import org.hacklace.animator.ConversionUtil;
+import org.hacklace.animator.IllegalHacklaceConfigFileException;
 import org.hacklace.animator.StatusByte;
 import org.hacklace.animator.enums.AnimationType;
 import org.hacklace.animator.enums.Delay;
@@ -166,5 +168,91 @@ public abstract class DisplayBuffer implements Cloneable {
 	 */
 	public static int getNumGrids() {
 		return MAX_COLUMNS / COLUMNS;
+	}
+	
+	/**
+	 * 
+	 * @param cfgLine
+	 * @param lineNumber
+	 * @return a DisplayBuffer for the input line, or null for $00, (the last
+	 *         line)
+	 * @throws IllegalHacklaceConfigFileException
+	 */
+	public static DisplayBuffer createBufferFromLine(String cfgLine,
+			int lineNumber)
+			throws IllegalHacklaceConfigFileException {
+		String statusByteString = cfgLine.substring(0, 3);
+		StatusByte statusByte = new StatusByte(statusByteString, lineNumber);
+		if (statusByte.isEOF()) {
+			return null;
+		}
+		
+		// text or graphic animation?
+		StepWidth stepWidth = statusByte.getStepWidth();
+		DisplayBuffer buffer = null;
+		String restOfLine = cfgLine.substring(4);
+		if (restOfLine.startsWith("~")) {
+			char letter = restOfLine.charAt(1);
+			ReferenceDisplayBuffer referenceDisplayBuffer = new ReferenceDisplayBuffer(
+					letter);
+	
+			buffer = referenceDisplayBuffer;
+		} else if (stepWidth == StepWidth.ONE) {
+			TextDisplayBuffer textDisplayBuffer = new TextDisplayBuffer(
+					restOfLine);
+			buffer = textDisplayBuffer;
+		} else if (restOfLine.startsWith("$FF")) {
+			GraphicDisplayBuffer graphicDisplayBuffer = new GraphicDisplayBuffer();
+			byte[] aniBytes = ConversionUtil.createByteArrayFromString(
+					restOfLine.substring(4, restOfLine.length() - 4),
+					lineNumber); // cut off $FF in beginning and end
+			graphicDisplayBuffer.setDataFromBytes(aniBytes);
+			buffer = graphicDisplayBuffer;
+		} else {
+			MixedDisplayBuffer mixedDisplayBuffer = new MixedDisplayBuffer(
+					restOfLine);
+			buffer = mixedDisplayBuffer;
+		}
+		assert (buffer != null);
+		buffer.setDirection(statusByte.getDirection());
+		buffer.setSpeed(statusByte.getSpeed());
+		buffer.setStepWidth(stepWidth);
+		buffer.setDelay(statusByte.getDelay());
+		return buffer;
+	}
+	
+	/**
+	 * Generates the raw string used in config files
+	 * @return the raw string used in config files
+	 */
+	public String getRawString() {
+		StatusByte statusByte = getStatusByte();
+		StringBuilder stringBuilder = new StringBuilder();
+		String statusByteString = ConversionUtil.convertByteToString(statusByte
+				.getByte());
+		stringBuilder.append(statusByteString).append(",");
+		AnimationType animationType = getAnimationType();
+		if (animationType == AnimationType.TEXT) {
+			TextDisplayBuffer textDisplayBuffer = (TextDisplayBuffer) this;
+			stringBuilder.append(textDisplayBuffer.getText());
+		} else if (animationType == AnimationType.GRAPHIC) {
+			GraphicDisplayBuffer graphicDisplayBuffer = (GraphicDisplayBuffer) this;
+			byte[] columns = graphicDisplayBuffer.getColumnsAsBytes();
+			stringBuilder.append("$FF ");
+			for (byte column : columns) {
+				stringBuilder.append(ConversionUtil.convertByteToString(column))
+						.append(" ");
+			}
+			stringBuilder.append("$FF,");
+		} else if (animationType == AnimationType.REFERENCE) {
+			ReferenceDisplayBuffer referenceDisplayBuffer = (ReferenceDisplayBuffer) this;
+			stringBuilder.append("~").append(
+					referenceDisplayBuffer.getLetter());
+		} else {
+			MixedDisplayBuffer mixedDisplayBuffer = (MixedDisplayBuffer) this;
+			stringBuilder.append(mixedDisplayBuffer.getStringValue());
+		}
+		stringBuilder.append("\n");
+		return stringBuilder.toString();
 	}
 }

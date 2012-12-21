@@ -16,8 +16,6 @@ import org.hacklace.animator.displaybuffer.GraphicDisplayBuffer;
 import org.hacklace.animator.displaybuffer.MixedDisplayBuffer;
 import org.hacklace.animator.displaybuffer.ReferenceDisplayBuffer;
 import org.hacklace.animator.displaybuffer.TextDisplayBuffer;
-import org.hacklace.animator.enums.AnimationType;
-import org.hacklace.animator.enums.StepWidth;
 
 public class HacklaceConfigManager {
 
@@ -46,7 +44,7 @@ public class HacklaceConfigManager {
 					// ignore empty lines (especially at end of file)
 					continue loop;
 				}
-				DisplayBuffer displayBuffer = HacklaceConfigManager.createBufferFromLine(cfgLine,
+				DisplayBuffer displayBuffer = DisplayBuffer.createBufferFromLine(cfgLine,
 						lineNumber);
 				if (displayBuffer != null /* $00 = EOF */) {
 					list.add(displayBuffer);
@@ -68,34 +66,7 @@ public class HacklaceConfigManager {
 			out = new BufferedWriter(fw);
 
 			for (DisplayBuffer displayBuffer : this.list) {
-				StatusByte statusByte = displayBuffer.getStatusByte();
-				StringBuilder stringBuilder = new StringBuilder();
-				String statusByteString = ConversionUtil.convertByteToString(statusByte
-						.getByte());
-				stringBuilder.append(statusByteString).append(",");
-				AnimationType animationType = displayBuffer.getAnimationType();
-				if (animationType == AnimationType.TEXT) {
-					TextDisplayBuffer textDisplayBuffer = (TextDisplayBuffer) displayBuffer;
-					stringBuilder.append(textDisplayBuffer.getText());
-				} else if (animationType == AnimationType.GRAPHIC) {
-					GraphicDisplayBuffer graphicDisplayBuffer = (GraphicDisplayBuffer) displayBuffer;
-					byte[] columns = graphicDisplayBuffer.getColumnsAsBytes();
-					stringBuilder.append("$FF ");
-					for (byte column : columns) {
-						stringBuilder.append(ConversionUtil.convertByteToString(column))
-								.append(" ");
-					}
-					stringBuilder.append("$FF,");
-				} else if (animationType == AnimationType.REFERENCE) {
-					ReferenceDisplayBuffer referenceDisplayBuffer = (ReferenceDisplayBuffer) displayBuffer;
-					stringBuilder.append("~").append(
-							referenceDisplayBuffer.getLetter());
-				} else {
-					MixedDisplayBuffer mixedDisplayBuffer = (MixedDisplayBuffer) displayBuffer;
-					stringBuilder.append(mixedDisplayBuffer.getStringValue());
-				}
-				stringBuilder.append("\n");
-				out.write(stringBuilder.toString());
+				out.write(displayBuffer.getRawString());
 			}
 			out.write("$00,");
 		} finally {
@@ -181,55 +152,5 @@ public class HacklaceConfigManager {
 		return list.get(index);
 	}
 
-	/**
-	 * 
-	 * @param cfgLine
-	 * @param lineNumber
-	 * @return a DisplayBuffer for the input line, or null for $00, (the last
-	 *         line)
-	 * @throws IllegalHacklaceConfigFileException
-	 */
-	protected static DisplayBuffer createBufferFromLine(String cfgLine,
-			int lineNumber)
-			throws IllegalHacklaceConfigFileException {
-		String statusByteString = cfgLine.substring(0, 3);
-		StatusByte statusByte = new StatusByte(statusByteString, lineNumber);
-		if (statusByte.isEOF()) {
-			return null;
-		}
-		
-		// text or graphic animation?
-		StepWidth stepWidth = statusByte.getStepWidth();
-		DisplayBuffer buffer = null;
-		String restOfLine = cfgLine.substring(4);
-		if (restOfLine.startsWith("~")) {
-			char letter = restOfLine.charAt(1);
-			ReferenceDisplayBuffer referenceDisplayBuffer = new ReferenceDisplayBuffer(
-					letter);
-	
-			buffer = referenceDisplayBuffer;
-		} else if (stepWidth == StepWidth.ONE) {
-			TextDisplayBuffer textDisplayBuffer = new TextDisplayBuffer(
-					restOfLine);
-			buffer = textDisplayBuffer;
-		} else if (restOfLine.startsWith("$FF")) {
-			GraphicDisplayBuffer graphicDisplayBuffer = new GraphicDisplayBuffer();
-			byte[] aniBytes = ConversionUtil.createByteArrayFromString(
-					restOfLine.substring(4, restOfLine.length() - 4),
-					lineNumber); // cut off $FF in beginning and end
-			graphicDisplayBuffer.setDataFromBytes(aniBytes);
-			buffer = graphicDisplayBuffer;
-		} else {
-			MixedDisplayBuffer mixedDisplayBuffer = new MixedDisplayBuffer(
-					restOfLine);
-			buffer = mixedDisplayBuffer;
-		}
-		assert (buffer != null);
-		buffer.setDirection(statusByte.getDirection());
-		buffer.setSpeed(statusByte.getSpeed());
-		buffer.setStepWidth(stepWidth);
-		buffer.setDelay(statusByte.getDelay());
-		return buffer;
-	}
 
 }
