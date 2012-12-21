@@ -1,16 +1,21 @@
 package org.hacklace.animator.gui;
 
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import org.hacklace.animator.HacklaceConfigManager;
+import org.hacklace.animator.IllegalHacklaceConfigFileException;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.TextDisplayBuffer;
 import org.hacklace.animator.enums.AnimationType;
@@ -103,25 +108,26 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 		JLabel label = new JLabel("Raw data:");
 		rawInputPanel.add(label);
 		rawInputTextField = new JTextField(DisplayBuffer.getNumGrids());
-		rawInputTextField.addKeyListener(new KeyListener() {
-			private void updateText() {
-				((TextDisplayBuffer)bufferRef).setText(rawInputTextField.getText());
+		rawInputTextField.setText("");
+		rawInputPanel.add(rawInputTextField);
+		JButton button = new JButton("Apply");
+		button.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String rawString = rawInputTextField.getText().trim();
+				try {
+					DisplayBuffer tmp = DisplayBuffer.createBufferFromLine(rawString, 0);
+					// it worked without error, we can now switch buffers
+					bufferRef = tmp;
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null,
+							"Invalid raw string supplied. Message: " + ex.toString(),
+							"Error", JOptionPane.ERROR_MESSAGE);
+				}
 				setFromDisplayBuffer(bufferRef, false);
 			}
-			@Override
-			public void keyPressed(KeyEvent arg0) {
-				updateText();
-			}
-			@Override
-			public void keyReleased(KeyEvent arg0) {
-				updateText();
-			}
-			@Override
-			public void keyTyped(KeyEvent arg0) {
-				updateText();
-			}
 		});
-		rawInputPanel.add(rawInputTextField);
+		rawInputPanel.add(button);
 		return rawInputPanel;
 	}
 	
@@ -199,12 +205,13 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 			if (!editTextField.getText().equals(text)) {
 				editTextField.setText(text);
 			}
-			if (!rawInputTextField.getText().equals(text)) {
-				rawInputTextField.setText(text);
-			}
 		} else {
 			ledPanel.setEnabled(true);
 			editTextPanel.setVisible(false);
+		}
+		String rawString = bufferRef.getRawString();
+		if (!rawInputTextField.getText().equals(rawString)) {
+			rawInputTextField.setText(rawString);
 		}
 	}
 	
@@ -258,5 +265,6 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 	public void onLedChange(int row, int column, boolean newValue) {
 		// System.out.println("LED Changed: " + row + "/" + column + " to " + newValue);
 		bufferRef.setValueAt(column + DisplayBuffer.COLUMNS * currentPosition, row, newValue);
+		rawInputTextField.setText(bufferRef.getRawString());
 	}
 }
