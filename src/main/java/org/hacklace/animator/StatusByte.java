@@ -115,10 +115,11 @@ public class StatusByte implements Cloneable {
 	}
 
 	public void setStepWidth(StepWidth stepWidth) {
-		int bit3 = stepWidth.getValue() >> 3;
-		int mask = bit3 | 0xF7; // 1111 0111
+		int bit3 = stepWidth.getBit() << 3;
+		// clear bit
+		this.bits &= 0xF7; // 1111 0111
 		// set bit 3 to the desired value, leave rest unchanged
-		this.bits |= mask;
+		this.bits |= bit3;
 	}
 
 	public void setSpeed(Speed speed) {

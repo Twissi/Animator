@@ -26,7 +26,7 @@ public enum StepWidth {
 	 * @return
 	 */
 	public byte getStepWidthAsByte() {
-		return (byte) (this.bit >> 3);
+		return (byte) (this.bit << 3);
 	}
 	
 	/**
