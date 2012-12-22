@@ -27,6 +27,8 @@ import org.hacklace.animator.enums.Speed;
 public class EditAnimationPanel extends JPanel implements OptionsObserver,
 		LedObserver {
 	private static final long serialVersionUID = -5137928768652375360L;
+	
+	private static final int VIRTUAL_KEYS_PER_ROW = 15;
 	private AnimationOptionsPanel optionsPanel;
 	private JPanel editTextPanel;
 	private JPanel virtualKeyboardPanel;
@@ -57,6 +59,7 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 
 	private JPanel createVirtualKeyboardPanel() {
 		virtualKeyboardPanel = new JPanel();
+		virtualKeyboardPanel.setLayout(new GridLayout(0, 1));
 		ActionListener virtualKeyboardListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -76,11 +79,23 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 		int numButtons = FontUtil.HIGHEST_SPECIAL_INDEX
 				- FontUtil.LOWEST_SPECIAL_INDEX + 1;
 		VirtualKeyboardButton[] buttons = new VirtualKeyboardButton[numButtons];
+		int numKeyboardRows = numButtons / VIRTUAL_KEYS_PER_ROW + 1;
+		JPanel[] keyboardRows = new JPanel[numKeyboardRows];
+		for (int i = 0; i < keyboardRows.length; i++) {
+			keyboardRows[i] = new JPanel();
+		}
+		int currentRow = -1;
 		for (int i = 0; i < numButtons; i++) {
+			if (i % VIRTUAL_KEYS_PER_ROW == 0) {
+				currentRow++;
+			}
 			buttons[i] = new VirtualKeyboardButton(i
 					+ FontUtil.LOWEST_SPECIAL_INDEX);
 			buttons[i].addActionListener(virtualKeyboardListener);
-			virtualKeyboardPanel.add(buttons[i]);
+			keyboardRows[currentRow].add(buttons[i]);
+		}
+		for (int i = 0; i < keyboardRows.length; i++) {
+			virtualKeyboardPanel.add(keyboardRows[i]);
 		}
 		return virtualKeyboardPanel;
 	}
