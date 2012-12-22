@@ -76,8 +76,8 @@ public class FileChooser extends JFileChooser {
 		int state = this.showSaveDialog(contentPane);
 		if (state == JFileChooser.APPROVE_OPTION) {
 			file = this.getSelectedFile();
-			if (!(this.getSelectedFile().getName().toLowerCase().endsWith(".mid"))) {
-				file = new File(file.getPath() + ".mid");
+			if (!(this.getSelectedFile().getName().toLowerCase().endsWith(".hack"))) {
+				file = new File(file.getPath() + ".hack");
 			}
 			return file;
 		} else {
