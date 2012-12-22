@@ -13,19 +13,23 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.text.BadLocationException;
 
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
+import org.hacklace.animator.displaybuffer.FontUtil;
 import org.hacklace.animator.displaybuffer.TextDisplayBuffer;
 import org.hacklace.animator.enums.AnimationType;
 import org.hacklace.animator.enums.Delay;
 import org.hacklace.animator.enums.Direction;
 import org.hacklace.animator.enums.Speed;
 
-public class EditAnimationPanel extends JPanel implements OptionsObserver, LedObserver {
+public class EditAnimationPanel extends JPanel implements OptionsObserver,
+		LedObserver {
 	private static final long serialVersionUID = -5137928768652375360L;
 	private AnimationOptionsPanel optionsPanel;
 	private JPanel editTextPanel;
+	private JPanel virtualKeyboardPanel;
 	private JTextField editTextField;
 	private JTextField rawInputTextField;
 	private LedPanel prevLedPanel; // display of the previous frame
@@ -34,8 +38,10 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 	private JLabel prevLabel;
 	private JLabel currentLabel;
 	private JLabel nextLabel;
-	private DisplayBuffer bufferRef; // our internal temporary displayBuffer for editing
-	private DisplayBuffer origBuffer; // keep a reference to the original buffer for overwriting on save
+	private DisplayBuffer bufferRef; // our internal temporary displayBuffer for
+										// editing
+	private DisplayBuffer origBuffer; // keep a reference to the original buffer
+										// for overwriting on save
 	private int currentPosition = 0;
 
 	public EditAnimationPanel() {
@@ -43,13 +49,45 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 		add(optionsPanel);
 		add(createLedPanelPanel());
 		add(createEditTextPanel());
+		add(createVirtualKeyboardPanel());
 		add(createRawInputPanel());
 		reset();
 		optionsPanel.addObserver(this);
 	}
-	
+
+	private JPanel createVirtualKeyboardPanel() {
+		virtualKeyboardPanel = new JPanel();
+		ActionListener virtualKeyboardListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				VirtualKeyboardButton vk = (VirtualKeyboardButton) arg0
+						.getSource();
+				String chars = vk.getString();
+				int pos = editTextField.getCaretPosition();
+				try {
+					editTextField.getDocument().insertString(pos, chars, null);
+					((TextDisplayBuffer) bufferRef).setText(editTextField.getText());
+					setFromDisplayBuffer(bufferRef, false);
+				} catch (BadLocationException e) {
+					// just do nothing, this should not happen anyways
+				}
+			}
+		};
+		int numButtons = FontUtil.HIGHEST_SPECIAL_INDEX
+				- FontUtil.LOWEST_SPECIAL_INDEX + 1;
+		VirtualKeyboardButton[] buttons = new VirtualKeyboardButton[numButtons];
+		for (int i = 0; i < numButtons; i++) {
+			buttons[i] = new VirtualKeyboardButton(i
+					+ FontUtil.LOWEST_SPECIAL_INDEX);
+			buttons[i].addActionListener(virtualKeyboardListener);
+			virtualKeyboardPanel.add(buttons[i]);
+		}
+		return virtualKeyboardPanel;
+	}
+
 	/**
 	 * Generate the panel of LedPanels for the edit view
+	 * 
 	 * @return
 	 */
 	private JPanel createLedPanelPanel() {
@@ -76,23 +114,26 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 		ledPanelPanel.add(nextLabel);
 		return ledPanelPanel;
 	}
-	
+
 	private JPanel createEditTextPanel() {
 		editTextPanel = new JPanel();
 		editTextField = new JTextField(DisplayBuffer.getNumGrids());
 		editTextField.addKeyListener(new KeyListener() {
 			private void updateText() {
-				((TextDisplayBuffer)bufferRef).setText(editTextField.getText());
+				((TextDisplayBuffer) bufferRef).setText(editTextField.getText());
 				setFromDisplayBuffer(bufferRef, false);
 			}
+
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 				updateText();
 			}
+
 			@Override
 			public void keyReleased(KeyEvent arg0) {
 				updateText();
 			}
+
 			@Override
 			public void keyTyped(KeyEvent arg0) {
 				updateText();
@@ -101,7 +142,7 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 		editTextPanel.add(editTextField);
 		return editTextPanel;
 	}
-	
+
 	public JPanel createRawInputPanel() {
 		JPanel rawInputPanel = new JPanel();
 		JLabel label = new JLabel("Raw data:");
@@ -115,13 +156,16 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 			public void actionPerformed(ActionEvent arg0) {
 				String rawString = rawInputTextField.getText().trim();
 				try {
-					DisplayBuffer tmp = DisplayBuffer.createBufferFromLine(rawString, 0);
+					DisplayBuffer tmp = DisplayBuffer.createBufferFromLine(
+							rawString, 0);
 					// it worked without error, we can now switch buffers
 					bufferRef = tmp;
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null,
-							"Invalid raw string supplied. Message: " + ex.toString(),
-							"Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(
+							null,
+							"Invalid raw string supplied. Message: "
+									+ ex.toString(), "Error",
+							JOptionPane.ERROR_MESSAGE);
 				}
 				setFromDisplayBuffer(bufferRef, false);
 			}
@@ -129,49 +173,46 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 		rawInputPanel.add(button);
 		return rawInputPanel;
 	}
-	
-	/* see note below...
-	public void copyGridDataToPanel(Grid grid, LedPanel panel) {
-		for (int x=0; x<DisplayBuffer.COLUMNS; x++) {
-			for (int y=0; y<DisplayBuffer.ROWS; y++) {
-				panel.setLed(y, x, grid.getData()[x][y]);
-			}
-		}
-	}
-	*/
-	
+
+	/*
+	 * see note below... public void copyGridDataToPanel(Grid grid, LedPanel
+	 * panel) { for (int x=0; x<DisplayBuffer.COLUMNS; x++) { for (int y=0;
+	 * y<DisplayBuffer.ROWS; y++) { panel.setLed(y, x, grid.getData()[x][y]); }
+	 * } }
+	 */
+
 	public void copyBufferToPanel(int position, LedPanel panel) {
-		for (int x=0; x<DisplayBuffer.COLUMNS; x++) {
-			for (int y=0; y<DisplayBuffer.ROWS; y++) {
-				panel.setLed(y, x, bufferRef.getValueAt(x + DisplayBuffer.COLUMNS * position, y));
+		for (int x = 0; x < DisplayBuffer.COLUMNS; x++) {
+			for (int y = 0; y < DisplayBuffer.ROWS; y++) {
+				panel.setLed(
+						y,
+						x,
+						bufferRef.getValueAt(x + DisplayBuffer.COLUMNS
+								* position, y));
 			}
 		}
 	}
-	
+
 	public void setFromDisplayBuffer(DisplayBuffer buffer, boolean clone) {
 		if (clone) {
-			// clone the display buffer so we can edit and cancel without changing the original data
+			// clone the display buffer so we can edit and cancel without
+			// changing the original data
 			bufferRef = buffer.clone();
 			origBuffer = buffer;
 		}
-		/* The buffer implementation is not working or at least very much unintuitive.
-		 * I'll implement direct access to the data until I've talked to the team.
-		 * TODO: Fix this!
-		// get the previous, current and next grid for displaying. Use null if we're at the start or end of an animation
-		Grid prevGrid = (buffer.getPosition() > 0) ? buffer.getGrid(-1) : null;
-		Grid grid = buffer.getCurrent();
-		Grid nextGrid = (buffer.getPosition() < buffer.getNumGrids() - 1) ? buffer.getNext() : null;
-		if (prevGrid != null) {
-			copyGridDataToPanel(prevGrid, prevLedPanel);
-		} else {
-			prevLedPanel.clear();
-		}
-		copyGridDataToPanel(grid, ledPanel);
-		if (nextGrid != null) {
-			copyGridDataToPanel(nextGrid, nextLedPanel);
-		} else {
-			nextLedPanel.clear();
-		}
+		/*
+		 * The buffer implementation is not working or at least very much
+		 * unintuitive. I'll implement direct access to the data until I've
+		 * talked to the team. TODO: Fix this! // get the previous, current and
+		 * next grid for displaying. Use null if we're at the start or end of an
+		 * animation Grid prevGrid = (buffer.getPosition() > 0) ?
+		 * buffer.getGrid(-1) : null; Grid grid = buffer.getCurrent(); Grid
+		 * nextGrid = (buffer.getPosition() < buffer.getNumGrids() - 1) ?
+		 * buffer.getNext() : null; if (prevGrid != null) {
+		 * copyGridDataToPanel(prevGrid, prevLedPanel); } else {
+		 * prevLedPanel.clear(); } copyGridDataToPanel(grid, ledPanel); if
+		 * (nextGrid != null) { copyGridDataToPanel(nextGrid, nextLedPanel); }
+		 * else { nextLedPanel.clear(); }
 		 */
 		if (currentPosition > 0) {
 			copyBufferToPanel(currentPosition - 1, prevLedPanel);
@@ -190,16 +231,18 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 			nextLabel.setText("-");
 		}
 		// set speed and delay
-		optionsPanel.setOptions(buffer.getSpeed().getValue(), buffer.getDelay().getValue(), buffer.getDirection().getValue());
+		optionsPanel.setOptions(buffer.getSpeed().getValue(), buffer.getDelay()
+				.getValue(), buffer.getDirection().getValue());
 		switchMode();
 	}
-	
+
 	public void switchMode() {
 		// treat text buffers different from graphics buffers
 		if (bufferRef.getAnimationType() == AnimationType.TEXT) {
 			ledPanel.setEnabled(false);
 			editTextPanel.setVisible(true);
-			String text = ((TextDisplayBuffer)bufferRef).getText();
+			virtualKeyboardPanel.setVisible(true);
+			String text = ((TextDisplayBuffer) bufferRef).getText();
 			// note: conditional to prevent the cursor jumping
 			if (!editTextField.getText().equals(text)) {
 				editTextField.setText(text);
@@ -207,63 +250,70 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver, LedOb
 		} else {
 			ledPanel.setEnabled(true);
 			editTextPanel.setVisible(false);
+			virtualKeyboardPanel.setVisible(false);
 		}
 		String rawString = bufferRef.getRawString();
 		if (!rawInputTextField.getText().equals(rawString)) {
 			rawInputTextField.setText(rawString);
 		}
 	}
-	
+
 	public void reset() {
 		currentPosition = 0;
 		optionsPanel.setPosition(currentPosition);
 	}
-	
+
 	/**
 	 * Switch our temporary DisplayBuffer to the original passed on startEdit
-	 * The buffer must not be touched anymore after this because we switch them(!)
+	 * The buffer must not be touched anymore after this because we switch
+	 * them(!)
 	 */
 	public void saveBuffer() {
-		HacklaceConfigManager cm = AnimatorGui.getInstance().getHacklaceConfigManager();
-		List <DisplayBuffer> list = cm.getList();
+		HacklaceConfigManager cm = AnimatorGui.getInstance()
+				.getHacklaceConfigManager();
+		List<DisplayBuffer> list = cm.getList();
 		list.set(list.indexOf(origBuffer), bufferRef);
 		bufferRef = null;
 		origBuffer = null;
-		// refresh list on home page because it contains the text for TextDisplayBuffers
+		// refresh list on home page because it contains the text for
+		// TextDisplayBuffers
 		AnimatorGui.getInstance().getHomePanel().updateList(cm.getList(), true);
 	}
-	
+
 	public void setMaxPosition(int maxPosition) {
 		optionsPanel.setMaxPosition(maxPosition);
 	}
-	
+
 	public void onSpeedChanged(Speed newSpeed) {
 		bufferRef.setSpeed(newSpeed);
 	}
-	
+
 	public void onDelayChanged(Delay newDelay) {
 		bufferRef.setDelay(newDelay);
 	}
-	
+
 	public void onPositionChanged(int newPosition) {
 		// ignore the event if we don't have a valid buffer yet
-		if (bufferRef == null) return;
+		if (bufferRef == null)
+			return;
 		currentPosition = newPosition;
 		setFromDisplayBuffer(bufferRef, false);
 	}
-	
+
 	public void onDirectionChanged(Direction newDirection) {
 		bufferRef.setDirection(newDirection);
 	}
-	
+
 	public void onSaveAnimation() {
 		saveBuffer();
 		AnimatorGui.getInstance().setCurrentTabIndex(0);
 	}
-	
+
 	public void onLedChange(int row, int column, boolean newValue) {
-		// System.out.println("LED Changed: " + row + "/" + column + " to " + newValue);
-		bufferRef.setValueAt(column + DisplayBuffer.COLUMNS * currentPosition, row, newValue);
+		// System.out.println("LED Changed: " + row + "/" + column + " to " +
+		// newValue);
+		bufferRef.setValueAt(column + DisplayBuffer.COLUMNS * currentPosition,
+				row, newValue);
 		rawInputTextField.setText(bufferRef.getRawString());
 	}
 }
