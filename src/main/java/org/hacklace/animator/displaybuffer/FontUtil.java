@@ -162,6 +162,9 @@ public class FontUtil {
 	 * @return the five animation bytes (including trailing empty columns)
 	 */
 	public static int[] getFiveBytesForIndex(int index) {
+		if (index - LOWEST_INDEX < 0 || index - LOWEST_INDEX > HACKLACE_CHARSET.length) {
+			return HACKLACE_CHARSET['?'-LOWEST_INDEX];
+		}
 		return HACKLACE_CHARSET[index-LOWEST_INDEX];
 	}
 	
@@ -196,7 +199,7 @@ public class FontUtil {
 	 * @return returns the five animation bytes for € for ^A etc.
 	 */
 	public static int[] getFiveBytesForSpecial(String special) {
-		assert(special.length() == 2);
+		if (special.length() != 2) return getFiveBytesForIndex('?');
 		char c = special.charAt(1);
 		return getFiveBytesForSpecial(c);
 	}
