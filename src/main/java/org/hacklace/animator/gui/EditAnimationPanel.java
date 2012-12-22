@@ -1,6 +1,7 @@
 package org.hacklace.animator.gui;
 
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -13,7 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.text.BadLocationException;
+import javax.swing.text.*;
 
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
@@ -27,7 +28,7 @@ import org.hacklace.animator.enums.Speed;
 public class EditAnimationPanel extends JPanel implements OptionsObserver,
 		LedObserver {
 	private static final long serialVersionUID = -5137928768652375360L;
-	
+
 	private static final int VIRTUAL_KEYS_PER_ROW = 15;
 	private AnimationOptionsPanel optionsPanel;
 	private JPanel editTextPanel;
@@ -69,7 +70,8 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 				int pos = editTextField.getCaretPosition();
 				try {
 					editTextField.getDocument().insertString(pos, chars, null);
-					((TextDisplayBuffer) bufferRef).setText(editTextField.getText());
+					((TextDisplayBuffer) bufferRef).setText(editTextField
+							.getText());
 					setFromDisplayBuffer(bufferRef, false);
 				} catch (BadLocationException e) {
 					// just do nothing, this should not happen anyways
@@ -133,6 +135,25 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 	private JPanel createEditTextPanel() {
 		editTextPanel = new JPanel();
 		editTextField = new JTextField(DisplayBuffer.getNumGrids());
+		PlainDocument doc = new PlainDocument();
+		doc.setDocumentFilter(new DocumentFilter() {
+			public void insertString(FilterBypass fb, int offs, String str,
+					AttributeSet a) throws BadLocationException {
+				if ((fb.getDocument().getLength() + str.length()) <= DisplayBuffer.getNumGrids())
+					super.insertString(fb, offs, str, a);
+				else
+					Toolkit.getDefaultToolkit().beep();
+			}
+
+			public void replace(FilterBypass fb, int offs, int length,
+					String str, AttributeSet a) throws BadLocationException {
+				if ((fb.getDocument().getLength() + str.length() - length) <= DisplayBuffer.getNumGrids())
+					super.replace(fb, offs, length, str, a);
+				else
+					Toolkit.getDefaultToolkit().beep();
+			}
+		});
+		editTextField.setDocument(doc);
 		editTextField.addKeyListener(new KeyListener() {
 			private void updateText() {
 				((TextDisplayBuffer) bufferRef).setText(editTextField.getText());
