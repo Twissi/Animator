@@ -10,7 +10,6 @@ import javax.swing.SwingUtilities;
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.IllegalHacklaceConfigFileException;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.io.File;
