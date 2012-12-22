@@ -175,8 +175,7 @@ public class AnimationListActions {
 		public void actionPerformed(ActionEvent e) {
 			int index = homePanel.getSelectedIndex();
 			if (index == -1 || index >= configManager.getList().size()) {
-				// Stay at first tab and do nothing if no valid selection
-				animatorGui.setCurrentTabIndex(0);
+				// do nothing if no valid selection
 				return;
 			}
 			DisplayBuffer displayBuffer = configManager.getList().get(index);
@@ -190,7 +189,7 @@ public class AnimationListActions {
 				panel.reset();
 				panel.setFromDisplayBuffer(displayBuffer, true);
 				panel.setMaxPosition(DisplayBuffer.getNumGrids() - 1);
-				animatorGui.setCurrentTabIndex(1);
+				animatorGui.setEditMode(true);
 				break;
 			case REFERENCE:
 				int result = askForReference(((ReferenceDisplayBuffer)displayBuffer).getLetter());
@@ -204,8 +203,6 @@ public class AnimationListActions {
 								null,
 								"This type of animation cannot be edited or is not supported yet.",
 								"Error", JOptionPane.ERROR_MESSAGE);
-				// required if edit mode was started by clicking tabs:
-				animatorGui.setCurrentTabIndex(0);
 				break;
 			}
 		}

@@ -30,7 +30,7 @@ public class HomePanel extends JPanel {
 		c.anchor = GridBagConstraints.NORTHWEST;
 		c.gridx = 0;
 		c.gridy = 0;
-		c.gridheight = GridBagConstraints.REMAINDER;
+		c.gridheight = 3;
 		JScrollPane animationListScrollPane = new JScrollPane(animationList);
 		animationListScrollPane.setPreferredSize(new Dimension(400, 200));
 		add(animationListScrollPane, c);
@@ -41,10 +41,6 @@ public class HomePanel extends JPanel {
 		add(new JButton(new AnimationListActions.StartEditAction(this, hacklaceConfigManager, animatorGui)), c);
 		add(new JButton(new AnimationListActions.MoveUpAction(this, hacklaceConfigManager)), c);
 		add(new JButton(new AnimationListActions.MoveDownAction(this, hacklaceConfigManager)), c);
-		// add spacer
-		JLabel spacer = new JLabel();
-		spacer.setPreferredSize(new Dimension(1, 20));
-		add(spacer, c);
 		add(new JButton(new AnimationListActions.RemoveAction(this, hacklaceConfigManager)), c);
 		c.fill = GridBagConstraints.NONE;
 		c.gridx = 0;

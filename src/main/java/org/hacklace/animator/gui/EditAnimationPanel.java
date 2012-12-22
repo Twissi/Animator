@@ -386,7 +386,7 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 
 	public void onSaveAnimation() {
 		saveBuffer();
-		AnimatorGui.getInstance().setCurrentTabIndex(0);
+		AnimatorGui.getInstance().setEditMode(false);
 	}
 
 	public void onLedChange(int row, int column, boolean newValue) {

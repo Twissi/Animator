@@ -5,16 +5,14 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.IllegalHacklaceConfigFileException;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
+import java.awt.FlowLayout;
 import java.io.File;
 import java.io.IOException;
 
@@ -31,7 +29,6 @@ public class AnimatorGui extends JFrame {
 
 	private HomePanel homePanel;
 	private EditAnimationPanel editAnimationPanel;
-	private JTabbedPane tabs;
 
 	private HacklaceConfigManager hacklaceConfigManager;
 
@@ -50,14 +47,6 @@ public class AnimatorGui extends JFrame {
 				loadFile(fileName);
 			}
 		});
-	}
-
-	public int getCurrentTabIndex() {
-		return tabs.getSelectedIndex();
-	}
-
-	public void setCurrentTabIndex(int index) {
-		tabs.setSelectedIndex(index);
 	}
 
 	public File getCurrentFile() {
@@ -81,7 +70,8 @@ public class AnimatorGui extends JFrame {
 	}
 
 	private void initComponents() {
-
+		// Note: need to set layout or the second panel will overwrite the first
+		setLayout(new FlowLayout());
 		JMenuBar menuBar = new JMenuBar();
 		// file menu
 		JMenu menuFile = new JMenu("File");
@@ -101,36 +91,30 @@ public class AnimatorGui extends JFrame {
 		// 
 		setJMenuBar(menuBar);
 
-		// tabs
-		tabs = new JTabbedPane();
 		homePanel = new HomePanel(hacklaceConfigManager, this);
-		tabs.addTab("Home", null, homePanel, "Home");
+		add(homePanel);
 		editAnimationPanel = new EditAnimationPanel();
-		tabs.addTab("Edit(Animation)", null, editAnimationPanel, "Edit");
-		ChangeListener changeListener = new ChangeListener() {
-			public void stateChanged(ChangeEvent changeEvent) {
-				JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent
-						.getSource();
-				int index = sourceTabbedPane.getSelectedIndex();
-				if (index > 0) {
-					new AnimationListActions.StartEditAction(homePanel, hacklaceConfigManager, AnimatorGui.this)
-							.actionPerformed(new ActionEvent(this,
-									ActionEvent.ACTION_FIRST, "Edit"));
-				}
-			}
-		};
-		tabs.addChangeListener(changeListener);
-
-		// Add components
-		add(tabs);
-
+		add(editAnimationPanel);
+		
+		setEditMode(false);
+		
 		// Set stuff
 		setTitle(title);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setPreferredSize(new Dimension(900, 600));
+		setPreferredSize(new Dimension(900, 500));
 
 		pack();
 
+	}
+	
+	public void setEditMode(boolean editMode) {
+		if (editMode) {
+			editAnimationPanel.setVisible(true);
+			homePanel.setVisible(false);
+		} else {
+			editAnimationPanel.setVisible(false);
+			homePanel.setVisible(true);
+		}
 	}
 
 	public HacklaceConfigManager getHacklaceConfigManager() {
