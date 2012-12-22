@@ -1,16 +1,44 @@
 package org.hacklace.animator.gui;
 
 import java.awt.event.ActionEvent;
+import java.util.Arrays;
 
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
+import org.hacklace.animator.displaybuffer.ReferenceDisplayBuffer;
 import org.hacklace.animator.enums.AnimationType;
 
 public class AnimationListActions {
 
+	private static String[] makeStringArray(char start, char end) {
+		String[] result = new String[end - start + 1];
+		for (int i = 0; i < end - start + 1; i++) {
+			result[i] = "" + (char)(start + i);
+		}
+		return result;
+	}
+
+	public static int askForReference(char selectedLetter) {
+		String[] options = makeStringArray('A', 'F');
+		String letter = "" + selectedLetter;
+		int selected = Arrays.asList(options).indexOf(letter);
+		if (selected == -1) selected = 0; // if not in list anymore or invalid, preselect 'A'
+		String result = (String) JOptionPane
+				.showInputDialog(
+						AnimatorGui.getInstance(),
+						"Please select the number of the referenced animation. A is the first, B the second, etc.",
+						"Animation number",
+						JOptionPane.QUESTION_MESSAGE, null, options,
+						options[selected]);
+		if (result == null)
+			return -1; // cancel
+		return result.charAt(0);
+		
+	}
+	
 	public static class AddAction extends AbstractAction {
 		private static final long serialVersionUID = 1859804910358647446L;
 		private HomePanel homePanel;
@@ -36,18 +64,20 @@ public class AnimationListActions {
 
 			DisplayBuffer buffer = null;
 			switch (result) {
-				case GRAPHIC :
-					buffer = configManager.addGraphicDisplayBuffer();
-					break;
-				case TEXT :
-					buffer = configManager.addTextDisplayBuffer();
-					break;
-				case REFERENCE :
-					buffer = configManager.addReferenceDisplayBuffer();
-					break;
-				case MIXED :
-					buffer = configManager.addMixedDisplayBuffer();
-					break;
+			case GRAPHIC:
+				buffer = configManager.addGraphicDisplayBuffer();
+				break;
+			case TEXT:
+				buffer = configManager.addTextDisplayBuffer();
+				break;
+			case REFERENCE:
+				int letter = askForReference('A');
+				if (letter == -1) return; // cancel
+				buffer = configManager.addReferenceDisplayBuffer((char)letter);
+				break;
+			case MIXED:
+				buffer = configManager.addMixedDisplayBuffer();
+				break;
 			}
 			homePanel.add(buffer);
 			homePanel.updateList(configManager.getList(), true);
@@ -150,16 +180,25 @@ public class AnimationListActions {
 				return;
 			}
 			DisplayBuffer displayBuffer = configManager.getList().get(index);
-			// Start at first frame
-			displayBuffer.rewind();
-			EditAnimationPanel panel = animatorGui.getEditAnimationPanel();
-			panel.reset();
-			panel.setFromDisplayBuffer(displayBuffer, true);
-			panel.setMaxPosition(DisplayBuffer.getNumGrids() - 1);
-			if (displayBuffer.getAnimationType() == AnimationType.TEXT
-					|| displayBuffer.getAnimationType() == AnimationType.GRAPHIC) {
+			switch (displayBuffer.getAnimationType()) {
+			case TEXT:
+				// same as graphic, no break!
+			case GRAPHIC:
+				// Start at first frame
+				displayBuffer.rewind();
+				EditAnimationPanel panel = animatorGui.getEditAnimationPanel();
+				panel.reset();
+				panel.setFromDisplayBuffer(displayBuffer, true);
+				panel.setMaxPosition(DisplayBuffer.getNumGrids() - 1);
 				animatorGui.setCurrentTabIndex(1);
-			} else {
+				break;
+			case REFERENCE:
+				int result = askForReference(((ReferenceDisplayBuffer)displayBuffer).getLetter());
+				if (result == -1) return; // cancel
+				((ReferenceDisplayBuffer)displayBuffer).setLetter((char)result);
+				AnimatorGui.getInstance().getHomePanel().updateList(AnimatorGui.getInstance().getHacklaceConfigManager().getList(), true);
+				break;
+			case MIXED:
 				JOptionPane
 						.showMessageDialog(
 								null,
@@ -167,6 +206,7 @@ public class AnimationListActions {
 								"Error", JOptionPane.ERROR_MESSAGE);
 				// required if edit mode was started by clicking tabs:
 				animatorGui.setCurrentTabIndex(0);
+				break;
 			}
 		}
 	}

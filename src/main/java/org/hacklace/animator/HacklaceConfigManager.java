@@ -91,8 +91,8 @@ public class HacklaceConfigManager {
 		return gdb;
 	}
 
-	public ReferenceDisplayBuffer addReferenceDisplayBuffer() {
-		ReferenceDisplayBuffer rdb = new ReferenceDisplayBuffer('A');
+	public ReferenceDisplayBuffer addReferenceDisplayBuffer(char whichAnimation) {
+		ReferenceDisplayBuffer rdb = new ReferenceDisplayBuffer(whichAnimation);
 		addDisplayBuffer(rdb);
 		return rdb;
 	}
