@@ -95,6 +95,7 @@ public class MenuActions {
 		public void actionPerformed(ActionEvent e) {
 			FileChooser chooser = new FileChooser();
 			File saveAsFile = chooser.outputFile();
+			if (saveAsFile == null) return; // cancelled
 			AnimatorGui app = AnimatorGui.getInstance();
 			HacklaceConfigManager cm = app.getHacklaceConfigManager();
 			try {
@@ -117,6 +118,7 @@ public class MenuActions {
 		public void actionPerformed(ActionEvent e) {
 			FileChooser chooser = new FileChooser();
 			File openFile = chooser.inputFile();
+			if (openFile == null) return; // cancelled
 			AnimatorGui app = AnimatorGui.getInstance();
 			HacklaceConfigManager cm = app.getHacklaceConfigManager();
 			HomePanel homePanel = AnimatorGui.getInstance().getHomePanel();
