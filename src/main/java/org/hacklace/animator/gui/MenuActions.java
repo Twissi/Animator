@@ -2,6 +2,7 @@ package org.hacklace.animator.gui;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 
 import javax.swing.AbstractAction;
@@ -92,7 +93,18 @@ public class MenuActions {
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			doNothing(this.getClass());
+			FileChooser chooser = new FileChooser();
+			File saveAsFile = chooser.outputFile();
+			AnimatorGui app = AnimatorGui.getInstance();
+			HacklaceConfigManager cm = app.getHacklaceConfigManager();
+			try {
+				cm.writeFile(saveAsFile);
+				AnimatorGui.getInstance().setCurrentFile(saveAsFile);
+			} catch (IOException e1) {
+				JOptionPane.showMessageDialog(null, "Cannot write to file.",
+						"Error", JOptionPane.ERROR_MESSAGE);
+				AnimatorGui.getInstance().getHomePanel().reset();
+			}
 		}
 	}
 
@@ -129,7 +141,16 @@ public class MenuActions {
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			doNothing(this.getClass());
+			AnimatorGui app = AnimatorGui.getInstance();
+			HacklaceConfigManager cm = app.getHacklaceConfigManager();
+			if (app.getCurrentFile() != null) {
+				try {
+					cm.writeFile(app.getCurrentFile());
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null, "Cannot write to file.",
+							"Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
 		}
 	}
 
