@@ -22,7 +22,7 @@ public class VirtualKeyboardButton extends JButton {
 
 	public VirtualKeyboardButton(int index) {
 		super();
-		setPreferredSize(new Dimension(20, 20));
+		setPreferredSize(new Dimension(24, 24));
 		setFocusable(false);
 		imageIndex = index;
 		image = new BufferedImage(5, 7, BufferedImage.TYPE_INT_ARGB);
@@ -42,7 +42,7 @@ public class VirtualKeyboardButton extends JButton {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(image, 0, 0, getWidth() - 2, getHeight() - 2, 0, 0, 5, 7,
+		g.drawImage(image, 4, 4, getWidth() - 4, getHeight() - 4, 0, 0, 5, 7,
 				null);
 	}
 
