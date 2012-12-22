@@ -1,7 +1,5 @@
 package org.hacklace.animator.displaybuffer;
 
-import java.util.Arrays;
-
 import org.hacklace.animator.enums.AnimationType;
 
 public class TextDisplayBuffer extends DisplayBuffer {
