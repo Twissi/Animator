@@ -2,6 +2,7 @@ package org.hacklace.animator.gui;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.InputStream;
 
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
@@ -13,6 +14,24 @@ public class MenuActions {
 	protected static void doNothing(Class<? extends Object> clazz) {
 		System.out.println("Performing "+clazz.getSimpleName()+" - doesn't do anything right now");
 	}
+	
+	private static void loadResource(String fileName) {
+		AnimatorGui app = AnimatorGui.getInstance();
+		HacklaceConfigManager cm = app.getHacklaceConfigManager();
+		HomePanel homePanel = AnimatorGui.getInstance().getHomePanel();
+		try {
+			InputStream stream = AnimatorGui.getInstance().getClass().getResourceAsStream(fileName);
+			cm.clear();
+			cm.readStream(stream);
+			homePanel.clear();
+			homePanel.updateList(cm.getList(), false);
+			AnimatorGui.getInstance().setCurrentFile(null);
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(null, "Cannot read from file. Error: " + ex,
+					"Error", JOptionPane.ERROR_MESSAGE);
+			AnimatorGui.getInstance().getHomePanel().reset();
+		}
+	}
 
 	public static class LoadDefaultAction extends AbstractAction {
 
@@ -22,7 +41,7 @@ public class MenuActions {
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			doNothing(this.getClass());
+			loadResource("/Default_Konfiguration.txt");
 		}
 
 	}
@@ -31,12 +50,11 @@ public class MenuActions {
 
 		private static final long serialVersionUID = 5758517032413260605L;
 		public LoadExampleAction() {
-
 			super("Load example configuration");
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			doNothing(this.getClass());
+			loadResource("/example.cfg");
 		}
 
 	}
