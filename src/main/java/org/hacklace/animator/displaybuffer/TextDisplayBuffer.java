@@ -31,6 +31,7 @@ public class TextDisplayBuffer extends DisplayBuffer {
 	 * @param text
 	 */
 	public void setText(String text) {
+		clearData();
 		this.text = text;
 		int col = 0;
 		for (int i = 0; i < text.length(); i++) {

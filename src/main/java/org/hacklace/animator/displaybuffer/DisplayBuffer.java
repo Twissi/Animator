@@ -33,6 +33,14 @@ public abstract class DisplayBuffer implements Cloneable {
 		this.statusByte = statusByte;
 	}
 
+	protected void clearData() {
+		for (int x = 0; x < MAX_COLUMNS; x++) {
+			for (int y = 0; y < ROWS; y++) {
+				data[x][y] = false;
+			}
+		}
+	}
+	
 	/**
 	 * Top left corner is (0,0)
 	 * @param x right (column)
