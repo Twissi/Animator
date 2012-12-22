@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,17 +25,16 @@ public class HacklaceConfigManager {
 	public HacklaceConfigManager() {
 		list = new ArrayList<DisplayBuffer>();
 	}
-	
+
 	public void clear() {
 		list.clear();
 	}
 
-	public void readFile(File file) throws IllegalHacklaceConfigFileException,
-			IOException {
+	public void readStream(InputStream stream)
+			throws IllegalHacklaceConfigFileException, IOException {
+		DataInputStream in = new DataInputStream(stream);
 		BufferedReader br = null;
 		try {
-			FileInputStream fstream = new FileInputStream(file);
-			DataInputStream in = new DataInputStream(fstream);
 			br = new BufferedReader(new InputStreamReader(in));
 			String cfgLine;
 			int lineNumber = 0;
@@ -44,8 +44,8 @@ public class HacklaceConfigManager {
 					// ignore empty lines (especially at end of file)
 					continue loop;
 				}
-				DisplayBuffer displayBuffer = DisplayBuffer.createBufferFromLine(cfgLine,
-						lineNumber);
+				DisplayBuffer displayBuffer = DisplayBuffer
+						.createBufferFromLine(cfgLine, lineNumber);
 				if (displayBuffer != null /* $00 = EOF */) {
 					list.add(displayBuffer);
 				} else {
@@ -57,6 +57,11 @@ public class HacklaceConfigManager {
 				br.close();
 			}
 		}
+	}
+
+	public void readFile(File file) throws IOException, IllegalHacklaceConfigFileException {
+		FileInputStream fstream = new FileInputStream(file);
+		readStream(fstream);
 	}
 
 	public void writeFile(File file) throws IOException {
@@ -96,12 +101,12 @@ public class HacklaceConfigManager {
 		addDisplayBuffer(rdb);
 		return rdb;
 	}
-	
+
 	public MixedDisplayBuffer addMixedDisplayBuffer() {
 		MixedDisplayBuffer mdb = new MixedDisplayBuffer();
 		addDisplayBuffer(mdb);
 		return mdb;
-		
+
 	}
 
 	public void deleteDisplayBuffer(int index) {
@@ -151,6 +156,5 @@ public class HacklaceConfigManager {
 	public DisplayBuffer getDisplayBuffer(int index) {
 		return list.get(index);
 	}
-
 
 }
