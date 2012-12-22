@@ -127,7 +127,7 @@ public class AnimatorGui extends JFrame {
 		// Set stuff
 		setTitle(title);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setPreferredSize(new Dimension(600, 600));
+		setPreferredSize(new Dimension(900, 600));
 
 		pack();
 

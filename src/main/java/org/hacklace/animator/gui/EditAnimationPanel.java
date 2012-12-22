@@ -1,6 +1,9 @@
 package org.hacklace.animator.gui;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,8 +15,11 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.text.*;
 
 import org.hacklace.animator.HacklaceConfigManager;
@@ -31,13 +37,16 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 
 	private static final int VIRTUAL_KEYS_PER_ROW = 15;
 	private AnimationOptionsPanel optionsPanel;
+	private JPanel ledPanelPanel;
 	private JPanel editTextPanel;
 	private JPanel virtualKeyboardPanel;
+	private JPanel rawInputPanel;
 	private JTextField editTextField;
 	private JTextField rawInputTextField;
 	private LedPanel prevLedPanel; // display of the previous frame
 	private LedPanel ledPanel; // display/edit of the current frame
 	private LedPanel nextLedPanel; // display of the next frame
+	private JSlider positionSlider;
 	private JLabel prevLabel;
 	private JLabel currentLabel;
 	private JLabel nextLabel;
@@ -48,12 +57,29 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 	private int currentPosition = 0;
 
 	public EditAnimationPanel() {
+		ledPanelPanel = createLedPanelPanel();
+		editTextPanel = createEditTextPanel();
+		virtualKeyboardPanel = createVirtualKeyboardPanel();
+		rawInputPanel = createRawInputPanel();
 		optionsPanel = new AnimationOptionsPanel();
-		add(optionsPanel);
-		add(createLedPanelPanel());
-		add(createEditTextPanel());
-		add(createVirtualKeyboardPanel());
-		add(createRawInputPanel());
+		
+		setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.NORTHWEST;
+		c.insets = new Insets(5, 5, 5, 5);
+		// Left side: Options panel, spanning all rows at 0,0
+		c.gridheight = GridBagConstraints.REMAINDER;
+		add(optionsPanel, c);
+		// Right side, 4 rows, no spans
+		c.gridheight = 1;
+		c.gridx = 1;
+		add(ledPanelPanel, c);
+		c.gridy = GridBagConstraints.RELATIVE;
+		add(editTextPanel, c);
+		add(virtualKeyboardPanel, c);
+		add(rawInputPanel, c);
 		reset();
 		optionsPanel.addObserver(this);
 	}
@@ -61,6 +87,7 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 	private JPanel createVirtualKeyboardPanel() {
 		virtualKeyboardPanel = new JPanel();
 		virtualKeyboardPanel.setLayout(new GridLayout(0, 1));
+		virtualKeyboardPanel.add(new JLabel("Virtual Keyboard:"));
 		ActionListener virtualKeyboardListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -108,27 +135,56 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 	 * @return
 	 */
 	private JPanel createLedPanelPanel() {
-		GridLayout gridLayout = new GridLayout(2, 3);
-		gridLayout.setHgap(5);
 		JPanel ledPanelPanel = new JPanel();
-		ledPanelPanel.setLayout(gridLayout);
+		ledPanelPanel.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
 		// first row: 3 LedPanels
+		c.insets = new Insets(5, 5, 5, 5);
 		prevLedPanel = new LedPanel(AnimatorGui.ROWS, AnimatorGui.COLUMNS);
 		prevLedPanel.setEnabled(false);
-		ledPanelPanel.add(prevLedPanel);
+		c.gridx = 0;
+		ledPanelPanel.add(prevLedPanel, c);
 		ledPanel = new LedPanel(AnimatorGui.ROWS, AnimatorGui.COLUMNS);
 		ledPanel.addObserver(this);
-		ledPanelPanel.add(ledPanel);
+		c.gridx = 1;
+		ledPanelPanel.add(ledPanel, c);
 		nextLedPanel = new LedPanel(AnimatorGui.ROWS, AnimatorGui.COLUMNS);
 		nextLedPanel.setEnabled(false);
-		ledPanelPanel.add(nextLedPanel);
+		c.gridx = 2;
+		ledPanelPanel.add(nextLedPanel, c);
 		// second row: 3 labels for frame number
+		c.gridy = 1;
+		c.gridx = 0;
 		prevLabel = new JLabel("-", null, SwingConstants.CENTER);
-		ledPanelPanel.add(prevLabel);
+		ledPanelPanel.add(prevLabel, c);
 		currentLabel = new JLabel("-", null, SwingConstants.CENTER);
-		ledPanelPanel.add(currentLabel);
+		c.gridx = 1;
+		ledPanelPanel.add(currentLabel, c);
 		nextLabel = new JLabel("-", null, SwingConstants.CENTER);
-		ledPanelPanel.add(nextLabel);
+		c.gridx = 2;
+		ledPanelPanel.add(nextLabel, c);
+		// third row: One slider across all columns
+		c.gridy = 2;
+		c.gridx = 0;
+		c.gridwidth = 3;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		positionSlider = new JSlider(
+				SwingConstants.HORIZONTAL, 
+				1);
+		positionSlider.setPaintTicks(true);
+		positionSlider.setSnapToTicks(true);
+		positionSlider.setMinorTickSpacing(1);
+		positionSlider.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				// ignore the event if we don't have a valid buffer yet
+				if (bufferRef == null)
+					return;
+				currentPosition = ((JSlider)arg0.getSource()).getValue();
+				setFromDisplayBuffer(bufferRef, false);
+			}
+			});
+		ledPanelPanel.add(positionSlider, c);
 		return ledPanelPanel;
 	}
 
@@ -296,7 +352,7 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 
 	public void reset() {
 		currentPosition = 0;
-		optionsPanel.setPosition(currentPosition);
+		setPosition(currentPosition);
 	}
 
 	/**
@@ -316,24 +372,12 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 		AnimatorGui.getInstance().getHomePanel().updateList(cm.getList(), true);
 	}
 
-	public void setMaxPosition(int maxPosition) {
-		optionsPanel.setMaxPosition(maxPosition);
-	}
-
 	public void onSpeedChanged(Speed newSpeed) {
 		bufferRef.setSpeed(newSpeed);
 	}
 
 	public void onDelayChanged(Delay newDelay) {
 		bufferRef.setDelay(newDelay);
-	}
-
-	public void onPositionChanged(int newPosition) {
-		// ignore the event if we don't have a valid buffer yet
-		if (bufferRef == null)
-			return;
-		currentPosition = newPosition;
-		setFromDisplayBuffer(bufferRef, false);
 	}
 
 	public void onDirectionChanged(Direction newDirection) {
@@ -352,4 +396,13 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 				row, newValue);
 		rawInputTextField.setText(bufferRef.getRawString());
 	}
+	
+	public void setPosition(int position) {
+		positionSlider.setValue(position);
+	}
+	
+	public void setMaxPosition(int maxPosition) {
+		positionSlider.setMaximum(maxPosition);
+	}
+	
 }

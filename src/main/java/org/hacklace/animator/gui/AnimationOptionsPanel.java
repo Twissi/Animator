@@ -24,7 +24,6 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 	private static final long serialVersionUID = -2625306373507959134L;
 	private JSlider speedSlider;
 	private JSlider delaySlider;
-	private JSlider positionSlider;
 	private JRadioButton directionUni;
 	private JRadioButton directionBi;
 	private ButtonGroup directionButtons;
@@ -62,14 +61,6 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 		}
 	}
 	
-	public void setPosition(int position) {
-		positionSlider.setValue(position);
-	}
-	
-	public void setMaxPosition(int maxPosition) {
-		positionSlider.setMaximum(maxPosition);
-	}
-	
 	public void addObserver(OptionsObserver o) {
 		observerList.add(o);
 	}
@@ -84,11 +75,6 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 			for (OptionsObserver o: observerList) {
 				int intDelay = ((JSlider)e.getSource()).getValue();
 				o.onDelayChanged(Delay.fromInt(intDelay));
-			}
-		} else if (e.getSource().equals(positionSlider)) {
-			for (OptionsObserver o: observerList) {
-				int position = ((JSlider)e.getSource()).getValue();
-				o.onPositionChanged(position);
 			}
 		} else if (e.getSource().equals(directionUni) || e.getSource().equals(directionBi)) {
 			for (OptionsObserver o: observerList) {
@@ -125,15 +111,6 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 		delaySlider.addChangeListener(this);
 		add(delaySlider);
 		add(createDirectionPanel());
-		add(new JLabel("Frame:"));
-		positionSlider = new JSlider(
-				SwingConstants.HORIZONTAL, 
-				1);
-		positionSlider.setPaintTicks(true);
-		positionSlider.setSnapToTicks(true);
-		positionSlider.setMinorTickSpacing(1);
-		positionSlider.addChangeListener(this);
-		add(positionSlider);
 		JButton saveButton = new JButton(new SaveAnimationAction());
 		add(saveButton);
 		JButton cancelButton = new JButton(new CancelEditAction());
