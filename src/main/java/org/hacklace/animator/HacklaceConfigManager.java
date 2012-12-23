@@ -5,10 +5,12 @@ import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,8 @@ import org.hacklace.animator.displaybuffer.TextDisplayBuffer;
 
 public class HacklaceConfigManager {
 
+	public final static String HACKLACE_CHARSET = "ISO-8859-1";
+	
 	private List<DisplayBuffer> list;
 
 	public HacklaceConfigManager() {
@@ -35,7 +39,7 @@ public class HacklaceConfigManager {
 		DataInputStream in = new DataInputStream(stream);
 		BufferedReader br = null;
 		try {
-			br = new BufferedReader(new InputStreamReader(in));
+			br = new BufferedReader(new InputStreamReader(in, HACKLACE_CHARSET));
 			String cfgLine;
 			int lineNumber = 0;
 			loop: while ((cfgLine = br.readLine()) != null) {
@@ -65,10 +69,10 @@ public class HacklaceConfigManager {
 	}
 
 	public void writeFile(File file) throws IOException {
-		BufferedWriter out = null;
+		OutputStreamWriter out = null;
 		try {
-			FileWriter fw = new FileWriter(file);
-			out = new BufferedWriter(fw);
+			FileOutputStream fos = new FileOutputStream(file);
+			out = new OutputStreamWriter(fos, HACKLACE_CHARSET); 			
 			out.write(getRawString());
 		} finally {
 			if (out != null)

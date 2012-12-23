@@ -8,6 +8,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
@@ -92,8 +93,9 @@ public class MenuActions {
 			AnimatorGui app = AnimatorGui.getInstance();
 			HacklaceConfigManager cm = app.getHacklaceConfigManager();
 			FlashExporter flashExporter = new FlashExporter();
-			ByteArrayInputStream stream = new ByteArrayInputStream(cm.getRawString().getBytes());
+			ByteArrayInputStream stream;
 			try {
+				stream = new ByteArrayInputStream(cm.getRawString().getBytes(HacklaceConfigManager.HACKLACE_CHARSET));
 				flashExporter.write(stream);
 				JOptionPane.showMessageDialog(null, "Hacklace successfully flashed.",
 						"Flashed", JOptionPane.INFORMATION_MESSAGE);
