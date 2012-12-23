@@ -8,6 +8,7 @@ import gnu.io.UnsupportedCommOperationException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.PortUnreachableException;
 import java.util.Enumeration;
@@ -57,11 +58,15 @@ public class FlashExporter {
 	}
 	
 	public void write(File f) throws IOException, UnsupportedCommOperationException, PortInUseException {
+		FileInputStream fis = new FileInputStream(f);
+		write(fis);
+		fis.close();
+	}
+	
+	public void write(InputStream stream) throws IOException, UnsupportedCommOperationException, PortInUseException {
 		serialPort = initSerialPort( getPortIdentifier());
 		OutputStream serialOut = serialPort.getOutputStream();
 		
-		FileInputStream fis = new FileInputStream(f);
-				
 		serialOut.write( (byte) 27);
 
 		serialOut.write( (byte) 'H');
@@ -69,13 +74,12 @@ public class FlashExporter {
 		
 		
 		int i;
-		while( (  i = fis.read()) != -1 )  	 {
+		while( (  i = stream.read()) != -1 )  	 {
 			serialOut.write(i);
 		}
 		
 		serialOut.write( (byte) 27);
 		
-		fis.close();
 		serialOut.close();
 		serialPort.close();		
 		close();		
