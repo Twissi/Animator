@@ -69,15 +69,20 @@ public class HacklaceConfigManager {
 		try {
 			FileWriter fw = new FileWriter(file);
 			out = new BufferedWriter(fw);
-
-			for (DisplayBuffer displayBuffer : this.list) {
-				out.write(displayBuffer.getRawString());
-			}
-			out.write("$00,");
+			out.write(getRawString());
 		} finally {
 			if (out != null)
 				out.close();
 		}
+	}
+	
+	public String getRawString() {
+		StringBuilder stringBuilder = new StringBuilder();
+		for (DisplayBuffer displayBuffer : this.list) {
+			stringBuilder.append(displayBuffer.getRawString());
+		}
+		stringBuilder.append("$00,");
+		return stringBuilder.toString();
 	}
 
 	private void addDisplayBuffer(DisplayBuffer buffer) {

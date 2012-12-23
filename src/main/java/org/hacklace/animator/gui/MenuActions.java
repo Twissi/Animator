@@ -1,6 +1,10 @@
 package org.hacklace.animator.gui;
 
+import gnu.io.PortInUseException;
+import gnu.io.UnsupportedCommOperationException;
+
 import java.awt.event.ActionEvent;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +13,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
 import org.hacklace.animator.HacklaceConfigManager;
+import org.hacklace.animator.exporter.FlashExporter;
 
 public class MenuActions {
 	
@@ -84,7 +89,19 @@ public class MenuActions {
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			doNothing(this.getClass());
+			AnimatorGui app = AnimatorGui.getInstance();
+			HacklaceConfigManager cm = app.getHacklaceConfigManager();
+			FlashExporter flashExporter = new FlashExporter();
+			ByteArrayInputStream stream = new ByteArrayInputStream(cm.getRawString().getBytes());
+			try {
+				flashExporter.write(stream);
+				JOptionPane.showMessageDialog(null, "Hacklace successfully flashed.",
+						"Flashed", JOptionPane.INFORMATION_MESSAGE);
+			} catch (IOException | UnsupportedCommOperationException
+					| PortInUseException ex) {
+				JOptionPane.showMessageDialog(null, "Error flashing hacklace: " + ex,
+						"Error", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	}
 
