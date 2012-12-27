@@ -13,6 +13,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
 import org.hacklace.animator.HacklaceConfigManager;
+import org.hacklace.animator.exporter.BinExporter;
 import org.hacklace.animator.exporter.FlashExporter;
 
 public class MenuActions {
@@ -90,6 +91,45 @@ public class MenuActions {
 
 	}
 
+	public static class ExportBinAction extends AbstractAction {
+
+		private static final long serialVersionUID = 3972006266609060565L;
+
+		public ExportBinAction() {
+			super("Export .bin");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			FileChooser chooser = new FileChooser(".bin");
+			File saveAsFile = chooser.outputFile();
+			if (saveAsFile == null)
+				return; // cancelled
+			AnimatorGui app = AnimatorGui.getInstance();
+			HacklaceConfigManager cm = app.getHacklaceConfigManager();
+			BinExporter binExporter = new BinExporter();
+			ByteArrayInputStream stream = null;
+			try {
+				stream = new ByteArrayInputStream(cm.getRawString().getBytes(
+						HacklaceConfigManager.HACKLACE_CHARSET));
+				binExporter.write(stream, saveAsFile);
+			} // Java 7: (IOException | UnsupportedCommOperationException |
+				// PortInUseException ex)
+			catch (IOException ex) {
+				JOptionPane.showMessageDialog(null, "Error writing file: "
+						+ ex, "Error", JOptionPane.ERROR_MESSAGE);
+			}
+			if (stream != null) {
+				try {
+					stream.close();
+				} catch (IOException ex) {
+					JOptionPane.showMessageDialog(null, "Error closing stream: "
+							+ ex, "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		}
+	}
+
 	public static class FlashAction extends AbstractAction {
 
 		private static final long serialVersionUID = 3492735544537440621L;
@@ -135,7 +175,7 @@ public class MenuActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			FileChooser chooser = new FileChooser();
+			FileChooser chooser = new FileChooser(".hack");
 			File saveAsFile = chooser.outputFile();
 			if (saveAsFile == null)
 				return; // cancelled
@@ -161,7 +201,7 @@ public class MenuActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			FileChooser chooser = new FileChooser();
+			FileChooser chooser = new FileChooser(".hack");
 			File openFile = chooser.inputFile();
 			if (openFile == null)
 				return; // cancelled
