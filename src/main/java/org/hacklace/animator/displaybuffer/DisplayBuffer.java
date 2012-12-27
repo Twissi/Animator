@@ -263,4 +263,5 @@ public abstract class DisplayBuffer implements Cloneable {
 		stringBuilder.append("\n");
 		return stringBuilder.toString();
 	}
+
 }

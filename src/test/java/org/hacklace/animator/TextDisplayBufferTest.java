@@ -3,7 +3,6 @@ package org.hacklace.animator;
 import junit.framework.TestCase;
 
 import org.hacklace.animator.displaybuffer.Grid;
-import org.hacklace.animator.displaybuffer.TextDisplayBuffer;
 
 public class TextDisplayBufferTest extends TestCase {
 	
@@ -31,7 +30,7 @@ public class TextDisplayBufferTest extends TestCase {
 	
 	
 	public void testCurrent() {
-		TextDisplayBuffer tdb = new TextDisplayBuffer();
+		//TextDisplayBuffer tdb = new TextDisplayBuffer();
 		
 	}
 	

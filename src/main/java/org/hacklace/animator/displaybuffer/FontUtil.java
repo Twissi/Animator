@@ -162,8 +162,8 @@ public class FontUtil {
 	 * @return the five animation bytes (including trailing empty columns)
 	 */
 	public static int[] getFiveBytesForIndex(int index) {
-		if (index - LOWEST_INDEX < 0 || index - LOWEST_INDEX > HACKLACE_CHARSET.length) {
-			return HACKLACE_CHARSET['?'-LOWEST_INDEX];
+		if (index - LOWEST_INDEX < 0 || index - LOWEST_INDEX >= HACKLACE_CHARSET.length) {
+			return HACKLACE_CHARSET['?'-LOWEST_INDEX]; // display a question mark
 		}
 		return HACKLACE_CHARSET[index-LOWEST_INDEX];
 	}
