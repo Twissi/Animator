@@ -6,10 +6,8 @@ public class MixedDisplayBuffer extends DisplayBuffer {
 
 	@Override
 	public String toString() {
-		return "Mixed Animation " + stringValue;
+		return getAnimationType().getDescription() + " " + stringValue;
 	}
-
-
 
 	protected String stringValue;
 
@@ -28,8 +26,6 @@ public class MixedDisplayBuffer extends DisplayBuffer {
 	public void setStringValue(String stringValue) {
 		this.stringValue = stringValue;
 	}
-
-
 
 	@Override
 	public AnimationType getAnimationType() {

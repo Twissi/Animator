@@ -1,5 +1,7 @@
 package org.hacklace.animator.displaybuffer;
 
+import static org.hacklace.animator.ConversionUtil.convertAnimationByteTo7Booleans;
+
 import org.hacklace.animator.enums.AnimationType;
 
 public class GraphicDisplayBuffer extends DisplayBuffer {
@@ -30,28 +32,11 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 	public void setDataFromBytes(byte[] aniBytes) {
 		for (int column = 0; column < aniBytes.length; column++) {
 			byte aniByte = aniBytes[column];
-			this.data[column] = booleanArray7FromByte(aniByte);
+			this.data[column] = convertAnimationByteTo7Booleans(aniByte);
 		}
 		moveRight(); // set position to 5
 	}
 
-	/**
-	 * The first bit (bit 7) is assumed to be 0 (should be the case for
-	 * animation bytes)
-	 * 
-	 * @param bits
-	 * @return array with 7 booleans
-	 */
-	public static boolean[] booleanArray7FromByte(byte aniByte) {
-		byte mask = 64; // 0100 0000
-		boolean[] returnArray = new boolean[7];
-		for (int row = 0; row <= 6; row++) {
-			byte maskResult = (byte) (mask & aniByte);
-			returnArray[row] = ((maskResult != 0) ? true : false);
-			mask >>= 1;
-		}
-		return returnArray;
-	}
 
 	@Override
 	public AnimationType getAnimationType() {
@@ -89,7 +74,7 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 
 	@Override
 	public String toString() {
-		return "Grafische Animation";
+		return getAnimationType().getDescription();
 	}
 
 	public void setColumnRow(int column, int row, boolean value) {

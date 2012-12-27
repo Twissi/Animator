@@ -1,5 +1,9 @@
 package org.hacklace.animator.displaybuffer;
 
+import static org.hacklace.animator.ConversionUtil.convertAnimationByteTo7Booleans;
+import static org.hacklace.animator.ConversionUtil.convertStringToInt;
+import static org.hacklace.animator.ConversionUtil.isHexSequence;
+
 import org.hacklace.animator.enums.AnimationType;
 
 public class TextDisplayBuffer extends DisplayBuffer {
@@ -14,71 +18,94 @@ public class TextDisplayBuffer extends DisplayBuffer {
 	public TextDisplayBuffer(String text) {
 		super();
 		setText(text);
-			}
+	}
 
 	public String getText() {
 		return text;
 	}
-	
-	private boolean isEscape(char c) {
-		return (c == '^' || c == '~' || c == '$');
-	}
-	
+
 	/**
 	 * side effect: update data (bits/bytes)
+	 * 
 	 * @param text
 	 */
 	public void setText(String text) {
 		clearData();
 		this.text = text;
-		int col = 0;
-		for (int i = 0; i < text.length(); i++) {
-			int[] animationBytes;
+		int totalAnimationByteIndex = 0;
+		loopOverText: for (int i = 0; i < text.length(); i++) {
+			int[] oneToFiveAnimationBytes = new int[0]; // one to five bytes
 			char c = text.charAt(i);
-			if (isEscape(c)) {
-				// handle escape characters
+
+			// normal characters
+			if (c != '~' && c != '^' && c != '$') {
+				oneToFiveAnimationBytes = FontUtil.getMinimumBytesForChar(c);
+			}
+			// escape characters ~, &, $
+			else {
 				i++;
 				// ignore escape character at the end of the string
-				if (i > text.length() - 1) return;
+				if (i > text.length() - 1)
+					break loopOverText;
 				char next = text.charAt(i);
-				// escape for the character itself?
-				if (next == c) {
-					animationBytes = FontUtil.getMinimumBytesForChar(c);
-				} else {
+				// escape for the character itself? I.e. ~~ ^^ $$
+				if (next == c) { // Yes, ~~ ^^ $$
+					oneToFiveAnimationBytes = FontUtil
+							.getMinimumBytesForChar(c);
+				} else { // No, special chars or reference animation
 					switch (c) {
-					case '^':
-						animationBytes = FontUtil.getMinimumBytesForSpecial(next);
+					case '^': // (but not ^^) ^A for € etc.
+						oneToFiveAnimationBytes = FontUtil
+								.getMinimumBytesForSpecial(next);
 						break;
-					default:
-						// TODO A reference to an animation in a text animation... What do?
-						// For a non-fatal fallback, display the escape sequence instead...
-						i--;
-						c = text.charAt(i);
-						animationBytes = FontUtil.getMinimumBytesForChar(c);
-					}
-					
-				}
-			} else {
-				// normal character
-				animationBytes = FontUtil.getMinimumBytesForChar(c);
-			}
-			for (int byteNum = 0; byteNum < DisplayBuffer.COLUMNS; byteNum++) {
-				for (int bit = 0; bit < 7; bit++) {
-					if (byteNum < animationBytes.length) {
-						try {
-							data[byteNum + DisplayBuffer.COLUMNS * col][bit] = (animationBytes[byteNum] & (int)Math.pow(2, bit)) != 0;
-						} catch (ArrayIndexOutOfBoundsException ex) {
-							System.err.println("Error creating text buffer. col=" + col + " i=" + i + " c=" + c + " byteNum=" + byteNum);
+					case '$': // (but not $$) $80 for € etc.
+						String charSetIndexAsThreeCharString = "$" + next;
+						i++;
+						// ignore if end of string
+						if (i > text.length() - 1)
+							break loopOverText;
+						charSetIndexAsThreeCharString += text.charAt(i);
+						if (isHexSequence(charSetIndexAsThreeCharString)) {
+							int charSetIndex = convertStringToInt(charSetIndexAsThreeCharString);
+							oneToFiveAnimationBytes = FontUtil
+									.getMinimumBytesForIndex(charSetIndex);
+						} else {
+							// probably the user is in the process of typing
+							i--;
+							i--;
+							// temporarily just display the $
+							oneToFiveAnimationBytes = FontUtil
+									.getMinimumBytesForChar('$');
 						}
-					} else {
-						// clear all bits after the last column from the font
-						data[byteNum + DisplayBuffer.COLUMNS * col][bit] = false;
+						break;
+					case '~':
+						// TODO A reference to an animation in a text
+						// animation... What do?
+						// For a non-fatal fallback, display the escape sequence
+						// instead...
+						i--;
+						oneToFiveAnimationBytes = FontUtil
+								.getMinimumBytesForChar(c);
+						break;
 					}
 				}
 			}
-			col++;
+
+			for (int aniByte : oneToFiveAnimationBytes) {
+				boolean[] bits = convertAnimationByteTo7Booleans((byte) aniByte);
+				data[totalAnimationByteIndex] = bits;
+				totalAnimationByteIndex++;
+			} // end loop over one to five animation bytes
+
+		} // end loop over text
+
+		// clear all bits after the last column
+		for (int column = totalAnimationByteIndex; column < MAX_COLUMNS; column++) {
+			for (int row = 0; row < DisplayBuffer.ROWS /* 7 */; row++) {
+				data[column][row] = false;
+			}
 		}
-	}
+	} // end method
 
 	@Override
 	public AnimationType getAnimationType() {
@@ -87,7 +114,7 @@ public class TextDisplayBuffer extends DisplayBuffer {
 
 	@Override
 	public String toString() {
-		return "Text-Animation" + " " + text;
+		return getAnimationType().getDescription() + " " + text;
 	}
 
 }
