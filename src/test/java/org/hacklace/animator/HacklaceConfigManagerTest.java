@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.nio.file.Files;
 
 import junit.framework.TestCase;
 import junitx.framework.FileAssert;
@@ -24,7 +23,7 @@ public class HacklaceConfigManagerTest extends TestCase {
 	protected void setUp() throws IOException {
 		manager = new HacklaceConfigManager();
 
-		output = Files.createTempFile("test.hack", null).toFile();
+		output = File.createTempFile("test.hack", null);
 		URL url = this.getClass().getResource("/configs/example.hack");
 		exampleConf = new File(url.getFile());
 	}
