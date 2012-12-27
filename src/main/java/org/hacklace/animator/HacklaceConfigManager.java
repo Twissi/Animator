@@ -1,12 +1,10 @@
 package org.hacklace.animator;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -23,7 +21,7 @@ import org.hacklace.animator.displaybuffer.TextDisplayBuffer;
 public class HacklaceConfigManager {
 
 	public final static String HACKLACE_CHARSET = "ISO-8859-1";
-	
+
 	private List<DisplayBuffer> list;
 
 	public HacklaceConfigManager() {
@@ -63,7 +61,8 @@ public class HacklaceConfigManager {
 		}
 	}
 
-	public void readFile(File file) throws IOException, IllegalHacklaceConfigFileException {
+	public void readFile(File file) throws IOException,
+			IllegalHacklaceConfigFileException {
 		FileInputStream fstream = new FileInputStream(file);
 		readStream(fstream);
 	}
@@ -72,14 +71,14 @@ public class HacklaceConfigManager {
 		OutputStreamWriter out = null;
 		try {
 			FileOutputStream fos = new FileOutputStream(file);
-			out = new OutputStreamWriter(fos, HACKLACE_CHARSET); 			
+			out = new OutputStreamWriter(fos, HACKLACE_CHARSET);
 			out.write(getRawString());
 		} finally {
 			if (out != null)
 				out.close();
 		}
 	}
-	
+
 	public String getRawString() {
 		StringBuilder stringBuilder = new StringBuilder();
 		for (DisplayBuffer displayBuffer : this.list) {

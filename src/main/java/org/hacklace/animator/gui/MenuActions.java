@@ -27,7 +27,7 @@ public class MenuActions {
 		HacklaceConfigManager cm = app.getHacklaceConfigManager();
 		HomePanel homePanel = AnimatorGui.getInstance().getHomePanel();
 		try {
-			InputStream stream = AnimatorGui.getInstance().getClass().getResourceAsStream(fileName);
+			InputStream stream = AnimatorGui.class.getResourceAsStream(fileName);
 			cm.clear();
 			cm.readStream(stream);
 			homePanel.clear();
