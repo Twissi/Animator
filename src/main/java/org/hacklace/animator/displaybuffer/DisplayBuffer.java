@@ -2,7 +2,7 @@ package org.hacklace.animator.displaybuffer;
 
 import org.hacklace.animator.ConversionUtil;
 import org.hacklace.animator.IllegalHacklaceConfigFileException;
-import org.hacklace.animator.StatusByte;
+import org.hacklace.animator.ModusByte;
 import org.hacklace.animator.enums.AnimationType;
 import org.hacklace.animator.enums.Delay;
 import org.hacklace.animator.enums.Direction;
@@ -21,16 +21,16 @@ public abstract class DisplayBuffer implements Cloneable {
 
 	protected int position;
 
-	protected StatusByte statusByte;
+	protected ModusByte modusByte;
 
 	protected DisplayBuffer() {
 		data = new boolean[MAX_COLUMNS][ROWS];
 		position = 0;
-		statusByte = new StatusByte();
+		modusByte = new ModusByte();
 	}
 	
-	protected DisplayBuffer(StatusByte statusByte) {
-		this.statusByte = statusByte;
+	protected DisplayBuffer(ModusByte modusByte) {
+		this.modusByte = modusByte;
 	}
 
 	protected void clearData() {
@@ -56,7 +56,7 @@ public abstract class DisplayBuffer implements Cloneable {
 	}
 
 	public int getStepWidth() {
-		return statusByte.getStepWidth().getValue();
+		return modusByte.getStepWidth().getValue();
 	}
 
 	/*
@@ -108,31 +108,31 @@ public abstract class DisplayBuffer implements Cloneable {
 	}
 
 	public Direction getDirection() {
-		return this.statusByte.getDirection();
+		return this.modusByte.getDirection();
 	}
 
 	public Speed getSpeed() {
-		return this.statusByte.getSpeed();
+		return this.modusByte.getSpeed();
 	}
 
 	public Delay getDelay() {
-		return this.statusByte.getDelay();
+		return this.modusByte.getDelay();
 	}
 
 	public void setDirection(Direction direction) {
-		this.statusByte.setDirection(direction);
+		this.modusByte.setDirection(direction);
 	}
 
 	public void setDelay(Delay delay) {
-		this.statusByte.setDelay(delay);
+		this.modusByte.setDelay(delay);
 	}
 	
 	public void setStepWidth(StepWidth stepWidth) {
-		this.statusByte.setStepWidth(stepWidth);
+		this.modusByte.setStepWidth(stepWidth);
 	}
 	
 	public void setSpeed(Speed speed) {
-		this.statusByte.setSpeed(speed);
+		this.modusByte.setSpeed(speed);
 	}
 
 	public abstract AnimationType getAnimationType();
@@ -145,7 +145,7 @@ public abstract class DisplayBuffer implements Cloneable {
 	public DisplayBuffer clone()  {
 		try {
 			DisplayBuffer copy = (DisplayBuffer) super.clone();
-			copy.statusByte = this.statusByte.clone();
+			copy.modusByte = this.modusByte.clone();
 			copy.data = new boolean[MAX_COLUMNS][ROWS];
 			for (int colIndex = 0; colIndex < this.data.length; colIndex++) {
 				boolean[] column = this.data[colIndex];
@@ -166,8 +166,8 @@ public abstract class DisplayBuffer implements Cloneable {
 	 * 
 	 * @return reference to status byte
 	 */
-	public StatusByte getStatusByte() {
-		return this.statusByte;
+	public ModusByte getStatusByte() {
+		return this.modusByte;
 	}
 	
 	/**
@@ -190,13 +190,13 @@ public abstract class DisplayBuffer implements Cloneable {
 			int lineNumber)
 			throws IllegalHacklaceConfigFileException {
 		String statusByteString = cfgLine.substring(0, 3);
-		StatusByte statusByte = new StatusByte(statusByteString, lineNumber);
-		if (statusByte.isEOF()) {
+		ModusByte modusByte = new ModusByte(statusByteString, lineNumber);
+		if (modusByte.isEOF()) {
 			return null;
 		}
 		
 		// text or graphic animation?
-		StepWidth stepWidth = statusByte.getStepWidth();
+		StepWidth stepWidth = modusByte.getStepWidth();
 		DisplayBuffer buffer = null;
 		String restOfLine = cfgLine.substring(4);
 		if (restOfLine.startsWith("~")) {
@@ -222,10 +222,10 @@ public abstract class DisplayBuffer implements Cloneable {
 			buffer = mixedDisplayBuffer;
 		}
 		assert (buffer != null);
-		buffer.setDirection(statusByte.getDirection());
-		buffer.setSpeed(statusByte.getSpeed());
+		buffer.setDirection(modusByte.getDirection());
+		buffer.setSpeed(modusByte.getSpeed());
 		buffer.setStepWidth(stepWidth);
-		buffer.setDelay(statusByte.getDelay());
+		buffer.setDelay(modusByte.getDelay());
 		return buffer;
 	}
 	
@@ -234,9 +234,9 @@ public abstract class DisplayBuffer implements Cloneable {
 	 * @return the raw string used in config files
 	 */
 	public String getRawString() {
-		StatusByte statusByte = getStatusByte();
+		ModusByte modusByte = getStatusByte();
 		StringBuilder stringBuilder = new StringBuilder();
-		String statusByteString = ConversionUtil.convertByteToString(statusByte
+		String statusByteString = ConversionUtil.convertByteToString(modusByte
 				.getByte());
 		stringBuilder.append(statusByteString).append(",");
 		AnimationType animationType = getAnimationType();

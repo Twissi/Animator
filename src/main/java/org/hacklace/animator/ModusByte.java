@@ -5,18 +5,18 @@ import org.hacklace.animator.enums.Direction;
 import org.hacklace.animator.enums.Speed;
 import org.hacklace.animator.enums.StepWidth;
 
-public class StatusByte implements Cloneable {
+public class ModusByte implements Cloneable {
 	private byte bits;
 
-	public StatusByte() {
+	public ModusByte() {
 
 	}
 
-	public StatusByte(byte b) {
+	public ModusByte(byte b) {
 		this.bits = b;
 	}
 
-	public StatusByte(Direction direction, Delay delay, StepWidth stepWidth,
+	public ModusByte(Direction direction, Delay delay, StepWidth stepWidth,
 			Speed speed) {
 		byte b = (byte) (direction.getValue() << 7);
 		b += (delay.getValue() << 4);
@@ -92,7 +92,7 @@ public class StatusByte implements Cloneable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		StatusByte other = (StatusByte) obj;
+		ModusByte other = (ModusByte) obj;
 		if (bits != other.bits)
 			return false;
 		return true;
@@ -129,13 +129,13 @@ public class StatusByte implements Cloneable {
 		this.bits |= speed.value;
 	}
 
-	public StatusByte clone() {
-		StatusByte copy = new StatusByte();
+	public ModusByte clone() {
+		ModusByte copy = new ModusByte();
 		copy.bits = this.bits;
 		return copy;
 	}
 
-	public StatusByte(String statusByteString, int line)
+	public ModusByte(String statusByteString, int line)
 			throws IllegalHacklaceConfigFileException {
 		if (!ConversionUtil.isHexSequence(statusByteString)) {
 			throw new IllegalHacklaceConfigFileException("Status string "
@@ -144,7 +144,7 @@ public class StatusByte implements Cloneable {
 		this.bits = ConversionUtil.convertStringToByte(statusByteString);
 	}
 
-	public StatusByte(String statusByteString) {
+	public ModusByte(String statusByteString) {
 		this.bits = ConversionUtil.convertStringToByte(statusByteString);
 	}
 

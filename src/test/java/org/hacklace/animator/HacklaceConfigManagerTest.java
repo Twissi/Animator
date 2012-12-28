@@ -92,15 +92,15 @@ public class HacklaceConfigManagerTest extends TestCase {
 		Method createStatusByteFromStringMethod = hcm.getDeclaredMethod(
 				"createStatusByteFromString", String.class, Integer.TYPE);
 		createStatusByteFromStringMethod.setAccessible(true);
-		StatusByte statusByte = (StatusByte) createStatusByteFromStringMethod
+		ModusByte modusByte = (ModusByte) createStatusByteFromStringMethod
 				.invoke(null, "$45", 0);
-		assertEquals(Direction.FORWARD, statusByte.getDirection());
-		assertEquals(Speed.FIVE, statusByte.getSpeed());
-		assertEquals(StepWidth.ONE, statusByte.getStepWidth());
-		assertEquals(Delay.FOUR, statusByte.getDelay());
-		statusByte = (StatusByte) createStatusByteFromStringMethod.invoke(null,
+		assertEquals(Direction.FORWARD, modusByte.getDirection());
+		assertEquals(Speed.FIVE, modusByte.getSpeed());
+		assertEquals(StepWidth.ONE, modusByte.getStepWidth());
+		assertEquals(Delay.FOUR, modusByte.getDelay());
+		modusByte = (ModusByte) createStatusByteFromStringMethod.invoke(null,
 				"$00", 0);
-		assertTrue(statusByte.isEOF());
+		assertTrue(modusByte.isEOF());
 	}
 
 	public void testCreateByteArrayFromString() throws NoSuchMethodException,

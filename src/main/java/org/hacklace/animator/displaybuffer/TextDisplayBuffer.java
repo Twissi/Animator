@@ -73,7 +73,7 @@ public class TextDisplayBuffer extends DisplayBuffer {
 							// probably the user is in the process of typing
 							i--;
 							i--;
-							// temporarily just display the $
+							// temporarily just display the $ until the user has finished typing
 							oneToFiveAnimationBytes = FontUtil
 									.getMinimumBytesForChar('$');
 						}
