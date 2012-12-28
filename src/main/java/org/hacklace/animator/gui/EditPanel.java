@@ -64,18 +64,24 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 		
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridy = 0;
 		c.anchor = GridBagConstraints.NORTHWEST;
 		c.insets = new Insets(5, 5, 5, 5);
 		// Left side: Options panel, spanning all rows at 0,0
 		c.gridheight = GridBagConstraints.REMAINDER;
 		add(optionsPanel, c);
+		// Right side
+		c.gridheight = 1;
+		c.gridx = 1;
 		JPanel editDetailsPanel = new JPanel();
 		addMoreComponents(editDetailsPanel);
-		c.gridx = 1;
 		add(editDetailsPanel, c);
-		c.gridx = 2;
+		c.gridy = 1;
 		add(rawInputPanel, c);
 		optionsPanel.addObserver(this);
+		// set options and data from the display buffer
+		setFromDisplayBuffer(displayBuffer);
 	}
 	
 	/**
@@ -130,7 +136,10 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 		}
 	}
 
-	public abstract void setFromDisplayBuffer(DisplayBuffer buffer);
+	public void setFromDisplayBuffer(DisplayBuffer buffer) {
+		optionsPanel.setOptions(buffer.getSpeed().getValue(), buffer.getDelay()
+				.getValue(), buffer.getDirection().getValue());
+	}
 	
 	public void updateFromRawText() {
 		String rawString = bufferRef.getRawString();

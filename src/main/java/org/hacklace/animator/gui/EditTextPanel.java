@@ -15,6 +15,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import javax.swing.text.PlainDocument;
 
+import org.hacklace.animator.IniConf;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.FontUtil;
 import org.hacklace.animator.displaybuffer.TextDisplayBuffer;
@@ -30,11 +31,13 @@ public class EditTextPanel extends EditPanel {
 
 	public EditTextPanel(DisplayBuffer displayBuffer) {
 		super(displayBuffer);
-		/** @TODO implement!!! */
 	}
 
 	@Override
 	protected void addMoreComponents(JPanel panel) {
+		panel.setLayout(new GridLayout(0, 1));
+		textLedPanel = new LedPanel(IniConf.getInstance().rows(), IniConf.getInstance().columns() * 5);
+		panel.add(textLedPanel);
 		virtualKeyboardPanel = createVirtualKeyboardPanel();
 		panel.add(virtualKeyboardPanel);
 		textPanel = createTextPanel();
@@ -155,7 +158,9 @@ public class EditTextPanel extends EditPanel {
 		return textPanel;
 	}
 
+	@Override
 	public void setFromDisplayBuffer(DisplayBuffer buffer)	{
+		super.setFromDisplayBuffer(buffer);
 		copyBufferToPanel(currentPosition, textLedPanel);
 	}
 }

@@ -10,7 +10,6 @@ public class EditReferencePanel extends EditPanel {
 
 	public EditReferencePanel(DisplayBuffer displayBuffer) {
 		super(displayBuffer);
-		/** @TODO implement!!! */
 	}
 
 	@Override
@@ -21,6 +20,7 @@ public class EditReferencePanel extends EditPanel {
 
 	@Override
 	public void setFromDisplayBuffer(DisplayBuffer buffer) {
+		super.setFromDisplayBuffer(buffer);
 		// TODO Auto-generated method stub
 		
 	}

@@ -28,7 +28,6 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 
 	public EditGraphicPanel(DisplayBuffer displayBuffer) {
 		super(displayBuffer);
-		/** @TODO implement!!! */
 	}
 
 	@Override
@@ -94,6 +93,7 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 		return ledPanelPanel;
 	}
 
+	@Override
 	public void setFromDisplayBuffer(DisplayBuffer buffer) {
 		/*
 		 * The buffer implementation is not working or at least very much
@@ -109,6 +109,7 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 		 * (nextGrid != null) { copyGridDataToPanel(nextGrid, nextLedPanel); }
 		 * else { nextLedPanel.clear(); }
 		 */
+		super.setFromDisplayBuffer(buffer);
 		if (currentPosition > 0) {
 			copyBufferToPanel(currentPosition - 1, prevLedPanel);
 			prevLabel.setText(Integer.toString(currentPosition - 1));
@@ -125,9 +126,6 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 			nextLedPanel.clear();
 			nextLabel.setText("-");
 		}
-		// set speed and delay
-		optionsPanel.setOptions(buffer.getSpeed().getValue(), buffer.getDelay()
-				.getValue(), buffer.getDirection().getValue());
 	}
 
 	public void onLedChange(int row, int column, boolean newValue) {
