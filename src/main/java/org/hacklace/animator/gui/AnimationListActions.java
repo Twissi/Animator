@@ -8,7 +8,6 @@ import javax.swing.JOptionPane;
 
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
-import org.hacklace.animator.displaybuffer.ReferenceDisplayBuffer;
 import org.hacklace.animator.enums.AnimationType;
 
 public class AnimationListActions {
@@ -168,7 +167,6 @@ public class AnimationListActions {
 			this.homePanel = homePanel;
 			this.configManager = configManager;
 			this.animatorGui = animatorGui;
-
 		}
 
 		@Override
@@ -179,31 +177,7 @@ public class AnimationListActions {
 				return;
 			}
 			DisplayBuffer displayBuffer = configManager.getList().get(index);
-			switch (displayBuffer.getAnimationType()) {
-			case TEXT:
-				// same as graphic, no break!
-			case GRAPHIC:
-				// Start at first frame
-				EditAnimationPanel panel = animatorGui.getEditAnimationPanel();
-				panel.reset();
-				panel.setFromDisplayBuffer(displayBuffer, true);
-				panel.setMaxPosition(DisplayBuffer.getNumGrids() - 1);
-				animatorGui.setEditMode(true);
-				break;
-			case REFERENCE:
-				int result = askForReference(((ReferenceDisplayBuffer)displayBuffer).getLetter());
-				if (result == -1) return; // cancel
-				((ReferenceDisplayBuffer)displayBuffer).setLetter((char)result);
-				AnimatorGui.getInstance().getHomePanel().updateList(AnimatorGui.getInstance().getHacklaceConfigManager().getList(), true);
-				break;
-			case MIXED:
-				JOptionPane
-						.showMessageDialog(
-								null,
-								"This type of animation cannot be edited or is not supported yet.",
-								"Error", JOptionPane.ERROR_MESSAGE);
-				break;
-			}
+			animatorGui.startEditMode(displayBuffer);
 		}
 	}
 

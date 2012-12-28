@@ -10,7 +10,9 @@ import javax.swing.SwingUtilities;
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.IllegalHacklaceConfigFileException;
 import org.hacklace.animator.IniConf;
+import org.hacklace.animator.displaybuffer.DisplayBuffer;
 
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.io.File;
@@ -25,7 +27,8 @@ public class AnimatorGui extends JFrame {
 	private File currentFile;
 
 	private HomePanel homePanel;
-	private EditAnimationPanel editAnimationPanel;
+	private EditPanel editPanel = null;
+	private Container contentPane;
 
 	private HacklaceConfigManager hacklaceConfigManager;
 
@@ -62,10 +65,6 @@ public class AnimatorGui extends JFrame {
 		return homePanel;
 	}
 
-	public EditAnimationPanel getEditAnimationPanel() {
-		return editAnimationPanel;
-	}
-
 	private void initComponents() {
 		// Note: need to set layout or the second panel will overwrite the first
 		setLayout(new FlowLayout());
@@ -89,12 +88,9 @@ public class AnimatorGui extends JFrame {
 		// 
 		setJMenuBar(menuBar);
 
+		contentPane = this.getContentPane();
 		homePanel = new HomePanel(hacklaceConfigManager, this);
-		add(homePanel);
-		editAnimationPanel = new EditAnimationPanel();
-		add(editAnimationPanel);
-		
-		setEditMode(false);
+		contentPane.add(homePanel);
 		
 		// Set stuff
 		setTitle(title);
@@ -105,18 +101,23 @@ public class AnimatorGui extends JFrame {
 
 	}
 	
-	public void setEditMode(boolean editMode) {
-		if (editMode) {
-			editAnimationPanel.setVisible(true);
-			homePanel.setVisible(false);
-		} else {
-			editAnimationPanel.setVisible(false);
-			homePanel.setVisible(true);
-		}
-	}
-
 	public HacklaceConfigManager getHacklaceConfigManager() {
 		return hacklaceConfigManager;
+	}
+
+	public void stopEditMode() {
+		if (editPanel != null) {
+			contentPane.remove(editPanel);
+			editPanel = null;
+		}
+		homePanel.setVisible(true);
+		repaint();
+	}
+	
+	public void startEditMode(DisplayBuffer displayBuffer) {
+		editPanel = EditPanel.factory(displayBuffer);
+		homePanel.setVisible(false);
+		contentPane.add(editPanel);
 	}
 
 	/**

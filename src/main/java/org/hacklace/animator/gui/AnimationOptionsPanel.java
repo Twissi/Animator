@@ -126,6 +126,7 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 		public void actionPerformed(ActionEvent e) {
 			for (OptionsObserver o: observerList) {
 				o.onSaveAnimation();
+				AnimatorGui.getInstance().stopEditMode();
 			}
 		}
 	}
@@ -137,7 +138,7 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			AnimatorGui.getInstance().setEditMode(false);
+			AnimatorGui.getInstance().stopEditMode();
 		}
 	}
 }

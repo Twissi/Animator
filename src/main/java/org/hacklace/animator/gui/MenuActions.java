@@ -54,7 +54,7 @@ public class MenuActions {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			loadResource("/Default_Konfiguration.txt");
-			AnimatorGui.getInstance().setEditMode(false);
+			AnimatorGui.getInstance().stopEditMode();
 		}
 
 	}
@@ -70,7 +70,7 @@ public class MenuActions {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			loadResource("/example.cfg");
-			AnimatorGui.getInstance().setEditMode(false);
+			AnimatorGui.getInstance().stopEditMode();
 		}
 
 	}
@@ -214,12 +214,12 @@ public class MenuActions {
 				homePanel.clear();
 				homePanel.updateList(cm.getList(), false);
 				app.setCurrentFile(openFile);
-				app.setEditMode(false);
+				app.stopEditMode();
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(null, "Cannot read from file.",
 						"Error", JOptionPane.ERROR_MESSAGE);
 				app.getHomePanel().reset();
-				app.setEditMode(false);
+				app.stopEditMode();
 			}
 		}
 	}
