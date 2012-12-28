@@ -163,12 +163,4 @@ public class AnimatorGui extends JFrame {
 		}
 	}
 
-	public static void main(String[] args) {
-		if (args.length > 0) {
-			getInstance(args[0]);
-		} else {
-			getInstance();
-		}
-	}
-
 }
