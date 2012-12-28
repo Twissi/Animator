@@ -19,13 +19,10 @@ public abstract class DisplayBuffer implements Cloneable {
 
 	public static final int MAX_COLUMNS = 200;
 
-	protected int position;
-
 	protected ModusByte modusByte;
 
 	protected DisplayBuffer() {
 		data = new boolean[MAX_COLUMNS][ROWS];
-		position = 0;
 		modusByte = new ModusByte();
 	}
 	
@@ -62,50 +59,6 @@ public abstract class DisplayBuffer implements Cloneable {
 	/*
 	 * Real code
 	 */
-
-	public void rewind() {
-		position = 0;
-	}
-
-	public void moveLeft() {
-		position = Math.max(0, position - getStepWidth());
-	}
-
-	public void moveRight() {
-		position = Math.min(position + getStepWidth(), MAX_COLUMNS - 1);
-	}
-
-	/*
-	 * Getter/Setter
-	 */
-
-	private Grid getGrid(int offset) {
-		Grid newGrid = new Grid(ROWS, COLUMNS);
-
-		for (int column = 0; column < COLUMNS; column++) {
-			for (int row = 0; row < ROWS; row++) {
-				newGrid.setColumnRow(column, row, data[position + offset + column][row]);
-			}
-		}
-
-		return newGrid;
-	}
-
-	public Grid getPrevious() {
-		return getGrid(-2 * getStepWidth());
-	}
-
-	public Grid getCurrent() {
-		return getGrid(-getStepWidth());
-	}
-
-	public Grid getNext() {
-		return getGrid(0);
-	}
-
-	public int getPosition() {
-		return position;
-	}
 
 	public Direction getDirection() {
 		return this.modusByte.getDirection();
@@ -162,13 +115,6 @@ public abstract class DisplayBuffer implements Cloneable {
 		return data[column][row];
 	}
 
-	/**
-	 * 
-	 * @return reference to status byte
-	 */
-	public ModusByte getStatusByte() {
-		return this.modusByte;
-	}
 	
 	/**
 	 * returns the total number of grids
@@ -234,7 +180,6 @@ public abstract class DisplayBuffer implements Cloneable {
 	 * @return the raw string used in config files
 	 */
 	public String getRawString() {
-		ModusByte modusByte = getStatusByte();
 		StringBuilder stringBuilder = new StringBuilder();
 		String statusByteString = ConversionUtil.convertByteToString(modusByte
 				.getByte());

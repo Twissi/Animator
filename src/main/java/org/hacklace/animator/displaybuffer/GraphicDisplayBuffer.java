@@ -10,31 +10,11 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 		super();
 	}
 
-	public void addGrid(Grid grid) {
-		for (int column = 0; column < COLUMNS; column++) {
-			for (int row = 0; row < ROWS; row++) {
-				this.data[position + column][row] = grid.getColumnRow(column,
-						row);
-			}
-		}
-		moveRight();
-	}
-
-	public void deleteLastGrid() {
-		for (int column = 0; column < COLUMNS; column++) {
-			for (int row = 0; row < ROWS; row++) {
-				this.data[position + column][row] = false;
-			}
-		}
-		moveLeft();
-	}
-
 	public void setDataFromBytes(byte[] aniBytes) {
 		for (int column = 0; column < aniBytes.length; column++) {
 			byte aniByte = aniBytes[column];
 			this.data[column] = convertAnimationByteTo7Booleans(aniByte);
 		}
-		moveRight(); // set position to 5
 	}
 
 
