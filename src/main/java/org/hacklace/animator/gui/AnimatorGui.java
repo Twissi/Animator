@@ -21,9 +21,6 @@ public class AnimatorGui extends JFrame {
 
 	public static AnimatorGui instance;
 
-	public static final int ROWS = 7;
-	public static final int COLUMNS = 5;
-
 	private File currentFile;
 
 	private HomePanel homePanel;

@@ -17,7 +17,6 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 		}
 	}
 
-
 	@Override
 	public AnimationType getAnimationType() {
 		return AnimationType.GRAPHIC;
@@ -33,7 +32,7 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 			byte value = (byte) booleanArrayAsInt(bools);
 			allByteColumns[colIndex] = value;
 			if (value != 0) {
-			  numberOfUsedColumns = colIndex+1;	
+				numberOfUsedColumns = colIndex + 1;
 			}
 		}
 		byte[] usedByteColumns = new byte[numberOfUsedColumns];
@@ -41,7 +40,7 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 				numberOfUsedColumns);
 		return usedByteColumns;
 	}
-	
+
 	public static int booleanArrayAsInt(boolean[] array) {
 		int value = 0;
 		for (boolean bool : array) {

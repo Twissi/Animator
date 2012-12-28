@@ -2,6 +2,8 @@ package org.hacklace.animator.displaybuffer;
 
 import java.util.Arrays;
 
+import org.hacklace.animator.IniConf;
+
 public class Grid {
 
 	private boolean[][] data;
@@ -9,7 +11,7 @@ public class Grid {
 	private final int columns;
 
 	public Grid() {
-		this(DisplayBuffer.ROWS, DisplayBuffer.COLUMNS); // default 7, 5
+		this(IniConf.getInstance().rows(), IniConf.getInstance().columns()); // default 7, 5
 	}
 
 	public Grid(int rows, int columns) {
