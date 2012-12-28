@@ -152,31 +152,40 @@ public abstract class DisplayBuffer implements Cloneable {
 
 		String restOfLine = getRestOfLine(cfgLine);
 		AnimationType animationType = restOfLineAnalyzeType(restOfLine);
-        DisplayBuffer displayBuffer = createDisplayBuffer(modusByte, animationType, restOfLine, lineNumber);
+		DisplayBuffer displayBuffer = createDisplayBuffer(modusByte,
+				animationType, restOfLine, lineNumber);
 		return displayBuffer;
-		
+
 	}
 
 	private static DisplayBuffer createDisplayBuffer(ModusByte modusByte,
-			AnimationType animationType, String restOfLine, int lineNumber) throws IllegalHacklaceConfigFileException {
-		switch(animationType) {
-		case TEXT :
-			return new TextDisplayBuffer(modusByte, restOfLine);
-		case GRAPHIC:
-			return new GraphicDisplayBuffer(modusByte, restOfLine, lineNumber); 
-		case REFERENCE:
-			return new ReferenceDisplayBuffer(modusByte, restOfLine.charAt(1));
-		case MIXED:
-			return new MixedDisplayBuffer(modusByte, restOfLine);
-		
-		} 
+			AnimationType animationType, String restOfLine, int lineNumber)
+			throws IllegalHacklaceConfigFileException {
+		switch (animationType) {
+			case TEXT :
+				return new TextDisplayBuffer(modusByte, restOfLine);
+			case GRAPHIC :
+				return new GraphicDisplayBuffer(modusByte, restOfLine,
+						lineNumber);
+			case REFERENCE :
+				return new ReferenceDisplayBuffer(modusByte,
+						restOfLine.charAt(1));
+			case MIXED :
+				return new MixedDisplayBuffer(modusByte, restOfLine);
+
+		}
 		return null;
 	}
 
-	public static AnimationType fullLineAnalyzetype(String fullLine) {
+	/**
+	 * 
+	 * @param fullLine
+	 * @return
+	 */
+	public static AnimationType fullLineAnalyzeType(String fullLine) {
 		return restOfLineAnalyzeType(getRestOfLine(fullLine));
 	}
-	
+
 	/**
 	 * 
 	 * @param restOfLine
@@ -185,9 +194,9 @@ public abstract class DisplayBuffer implements Cloneable {
 	 * @return
 	 */
 	public static AnimationType restOfLineAnalyzeType(String restOfLine) {
-		
+
 		// 0 or 1 chars cannot be reference/graphic/mixed
-		if (restOfLine.trim().length() < 2) 
+		if (restOfLine.trim().length() < 2)
 			return AnimationType.TEXT;
 
 		if (restOfLineIsReference(restOfLine))
@@ -315,7 +324,13 @@ public abstract class DisplayBuffer implements Cloneable {
 	 * @return
 	 */
 	public static int restOfLineNumberOfDirectModes(String restOfLine) {
-		return restOfLine.split(DIRECT).length - 1;
+		int numberOfDirectModes = 0;
+		int index = 0;
+		while ((index = restOfLine.indexOf(DIRECT, index)) != -1) {
+			numberOfDirectModes++;
+			index += 3;
+		}
+		return numberOfDirectModes;
 	}
 
 	/**
@@ -326,15 +341,6 @@ public abstract class DisplayBuffer implements Cloneable {
 	 */
 	public static int fullLineNumberOfDirectModes(String fullLine) {
 		return restOfLineNumberOfDirectModes(getRestOfLine(fullLine));
-	}
-
-	/**
-	 * 
-	 * @param fullLine
-	 * @return
-	 */
-	public static AnimationType fullLineAnalyzeType(String fullLine) {
-		return fullLineAnalyzeType(getRestOfLine(fullLine));
 	}
 
 	/**
