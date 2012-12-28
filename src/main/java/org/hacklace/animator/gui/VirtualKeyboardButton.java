@@ -43,7 +43,7 @@ public class VirtualKeyboardButton extends JButton {
 	}
 
 	public String getString() {
-		return "^" + String.valueOf((char)(imageIndex - 0x80 + 'A'));
+		return FontUtil.getRepresentationForIndex(imageIndex);
 	}
 
 	/* TESTING:

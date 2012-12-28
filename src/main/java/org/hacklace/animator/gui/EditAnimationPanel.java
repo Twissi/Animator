@@ -31,11 +31,12 @@ import org.hacklace.animator.enums.Delay;
 import org.hacklace.animator.enums.Direction;
 import org.hacklace.animator.enums.Speed;
 
-public class EditAnimationPanel extends JPanel implements OptionsObserver,
-		LedObserver {
+public class EditAnimationPanel extends JPanel
+		implements
+			OptionsObserver,
+			LedObserver {
 	private static final long serialVersionUID = -5137928768652375360L;
 
-	private static final int VIRTUAL_KEYS_PER_ROW = 15;
 	private AnimationOptionsPanel optionsPanel;
 	private JPanel ledPanelPanel;
 	private JPanel editTextPanel;
@@ -59,10 +60,10 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 	public EditAnimationPanel() {
 		ledPanelPanel = createLedPanelPanel();
 		editTextPanel = createEditTextPanel();
-		virtualKeyboardPanel = createVirtualKeyboardPanel();
+		createVirtualKeyboardPanel();
 		rawInputPanel = createRawInputPanel();
 		optionsPanel = new AnimationOptionsPanel();
-		
+
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
@@ -84,7 +85,7 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 		optionsPanel.addObserver(this);
 	}
 
-	private JPanel createVirtualKeyboardPanel() {
+	private void createVirtualKeyboardPanel() {
 		virtualKeyboardPanel = new JPanel();
 		virtualKeyboardPanel.setLayout(new GridLayout(0, 1));
 		virtualKeyboardPanel.add(new JLabel("Virtual Keyboard:"));
@@ -105,28 +106,46 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 				}
 			}
 		};
-		int numButtons = FontUtil.HIGHEST_SPECIAL_INDEX
-				- FontUtil.LOWEST_SPECIAL_INDEX + 1;
-		VirtualKeyboardButton[] buttons = new VirtualKeyboardButton[numButtons];
-		int numKeyboardRows = numButtons / VIRTUAL_KEYS_PER_ROW + 1;
-		JPanel[] keyboardRows = new JPanel[numKeyboardRows];
-		for (int i = 0; i < keyboardRows.length; i++) {
-			keyboardRows[i] = new JPanel();
-		}
-		int currentRow = -1;
-		for (int i = 0; i < numButtons; i++) {
-			if (i % VIRTUAL_KEYS_PER_ROW == 0) {
-				currentRow++;
+		final int VIRTUAL_KEYS_PER_ROW = 15;
+		int columsRemaining = VIRTUAL_KEYS_PER_ROW;
+
+		JPanel keyboardRow = new JPanel();
+		virtualKeyboardPanel.add(keyboardRow);
+		
+		VirtualKeyboardButton button = new VirtualKeyboardButton(0x7F);
+		button.setToolTipText("one empty column");
+		button.addActionListener(virtualKeyboardListener);
+		keyboardRow.add(button);
+		columsRemaining--;
+		
+		button = new VirtualKeyboardButton('^');
+		button.addActionListener(virtualKeyboardListener);
+		keyboardRow.add(button);
+		columsRemaining--;
+		
+		button = new VirtualKeyboardButton('$');
+		button.addActionListener(virtualKeyboardListener);
+		keyboardRow.add(button);
+		columsRemaining--;
+		
+		button = new VirtualKeyboardButton('~');
+		button.addActionListener(virtualKeyboardListener);
+		keyboardRow.add(button);
+		columsRemaining--;		
+		
+		for (int i = FontUtil.LOWEST_SPECIAL_INDEX; i <= FontUtil.HIGHEST_INDEX; i++) {
+			if (columsRemaining == 0) {
+				keyboardRow = new JPanel();
+				virtualKeyboardPanel.add(keyboardRow);
+				columsRemaining = VIRTUAL_KEYS_PER_ROW;
 			}
-			buttons[i] = new VirtualKeyboardButton(i
-					+ FontUtil.LOWEST_SPECIAL_INDEX);
-			buttons[i].addActionListener(virtualKeyboardListener);
-			keyboardRows[currentRow].add(buttons[i]);
+			columsRemaining--;
+			
+			button = new VirtualKeyboardButton(i);
+			if (i-FontUtil.SPECIAL_CHAR_OFFSET=='^') button.setToolTipText("six empty columns");
+			button.addActionListener(virtualKeyboardListener);
+			keyboardRow.add(button);
 		}
-		for (int i = 0; i < keyboardRows.length; i++) {
-			virtualKeyboardPanel.add(keyboardRows[i]);
-		}
-		return virtualKeyboardPanel;
 	}
 
 	/**
@@ -168,9 +187,7 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 		c.gridx = 0;
 		c.gridwidth = 3;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		positionSlider = new JSlider(
-				SwingConstants.HORIZONTAL, 
-				1);
+		positionSlider = new JSlider(SwingConstants.HORIZONTAL, 1);
 		positionSlider.setPaintTicks(true);
 		positionSlider.setSnapToTicks(true);
 		positionSlider.setMinorTickSpacing(1);
@@ -180,10 +197,10 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 				// ignore the event if we don't have a valid buffer yet
 				if (bufferRef == null)
 					return;
-				currentPosition = ((JSlider)arg0.getSource()).getValue();
+				currentPosition = ((JSlider) arg0.getSource()).getValue();
 				setFromDisplayBuffer(bufferRef, false);
 			}
-			});
+		});
 		ledPanelPanel.add(positionSlider, c);
 		return ledPanelPanel;
 	}
@@ -195,7 +212,8 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 		doc.setDocumentFilter(new DocumentFilter() {
 			public void insertString(FilterBypass fb, int offs, String str,
 					AttributeSet a) throws BadLocationException {
-				if ((fb.getDocument().getLength() + str.length()) <= DisplayBuffer.getNumGrids())
+				if ((fb.getDocument().getLength() + str.length()) <= DisplayBuffer
+						.getNumGrids())
 					super.insertString(fb, offs, str, a);
 				else
 					Toolkit.getDefaultToolkit().beep();
@@ -203,7 +221,8 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 
 			public void replace(FilterBypass fb, int offs, int length,
 					String str, AttributeSet a) throws BadLocationException {
-				if ((fb.getDocument().getLength() + str.length() - length) <= DisplayBuffer.getNumGrids())
+				if ((fb.getDocument().getLength() + str.length() - length) <= DisplayBuffer
+						.getNumGrids())
 					super.replace(fb, offs, length, str, a);
 				else
 					Toolkit.getDefaultToolkit().beep();
@@ -396,13 +415,13 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 				row, newValue);
 		rawInputTextField.setText(bufferRef.getRawString());
 	}
-	
+
 	public void setPosition(int position) {
 		positionSlider.setValue(position);
 	}
-	
+
 	public void setMaxPosition(int maxPosition) {
 		positionSlider.setMaximum(maxPosition);
 	}
-	
+
 }

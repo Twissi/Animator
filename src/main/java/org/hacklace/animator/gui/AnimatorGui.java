@@ -16,7 +16,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class AnimatorGui extends JFrame {
-
+	
 	private static final long serialVersionUID = 2757544085601062109L;
 
 	public static AnimatorGui instance;
