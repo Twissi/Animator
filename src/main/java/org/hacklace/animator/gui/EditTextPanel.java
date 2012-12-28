@@ -34,11 +34,11 @@ public class EditTextPanel extends EditPanel {
 	}
 
 	@Override
-	protected void addMoreComponents() {
+	protected void addMoreComponents(JPanel panel) {
 		virtualKeyboardPanel = createVirtualKeyboardPanel();
-		add(virtualKeyboardPanel, c);
+		panel.add(virtualKeyboardPanel);
 		textPanel = createTextPanel();
-		add(textPanel, c);
+		panel.add(textPanel);
 	}
 
 	private JPanel createVirtualKeyboardPanel() {

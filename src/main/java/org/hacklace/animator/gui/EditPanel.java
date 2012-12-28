@@ -37,8 +37,6 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 	protected int gridRows = IniConf.getInstance().rows();
 	protected int gridCols = IniConf.getInstance().columns();
 	
-	protected GridBagConstraints c = new GridBagConstraints();
-
 	public static EditPanel factory(DisplayBuffer displayBuffer) {
 		switch (displayBuffer.getAnimationType()) {
 		case TEXT:
@@ -65,14 +63,17 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 		rawInputPanel = createRawInputPanel();
 		
 		setLayout(new GridBagLayout());
-		c.gridx = 0;
-		c.gridy = 0;
+		GridBagConstraints c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.NORTHWEST;
 		c.insets = new Insets(5, 5, 5, 5);
 		// Left side: Options panel, spanning all rows at 0,0
 		c.gridheight = GridBagConstraints.REMAINDER;
 		add(optionsPanel, c);
-		addMoreComponents();
+		JPanel editDetailsPanel = new JPanel();
+		addMoreComponents(editDetailsPanel);
+		c.gridx = 1;
+		add(editDetailsPanel, c);
+		c.gridx = 2;
 		add(rawInputPanel, c);
 		optionsPanel.addObserver(this);
 	}
@@ -80,7 +81,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 	/**
 	 * Overwrite this in children to add components on the right side above the raw edit panel
 	 */
-	protected abstract void addMoreComponents();
+	protected abstract void addMoreComponents(JPanel panel);
 	
 	public JPanel createRawInputPanel() {
 		JPanel rawInputPanel = new JPanel();

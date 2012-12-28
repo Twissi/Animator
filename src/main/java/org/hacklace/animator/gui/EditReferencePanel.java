@@ -1,5 +1,7 @@
 package org.hacklace.animator.gui;
 
+import javax.swing.JPanel;
+
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 
 public class EditReferencePanel extends EditPanel {
@@ -12,7 +14,7 @@ public class EditReferencePanel extends EditPanel {
 	}
 
 	@Override
-	protected void addMoreComponents() {
+	protected void addMoreComponents(JPanel panel) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -32,18 +32,9 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 	}
 
 	@Override
-	protected void addMoreComponents() {
-		// TODO Auto-generated method stub
-
+	protected void addMoreComponents(JPanel panel) {
 		ledPanelPanel = createLedPanelPanel();
-
-		// Right side, 4 rows, no spans
-		c.anchor = GridBagConstraints.NORTH;
-		c.gridheight = 1;
-		c.gridx = 1;
-		add(ledPanelPanel, c);
-		c.gridy = GridBagConstraints.RELATIVE;
-
+		panel.add(ledPanelPanel);
 	}
 
 	/**
