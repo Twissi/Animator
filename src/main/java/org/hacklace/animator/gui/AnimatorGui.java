@@ -10,6 +10,7 @@ import javax.swing.SwingUtilities;
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.IllegalHacklaceConfigFileException;
 import org.hacklace.animator.IniConf;
+import org.hacklace.animator.displaybuffer.DisplayBuffer;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -25,7 +26,7 @@ public class AnimatorGui extends JFrame {
 	private File currentFile;
 
 	private HomePanel homePanel;
-	private EditAnimationPanel editAnimationPanel;
+	private EditPanel editPanel = null;
 
 	private HacklaceConfigManager hacklaceConfigManager;
 
@@ -62,10 +63,6 @@ public class AnimatorGui extends JFrame {
 		return homePanel;
 	}
 
-	public EditAnimationPanel getEditAnimationPanel() {
-		return editAnimationPanel;
-	}
-
 	private void initComponents() {
 		// Note: need to set layout or the second panel will overwrite the first
 		setLayout(new FlowLayout());
@@ -91,10 +88,6 @@ public class AnimatorGui extends JFrame {
 
 		homePanel = new HomePanel(hacklaceConfigManager, this);
 		add(homePanel);
-		editAnimationPanel = new EditAnimationPanel();
-		add(editAnimationPanel);
-		
-		setEditMode(false);
 		
 		// Set stuff
 		setTitle(title);
@@ -105,18 +98,22 @@ public class AnimatorGui extends JFrame {
 
 	}
 	
-	public void setEditMode(boolean editMode) {
-		if (editMode) {
-			editAnimationPanel.setVisible(true);
-			homePanel.setVisible(false);
-		} else {
-			editAnimationPanel.setVisible(false);
-			homePanel.setVisible(true);
-		}
-	}
-
 	public HacklaceConfigManager getHacklaceConfigManager() {
 		return hacklaceConfigManager;
+	}
+
+	public void stopEditMode() {
+		if (editPanel != null) {
+			remove(editPanel);
+			editPanel = null;
+		}
+		homePanel.setVisible(true);
+	}
+	
+	public void startEditMode(DisplayBuffer displayBuffer) {
+		EditPanel editPanel = EditPanel.factory(displayBuffer);
+		homePanel.setVisible(false);
+		add(editPanel);
 	}
 
 	/**
