@@ -5,6 +5,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import org.hacklace.animator.HacklaceConfigManager;
@@ -12,6 +13,7 @@ import org.hacklace.animator.IllegalHacklaceConfigFileException;
 import org.hacklace.animator.IniConf;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.io.File;
@@ -27,6 +29,7 @@ public class AnimatorGui extends JFrame {
 
 	private HomePanel homePanel;
 	private EditPanel editPanel = null;
+	private Container contentPane;
 
 	private HacklaceConfigManager hacklaceConfigManager;
 
@@ -86,8 +89,9 @@ public class AnimatorGui extends JFrame {
 		// 
 		setJMenuBar(menuBar);
 
+		contentPane = this.getContentPane();
 		homePanel = new HomePanel(hacklaceConfigManager, this);
-		add(homePanel);
+		contentPane.add(homePanel);
 		
 		// Set stuff
 		setTitle(title);
@@ -104,16 +108,17 @@ public class AnimatorGui extends JFrame {
 
 	public void stopEditMode() {
 		if (editPanel != null) {
-			remove(editPanel);
+			contentPane.remove(editPanel);
 			editPanel = null;
 		}
 		homePanel.setVisible(true);
+		repaint();
 	}
 	
 	public void startEditMode(DisplayBuffer displayBuffer) {
-		EditPanel editPanel = EditPanel.factory(displayBuffer);
+		editPanel = EditPanel.factory(displayBuffer);
 		homePanel.setVisible(false);
-		add(editPanel);
+		contentPane.add(editPanel);
 	}
 
 	/**
