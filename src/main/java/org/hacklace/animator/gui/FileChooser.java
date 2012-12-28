@@ -12,29 +12,19 @@ public class FileChooser extends JFileChooser {
 	private JPanel contentPane;
 	private File inputFile;
 	private File outputFile;
+	private String extension;
 
 	private static final long serialVersionUID = 1L;
 
 	/* variables */
 	private File file;
-	private FileFilter hacklaceFileFilter = new FileFilter() {
-
-		@Override
-		public boolean accept(File f) {
-			return f.isDirectory() || f.getName().toLowerCase().endsWith(".hack");
-		}
-
-		@Override
-		public String getDescription() {
-			return ".hack";
-		}
-	};
-
+	private FileFilter hacklaceFileFilter;
 	/**
 	 * constructor of FileChooser
 	 */
-	public FileChooser() {
+	public FileChooser(String ext) {
 		super();
+		extension = ext;
 	}
 
 	/**
@@ -43,6 +33,17 @@ public class FileChooser extends JFileChooser {
 	 * @return returns the input-file
 	 */
 	public File inputFile() {
+		hacklaceFileFilter = new FileFilter() {
+			@Override
+			public boolean accept(File f) {
+				return f.isDirectory() || f.getName().toLowerCase().endsWith(extension);
+			}
+			@Override
+			public String getDescription() {
+				return extension;
+			}
+		};
+
 		this.setFileFilter(hacklaceFileFilter);
 		this.setMultiSelectionEnabled(false);
 		int state = this.showOpenDialog(contentPane);
@@ -76,8 +77,8 @@ public class FileChooser extends JFileChooser {
 		int state = this.showSaveDialog(contentPane);
 		if (state == JFileChooser.APPROVE_OPTION) {
 			file = this.getSelectedFile();
-			if (!(this.getSelectedFile().getName().toLowerCase().endsWith(".hack"))) {
-				file = new File(file.getPath() + ".hack");
+			if (!(this.getSelectedFile().getName().toLowerCase().endsWith(extension))) {
+				file = new File(file.getPath() + extension);
 			}
 			return file;
 		} else {
