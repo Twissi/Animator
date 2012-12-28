@@ -23,6 +23,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.*;
 
 import org.hacklace.animator.HacklaceConfigManager;
+import org.hacklace.animator.IniConf;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.FontUtil;
 import org.hacklace.animator.displaybuffer.TextDisplayBuffer;
@@ -31,10 +32,8 @@ import org.hacklace.animator.enums.Delay;
 import org.hacklace.animator.enums.Direction;
 import org.hacklace.animator.enums.Speed;
 
-public class EditAnimationPanel extends JPanel
-		implements
-			OptionsObserver,
-			LedObserver {
+public class EditAnimationPanel extends JPanel implements OptionsObserver,
+		LedObserver {
 	private static final long serialVersionUID = -5137928768652375360L;
 
 	private AnimationOptionsPanel optionsPanel;
@@ -56,6 +55,9 @@ public class EditAnimationPanel extends JPanel
 	private DisplayBuffer origBuffer; // keep a reference to the original buffer
 										// for overwriting on save
 	private int currentPosition = 0;
+
+	private int gridRows = IniConf.getInstance().rows();
+	private int gridCols = IniConf.getInstance().columns();
 
 	public EditAnimationPanel() {
 		ledPanelPanel = createLedPanelPanel();
@@ -111,28 +113,28 @@ public class EditAnimationPanel extends JPanel
 
 		JPanel keyboardRow = new JPanel();
 		virtualKeyboardPanel.add(keyboardRow);
-		
+
 		VirtualKeyboardButton button = new VirtualKeyboardButton(0x7F);
 		button.setToolTipText("one empty column");
 		button.addActionListener(virtualKeyboardListener);
 		keyboardRow.add(button);
 		columsRemaining--;
-		
+
 		button = new VirtualKeyboardButton('^');
 		button.addActionListener(virtualKeyboardListener);
 		keyboardRow.add(button);
 		columsRemaining--;
-		
+
 		button = new VirtualKeyboardButton('$');
 		button.addActionListener(virtualKeyboardListener);
 		keyboardRow.add(button);
 		columsRemaining--;
-		
+
 		button = new VirtualKeyboardButton('~');
 		button.addActionListener(virtualKeyboardListener);
 		keyboardRow.add(button);
-		columsRemaining--;		
-		
+		columsRemaining--;
+
 		for (int i = FontUtil.LOWEST_SPECIAL_INDEX; i <= FontUtil.HIGHEST_INDEX; i++) {
 			if (columsRemaining == 0) {
 				keyboardRow = new JPanel();
@@ -140,9 +142,10 @@ public class EditAnimationPanel extends JPanel
 				columsRemaining = VIRTUAL_KEYS_PER_ROW;
 			}
 			columsRemaining--;
-			
+
 			button = new VirtualKeyboardButton(i);
-			if (i-FontUtil.SPECIAL_CHAR_OFFSET=='^') button.setToolTipText("six empty columns");
+			if (i - FontUtil.SPECIAL_CHAR_OFFSET == '^')
+				button.setToolTipText("six empty columns");
 			button.addActionListener(virtualKeyboardListener);
 			keyboardRow.add(button);
 		}
@@ -159,15 +162,15 @@ public class EditAnimationPanel extends JPanel
 		GridBagConstraints c = new GridBagConstraints();
 		// first row: 3 LedPanels
 		c.insets = new Insets(5, 5, 5, 5);
-		prevLedPanel = new LedPanel(AnimatorGui.ROWS, AnimatorGui.COLUMNS);
+		prevLedPanel = new LedPanel(gridRows, gridCols);
 		prevLedPanel.setEnabled(false);
 		c.gridx = 0;
 		ledPanelPanel.add(prevLedPanel, c);
-		ledPanel = new LedPanel(AnimatorGui.ROWS, AnimatorGui.COLUMNS);
+		ledPanel = new LedPanel(gridRows, gridCols);
 		ledPanel.addObserver(this);
 		c.gridx = 1;
 		ledPanelPanel.add(ledPanel, c);
-		nextLedPanel = new LedPanel(AnimatorGui.ROWS, AnimatorGui.COLUMNS);
+		nextLedPanel = new LedPanel(gridRows, gridCols);
 		nextLedPanel.setEnabled(false);
 		c.gridx = 2;
 		ledPanelPanel.add(nextLedPanel, c);
@@ -293,13 +296,10 @@ public class EditAnimationPanel extends JPanel
 	 */
 
 	public void copyBufferToPanel(int position, LedPanel panel) {
-		for (int x = 0; x < DisplayBuffer.COLUMNS; x++) {
-			for (int y = 0; y < DisplayBuffer.ROWS; y++) {
-				panel.setLed(
-						y,
-						x,
-						bufferRef.getValueAt(x + DisplayBuffer.COLUMNS
-								* position, y));
+		for (int x = 0; x < gridCols; x++) {
+			for (int y = 0; y < gridRows; y++) {
+				panel.setLed(y, x,
+						bufferRef.getValueAt(x + gridCols * position, y));
 			}
 		}
 	}
@@ -411,8 +411,8 @@ public class EditAnimationPanel extends JPanel
 	public void onLedChange(int row, int column, boolean newValue) {
 		// System.out.println("LED Changed: " + row + "/" + column + " to " +
 		// newValue);
-		bufferRef.setValueAt(column + DisplayBuffer.COLUMNS * currentPosition,
-				row, newValue);
+		bufferRef
+				.setValueAt(column + gridCols * currentPosition, row, newValue);
 		rawInputTextField.setText(bufferRef.getRawString());
 	}
 

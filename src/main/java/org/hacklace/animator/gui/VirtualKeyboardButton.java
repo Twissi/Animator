@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JButton;
 
-import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.FontUtil;
 
 public class VirtualKeyboardButton extends JButton {
@@ -24,7 +23,7 @@ public class VirtualKeyboardButton extends JButton {
 		image = new BufferedImage(5, 7, BufferedImage.TYPE_INT_ARGB);
 		// paint the font data to the image
 		int[] animationBytes = FontUtil.getFiveBytesForIndex(index);
-		for (int i = 0; i < DisplayBuffer.COLUMNS; i++) {
+		for (int i = 0; i < animationBytes.length; i++) {
 			for (int bit = 0; bit < 7; bit++) {
 				if (i < animationBytes.length) {
 					if ((animationBytes[i] & (int) Math.pow(2, bit)) != 0) {

@@ -2,6 +2,7 @@ package org.hacklace.animator.displaybuffer;
 
 import org.hacklace.animator.ConversionUtil;
 import org.hacklace.animator.IllegalHacklaceConfigFileException;
+import org.hacklace.animator.IniConf;
 import org.hacklace.animator.ModusByte;
 import org.hacklace.animator.enums.AnimationType;
 import org.hacklace.animator.enums.Delay;
@@ -13,18 +14,17 @@ public abstract class DisplayBuffer implements Cloneable {
 
 	protected boolean[][] data;
 
-	public static final int ROWS = 7;
-
-	public static final int COLUMNS = 5;
-
 	public static final int MAX_COLUMNS = 200;
 
 	protected int position;
 
 	protected ModusByte modusByte;
+	
+	protected static int gridRows = IniConf.getInstance().rows();
+	protected static int gridCols = IniConf.getInstance().columns();
 
 	protected DisplayBuffer() {
-		data = new boolean[MAX_COLUMNS][ROWS];
+		data = new boolean[MAX_COLUMNS][gridRows];
 		position = 0;
 		modusByte = new ModusByte();
 	}
@@ -35,7 +35,7 @@ public abstract class DisplayBuffer implements Cloneable {
 
 	protected void clearData() {
 		for (int x = 0; x < MAX_COLUMNS; x++) {
-			for (int y = 0; y < ROWS; y++) {
+			for (int y = 0; y < gridRows; y++) {
 				data[x][y] = false;
 			}
 		}
@@ -80,10 +80,10 @@ public abstract class DisplayBuffer implements Cloneable {
 	 */
 
 	private Grid getGrid(int offset) {
-		Grid newGrid = new Grid(ROWS, COLUMNS);
+		Grid newGrid = new Grid(gridRows, gridCols);
 
-		for (int column = 0; column < COLUMNS; column++) {
-			for (int row = 0; row < ROWS; row++) {
+		for (int column = 0; column < gridCols; column++) {
+			for (int row = 0; row < gridRows; row++) {
 				newGrid.setColumnRow(column, row, data[position + offset + column][row]);
 			}
 		}
@@ -146,7 +146,7 @@ public abstract class DisplayBuffer implements Cloneable {
 		try {
 			DisplayBuffer copy = (DisplayBuffer) super.clone();
 			copy.modusByte = this.modusByte.clone();
-			copy.data = new boolean[MAX_COLUMNS][ROWS];
+			copy.data = new boolean[MAX_COLUMNS][gridRows];
 			for (int colIndex = 0; colIndex < this.data.length; colIndex++) {
 				boolean[] column = this.data[colIndex];
 				copy.data[colIndex] = column.clone();
@@ -175,7 +175,7 @@ public abstract class DisplayBuffer implements Cloneable {
 	 * @return
 	 */
 	public static int getNumGrids() {
-		return MAX_COLUMNS / COLUMNS;
+		return MAX_COLUMNS / gridCols;
 	}
 	
 	/**
@@ -262,6 +262,10 @@ public abstract class DisplayBuffer implements Cloneable {
 		}
 		stringBuilder.append("\n");
 		return stringBuilder.toString();
+	}
+	
+	public int getMaxColumns() {
+		return MAX_COLUMNS;
 	}
 
 }

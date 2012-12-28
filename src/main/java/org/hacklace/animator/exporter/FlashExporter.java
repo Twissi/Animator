@@ -25,7 +25,7 @@ public class FlashExporter {
 	private SerialPort  serialPort;
 		
 	public FlashExporter() {
-		conf = new IniConf();
+		conf = IniConf.getInstance();
 	}
 	
 	@SuppressWarnings("unchecked")

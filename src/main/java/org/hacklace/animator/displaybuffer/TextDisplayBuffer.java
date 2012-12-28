@@ -101,7 +101,7 @@ public class TextDisplayBuffer extends DisplayBuffer {
 
 		// clear all bits after the last column
 		for (int column = totalAnimationByteIndex; column < MAX_COLUMNS; column++) {
-			for (int row = 0; row < DisplayBuffer.ROWS /* 7 */; row++) {
+			for (int row = 0; row < gridRows /* 7 */; row++) {
 				data[column][row] = false;
 			}
 		}

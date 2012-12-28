@@ -11,8 +11,8 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 	}
 
 	public void addGrid(Grid grid) {
-		for (int column = 0; column < COLUMNS; column++) {
-			for (int row = 0; row < ROWS; row++) {
+		for (int column = 0; column < gridCols; column++) {
+			for (int row = 0; row < gridRows; row++) {
 				this.data[position + column][row] = grid.getColumnRow(column,
 						row);
 			}
@@ -21,8 +21,8 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 	}
 
 	public void deleteLastGrid() {
-		for (int column = 0; column < COLUMNS; column++) {
-			for (int row = 0; row < ROWS; row++) {
+		for (int column = 0; column < gridCols; column++) {
+			for (int row = 0; row < gridRows; row++) {
 				this.data[position + column][row] = false;
 			}
 		}

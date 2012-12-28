@@ -13,8 +13,9 @@ public class IniConf {
 	
 	private final static String configPath = "/animatorconf.ini";
 	private HierarchicalINIConfiguration conf;
+	private static IniConf instance;
 	
-	public IniConf(String path) {
+	private IniConf(String path) {
 		URL url = this.getClass().getResource(path);
 		try {			
 			conf = new HierarchicalINIConfiguration(url);
@@ -24,8 +25,33 @@ public class IniConf {
 		}
 	}
 	
-	public IniConf() {		
+	private IniConf() {		
 		this(configPath);
+	}
+	
+	public IniConf clone() { return null; };
+	
+	/**
+	 * Singleton
+	 * @return
+	 */
+	public static IniConf getInstance() {
+		if (instance == null) {
+			instance = new IniConf();
+		}
+		return instance;
+	}
+	
+	/**
+	 * Singleton for different ini file, eg. in unit tests
+	 * @param fileName
+	 * @return
+	 */
+	public static IniConf getInstance(String fileName) {
+		if (instance == null) {
+			instance = new IniConf(fileName);
+		}
+		return instance;
 	}
 	
 	public int rows() {
