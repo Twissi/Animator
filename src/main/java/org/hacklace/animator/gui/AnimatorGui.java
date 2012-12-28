@@ -9,6 +9,7 @@ import javax.swing.SwingUtilities;
 
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.IllegalHacklaceConfigFileException;
+import org.hacklace.animator.IniConf;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -98,7 +99,7 @@ public class AnimatorGui extends JFrame {
 		// Set stuff
 		setTitle(title);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setPreferredSize(new Dimension(900, 500));
+		setPreferredSize(new Dimension(IniConf.getInstance().displayWidth(), IniConf.getInstance().displayHeight()));
 
 		pack();
 
