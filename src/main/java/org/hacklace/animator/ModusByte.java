@@ -9,7 +9,8 @@ public class ModusByte implements Cloneable {
 	private byte bits;
 
 	public ModusByte() {
-
+		this.bits = 0x04; // medium speed
+        // avoids $00 which would mean end of file
 	}
 
 	public ModusByte(byte b) {

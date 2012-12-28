@@ -16,7 +16,7 @@ public abstract class DisplayBuffer implements Cloneable {
 
 	public static final int MAX_COLUMNS = 200;
 
-	protected ModusByte modusByte;
+	protected ModusByte modusByte = new ModusByte();
 
 	protected static int gridRows = IniConf.getInstance().rows();
 	protected static int gridCols = IniConf.getInstance().columns();
@@ -39,11 +39,13 @@ public abstract class DisplayBuffer implements Cloneable {
 	}
 
 	/**
-	 * Top left corner is (0,0)
-	 * Note: For convenience this returns boolean false for non-existent coordinates.
+	 * Top left corner is (0,0) Note: For convenience this returns boolean false
+	 * for non-existent coordinates.
 	 * 
-	 * @param x right (column)
-	 * @param y down (row)
+	 * @param x
+	 *            right (column)
+	 * @param y
+	 *            down (row)
 	 * @return
 	 */
 	public boolean getValueAt(int x, int y) {
@@ -142,44 +144,197 @@ public abstract class DisplayBuffer implements Cloneable {
 	 */
 	public static DisplayBuffer createBufferFromLine(String cfgLine,
 			int lineNumber) throws IllegalHacklaceConfigFileException {
-		String statusByteString = cfgLine.substring(0, 3);
-		ModusByte modusByte = new ModusByte(statusByteString, lineNumber);
+		String modusByteString = cfgLine.substring(0, 3);
+		ModusByte modusByte = new ModusByte(modusByteString, lineNumber);
 		if (modusByte.isEOF()) {
 			return null;
 		}
 
-		// text or graphic animation?
-		StepWidth stepWidth = modusByte.getStepWidth();
-		DisplayBuffer buffer = null;
-		String restOfLine = cfgLine.substring(4);
-		if (restOfLine.startsWith("~")) {
-			char letter = restOfLine.charAt(1);
-			ReferenceDisplayBuffer referenceDisplayBuffer = new ReferenceDisplayBuffer(
-					letter);
+		String restOfLine = getRestOfLine(cfgLine);
+		AnimationType animationType = restOfLineAnalyzeType(restOfLine);
+        DisplayBuffer displayBuffer = createDisplayBuffer(modusByte, animationType, restOfLine, lineNumber);
+		return displayBuffer;
+		
+	}
 
-			buffer = referenceDisplayBuffer;
-		} else if (stepWidth == StepWidth.ONE) {
-			TextDisplayBuffer textDisplayBuffer = new TextDisplayBuffer(
-					restOfLine);
-			buffer = textDisplayBuffer;
-		} else if (restOfLine.startsWith("$FF")) {
-			GraphicDisplayBuffer graphicDisplayBuffer = new GraphicDisplayBuffer();
-			byte[] aniBytes = ConversionUtil.createByteArrayFromString(
-					restOfLine.substring(4, restOfLine.length() - 4),
-					lineNumber); // cut off $FF in beginning and end
-			graphicDisplayBuffer.setDataFromBytes(aniBytes);
-			buffer = graphicDisplayBuffer;
-		} else {
-			MixedDisplayBuffer mixedDisplayBuffer = new MixedDisplayBuffer(
-					restOfLine);
-			buffer = mixedDisplayBuffer;
+	private static DisplayBuffer createDisplayBuffer(ModusByte modusByte,
+			AnimationType animationType, String restOfLine, int lineNumber) throws IllegalHacklaceConfigFileException {
+		switch(animationType) {
+		case TEXT :
+			return new TextDisplayBuffer(modusByte, restOfLine);
+		case GRAPHIC:
+			return new GraphicDisplayBuffer(modusByte, restOfLine, lineNumber); 
+		case REFERENCE:
+			return new ReferenceDisplayBuffer(modusByte, restOfLine.charAt(1));
+		case MIXED:
+			return new MixedDisplayBuffer(modusByte, restOfLine);
+		
+		} 
+		return null;
+	}
+
+	public static AnimationType fullLineAnalyzetype(String fullLine) {
+		return restOfLineAnalyzeType(getRestOfLine(fullLine));
+	}
+	
+	/**
+	 * 
+	 * @param restOfLine
+	 *            configuration line without the first four chars for the modus
+	 *            byte
+	 * @return
+	 */
+	public static AnimationType restOfLineAnalyzeType(String restOfLine) {
+		
+		// 0 or 1 chars cannot be reference/graphic/mixed
+		if (restOfLine.trim().length() < 2) 
+			return AnimationType.TEXT;
+
+		if (restOfLineIsReference(restOfLine))
+			return AnimationType.REFERENCE;
+
+		// contains, but is not reference
+		if (lineContainsReference(restOfLine))
+			return AnimationType.MIXED;
+
+		// contains no direct modes and no reference => is text
+		if (!restOfLineContainsDirectMode(restOfLine))
+			return AnimationType.TEXT;
+
+		if (restOfLineIsGraphicOnly(restOfLine))
+			return AnimationType.GRAPHIC;
+
+		return AnimationType.MIXED;
+	}
+
+	public static String getRestOfLine(String fullLine) {
+		if (fullLine.length() < 4)
+			return "";
+		return fullLine.substring(4);
+	}
+
+	public static boolean restOfLineContainsDirectMode(String restOfLine) {
+		return restOfLineNumberOfDirectModes(restOfLine) > 0;
+	}
+
+	public static boolean fullLineContainsDirectMode(String fullLine) {
+		return restOfLineContainsDirectMode(getRestOfLine(fullLine));
+	}
+
+	/**
+	 * 
+	 * @param restOfLine
+	 * @return true for ~A etc, false for ~~, false for others, slightly
+	 *         illegitimately true for "~A " (trailing spaces)
+	 */
+	public static boolean restOfLineIsReference(String restOfLine) {
+		return restOfLine.startsWith("~") && restOfLine.trim().length() == 2
+				&& restOfLine.charAt(1) != '~';
+		// Actually "~A " would have to be mixed, but the user
+		// may have entered the trailing space accidentally.
+		// It's not really legitimate to cut it off, but
+		// mixed buffers cannot be edited, so we do it anyway.
+		// Instead of the trailing space the user should use delay.
+	}
+
+	public static boolean fullLineIsReference(String fullLine) {
+		return restOfLineIsReference(getRestOfLine(fullLine));
+	}
+
+	/**
+	 * 
+	 * @param line
+	 *            can be rest of line (without modus byte) or full line (with
+	 *            modus byte)
+	 * @return
+	 */
+	public static boolean lineContainsReference(String line) {
+		if (line == null)
+			return false;
+		if (line.length() < 2)
+			return false;
+		if (!line.contains("~"))
+			return false;
+		// line now certainly contains ~
+		char last = ' ';
+		for (char c : line.toCharArray()) {
+			if (last == '~' && c != '~') {
+				// ~~ is not a reference, everything else is
+				return true;
+			}
+			if (last == '~' && c == '~') {
+				last = ' ';
+				// prevent e.g. ~~A to be read as reference instead of as text ~
+				// and A
+			} else {
+				last = c;
+			}
 		}
-		assert (buffer != null);
-		buffer.setDirection(modusByte.getDirection());
-		buffer.setSpeed(modusByte.getSpeed());
-		buffer.setStepWidth(stepWidth);
-		buffer.setDelay(modusByte.getDelay());
-		return buffer;
+		return false;
+	}
+
+	public final static String DIRECT = "$FF";
+
+	/**
+	 * rest of line starts with $FF and ends with $FF, (or other char instead of
+	 * ,)
+	 * 
+	 * @param fullLine
+	 * @return
+	 */
+	public static boolean restOfLineIsGraphicOnly(String restOfLine) {
+		if (!restOfLine.startsWith(DIRECT))
+			return false;
+		int length = restOfLine.length();
+		if (length < 4)
+			return false;
+		String end = restOfLine.substring(length - 4, length - 1);
+		// last char is , or space, leave out
+		if (!end.equals(DIRECT))
+			return false;
+		if (restOfLineNumberOfDirectModes(restOfLine) == 2)
+			return true;
+		return false;
+	}
+
+	/**
+	 * rest of line starts with $FF and ends with $FF, (or other char instead of
+	 * ,)
+	 * 
+	 * @param fullLine
+	 * @return
+	 */
+	public static boolean fullLineIsGraphicOnly(String fullLine) {
+		return restOfLineIsGraphicOnly(getRestOfLine(fullLine));
+	}
+
+	/**
+	 * How often does $FF occur? (Once for each start and end of direct mode)
+	 * 
+	 * @param restOfLine
+	 * @return
+	 */
+	public static int restOfLineNumberOfDirectModes(String restOfLine) {
+		return restOfLine.split(DIRECT).length - 1;
+	}
+
+	/**
+	 * How often does $FF occur? (Once for each start and end of direct mode)
+	 * 
+	 * @param fullLine
+	 * @return
+	 */
+	public static int fullLineNumberOfDirectModes(String fullLine) {
+		return restOfLineNumberOfDirectModes(getRestOfLine(fullLine));
+	}
+
+	/**
+	 * 
+	 * @param fullLine
+	 * @return
+	 */
+	public static AnimationType fullLineAnalyzeType(String fullLine) {
+		return fullLineAnalyzeType(getRestOfLine(fullLine));
 	}
 
 	/**

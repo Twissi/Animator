@@ -2,12 +2,25 @@ package org.hacklace.animator.displaybuffer;
 
 import static org.hacklace.animator.ConversionUtil.convertAnimationByteTo7Booleans;
 
+import org.hacklace.animator.ConversionUtil;
+import org.hacklace.animator.IllegalHacklaceConfigFileException;
+import org.hacklace.animator.ModusByte;
 import org.hacklace.animator.enums.AnimationType;
 
 public class GraphicDisplayBuffer extends DisplayBuffer {
 
 	public GraphicDisplayBuffer() {
 		super();
+	}
+
+	public GraphicDisplayBuffer(ModusByte modusByte, String restOfLine, int lineNumber) throws IllegalHacklaceConfigFileException {
+		super();
+		this.modusByte = modusByte;
+		byte[] aniBytes = ConversionUtil.createByteArrayFromString(
+				restOfLine.substring(4, restOfLine.length() - 4),
+				lineNumber); // cut off $FF in beginning and end
+		this.setDataFromBytes(aniBytes);
+	
 	}
 
 	public void setDataFromBytes(byte[] aniBytes) {

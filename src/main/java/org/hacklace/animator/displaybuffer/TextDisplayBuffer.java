@@ -4,6 +4,7 @@ import static org.hacklace.animator.ConversionUtil.convertAnimationByteTo7Boolea
 import static org.hacklace.animator.ConversionUtil.convertStringToInt;
 import static org.hacklace.animator.ConversionUtil.isHexSequence;
 
+import org.hacklace.animator.ModusByte;
 import org.hacklace.animator.enums.AnimationType;
 
 public class TextDisplayBuffer extends DisplayBuffer {
@@ -15,8 +16,9 @@ public class TextDisplayBuffer extends DisplayBuffer {
 		this.text = "";
 	}
 
-	public TextDisplayBuffer(String text) {
+	public TextDisplayBuffer(ModusByte modusByte, String text) {
 		super();
+		this.modusByte = modusByte;
 		setText(text);
 	}
 
