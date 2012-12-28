@@ -107,6 +107,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 		optionsPanel.addObserver(this);
 		// set options and data from the display buffer
 		setFromDisplayBuffer(displayBuffer);
+		rawInputTextField.setText(bufferRef.getRawString());
 	}
 	
 	/**

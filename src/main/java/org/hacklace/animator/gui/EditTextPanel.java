@@ -36,7 +36,6 @@ public class EditTextPanel extends EditPanel {
 	public EditTextPanel(DisplayBuffer displayBuffer) {
 		super(displayBuffer);
 		textEditField.setText(((TextDisplayBuffer)bufferRef).getText());
-		rawInputTextField.setText(bufferRef.getRawString());
 	}
 
 	@Override
