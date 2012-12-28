@@ -1,6 +1,7 @@
 package org.hacklace.animator.gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 
 import javax.swing.JButton;
 
@@ -51,6 +52,17 @@ public class Led extends JButton implements LedInterface {
 		this.row = row;
 		this.column = column;
 		this.observer = o;
+	}
+
+	@Override
+	public Dimension getPreferredSize() {
+		Dimension d = super.getPreferredSize();
+		if (d.width > d.height) {
+			d.width = d.height;
+		} else if (d.height > d.width) {
+			d.height = d.width;
+		}
+		return d;
 	}
 
 }
