@@ -184,7 +184,6 @@ public class AnimationListActions {
 				// same as graphic, no break!
 			case GRAPHIC:
 				// Start at first frame
-				displayBuffer.rewind();
 				EditAnimationPanel panel = animatorGui.getEditAnimationPanel();
 				panel.reset();
 				panel.setFromDisplayBuffer(displayBuffer, true);

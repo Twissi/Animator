@@ -10,33 +10,12 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 		super();
 	}
 
-	public void addGrid(Grid grid) {
-		for (int column = 0; column < gridCols; column++) {
-			for (int row = 0; row < gridRows; row++) {
-				this.data[position + column][row] = grid.getColumnRow(column,
-						row);
-			}
-		}
-		moveRight();
-	}
-
-	public void deleteLastGrid() {
-		for (int column = 0; column < gridCols; column++) {
-			for (int row = 0; row < gridRows; row++) {
-				this.data[position + column][row] = false;
-			}
-		}
-		moveLeft();
-	}
-
 	public void setDataFromBytes(byte[] aniBytes) {
 		for (int column = 0; column < aniBytes.length; column++) {
 			byte aniByte = aniBytes[column];
 			this.data[column] = convertAnimationByteTo7Booleans(aniByte);
 		}
-		moveRight(); // set position to 5
 	}
-
 
 	@Override
 	public AnimationType getAnimationType() {
@@ -53,7 +32,7 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 			byte value = (byte) booleanArrayAsInt(bools);
 			allByteColumns[colIndex] = value;
 			if (value != 0) {
-			  numberOfUsedColumns = colIndex+1;	
+				numberOfUsedColumns = colIndex + 1;
 			}
 		}
 		byte[] usedByteColumns = new byte[numberOfUsedColumns];
@@ -61,7 +40,7 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 				numberOfUsedColumns);
 		return usedByteColumns;
 	}
-	
+
 	public static int booleanArrayAsInt(boolean[] array) {
 		int value = 0;
 		for (boolean bool : array) {
