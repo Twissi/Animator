@@ -1,5 +1,7 @@
 package org.hacklace.animator.gui;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -7,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -14,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -58,6 +62,24 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 		return null;
 	}
 	
+	/**
+	 * This is a helper function for developing layouts.
+	 * It doesn't work though, if you want to use it you have to fix the label so it actually uses minWidth/height
+	 * @param text
+	 * @param color
+	 * @param minWidth
+	 * @param minHeight
+	 * @return
+	 */
+	@SuppressWarnings("unused")
+	private JLabel createDebugLabel(String text, Color color, int minWidth, int minHeight) {
+		JLabel label = new JLabel(text);
+		label.setBorder(BorderFactory.createLineBorder(Color.black));
+		label.setBackground(color);
+		label.setMinimumSize(new Dimension(minWidth, minHeight));
+		return label;
+	}
+	
 	public EditPanel(DisplayBuffer displayBuffer) {
 		bufferRef = displayBuffer.clone();
 		origBuffer = displayBuffer;
@@ -72,7 +94,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 		c.anchor = GridBagConstraints.NORTHWEST;
 		c.insets = new Insets(5, 5, 5, 5);
 		// Left side: Options panel, spanning all rows at 0,0
-		c.gridheight = GridBagConstraints.REMAINDER;
+		c.gridheight = 2;
 		add(optionsPanel, c);
 		// Right side
 		c.gridheight = 1;

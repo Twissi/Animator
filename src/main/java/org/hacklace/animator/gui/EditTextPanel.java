@@ -1,6 +1,9 @@
 package org.hacklace.animator.gui;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -38,15 +41,20 @@ public class EditTextPanel extends EditPanel {
 
 	@Override
 	protected void addMoreComponents(JPanel panel) {
-		panel.setLayout(new GridLayout(0, 1));
+		panel.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridy = GridBagConstraints.RELATIVE;
 		textLedPanel = new LedPanel(IniConf.getInstance().rows(), IniConf.getInstance().columns() * 5);
-		panel.add(textLedPanel);
+		panel.add(textLedPanel, c);
+		c.insets = new Insets(5, 5, 5, 5);
 		JSlider positionSlider = createPositionSlider();
-		panel.add(positionSlider);
+		panel.add(positionSlider, c);
+		c.insets = new Insets(0, 0, 0, 0);
 		virtualKeyboardPanel = createVirtualKeyboardPanel();
-		panel.add(virtualKeyboardPanel);
+		panel.add(virtualKeyboardPanel, c);
 		textPanel = createTextPanel();
-		panel.add(textPanel);
+		panel.add(textPanel, c);
 	}
 
 	private JPanel createVirtualKeyboardPanel() {
