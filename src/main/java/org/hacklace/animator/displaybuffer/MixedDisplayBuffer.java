@@ -34,5 +34,10 @@ public class MixedDisplayBuffer extends DisplayBuffer {
 	public AnimationType getAnimationType() {
 		return AnimationType.MIXED;
 	}
+	
+	@Override
+	public String getRawString() {
+		return this.modusByte.getRawString() + getStringValue();
+	}
 
 }

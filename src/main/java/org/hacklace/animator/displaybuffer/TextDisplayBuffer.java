@@ -118,5 +118,10 @@ public class TextDisplayBuffer extends DisplayBuffer {
 	public String toString() {
 		return getAnimationType().getDescription() + " " + text;
 	}
+	
+	@Override
+	public String getRawString() {
+		return this.modusByte.getRawString() + getText();
+	}
 
 }

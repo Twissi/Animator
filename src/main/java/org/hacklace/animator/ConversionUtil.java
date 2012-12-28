@@ -25,24 +25,26 @@ public class ConversionUtil {
 		assert (threeCharString.charAt(0) == '$');
 		return Integer.parseInt(threeCharString.substring(1), 16);
 	}
-	
+
 	/**
 	 * 
 	 * @param potentialHexString
 	 *            a String of length 3
-	 * @return true if string is $nn with n hex (0-F), 
-	 * false if the length of the String is not 3 or if it does not start with $ or if the last two chars are not hex
+	 * @return true if string is $nn with n hex (0-F), false if the length of
+	 *         the String is not 3 or if it does not start with $ or if the last
+	 *         two chars are not hex
 	 */
 	public static boolean isHexSequence(String potentialHexString) {
 		if (potentialHexString.length() != 3)
 			return false;
-		return potentialHexString.matches("^\\$[0-9A-F]{2}$"); 
+		return potentialHexString.matches("^\\$[0-9A-F]{2}$");
 		// ...................................$nn (exactly 3 chars)
 	}
 
 	/**
 	 * 
-	 * @param number -128 to 127
+	 * @param number
+	 *            -128 to 127
 	 * @return $nn a String of length 3
 	 */
 	public static String convertByteToString(byte number) {
@@ -51,6 +53,19 @@ public class ConversionUtil {
 			value += 256;
 		String leadingZero = (value < 0x10) ? "0" : "";
 		return "$" + leadingZero + Integer.toString(value, 16).toUpperCase();
+	}
+
+	/**
+	 * 
+	 * @param numbers
+	 * @return e.g. "$74 $28 $32 " (always a trailing space)
+	 */
+	public static String convertBytesToString(byte[] numbers) {
+		StringBuilder sb = new StringBuilder();
+		for (byte number : numbers) {
+			sb.append(convertByteToString(number)).append(" ");;
+		}
+		return sb.toString();
 	}
 
 	/**

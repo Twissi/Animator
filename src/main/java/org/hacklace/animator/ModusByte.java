@@ -136,17 +136,25 @@ public class ModusByte implements Cloneable {
 		return copy;
 	}
 
-	public ModusByte(String statusByteString, int line)
+	public ModusByte(String modusByteString, int line)
 			throws IllegalHacklaceConfigFileException {
-		if (!ConversionUtil.isHexSequence(statusByteString)) {
-			throw new IllegalHacklaceConfigFileException("Status string "
-					+ statusByteString + " is not hex ($nn) in line " + line + ".");
+		if (!ConversionUtil.isHexSequence(modusByteString)) {
+			throw new IllegalHacklaceConfigFileException("Modus string "
+					+ modusByteString + " is not hex ($nn) in line " + line + ".");
 		}
-		this.bits = ConversionUtil.convertStringToByte(statusByteString);
+		this.bits = ConversionUtil.convertStringToByte(modusByteString);
 	}
 
-	public ModusByte(String statusByteString) {
-		this.bits = ConversionUtil.convertStringToByte(statusByteString);
+	public ModusByte(String modusByteString) {
+		this.bits = ConversionUtil.convertStringToByte(modusByteString);
+	}
+
+	/**
+	 * 
+	 * @return e.g. "$45," (4 chars)
+	 */
+	public String getRawString() {
+		return ConversionUtil.convertByteToString(this.bits)+",";
 	}
 
 }

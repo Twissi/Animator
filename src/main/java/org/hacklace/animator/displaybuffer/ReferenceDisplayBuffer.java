@@ -36,5 +36,10 @@ public class ReferenceDisplayBuffer extends DisplayBuffer {
 	public String toString() {
 		return getAnimationType().getDescription() + " ~" + letter;
 	}
+	
+	@Override
+	public String getRawString() {
+		return this.modusByte.getRawString() + "~" + this.getLetter();
+	}
 
 }

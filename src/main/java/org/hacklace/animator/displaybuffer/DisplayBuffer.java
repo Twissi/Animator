@@ -1,6 +1,5 @@
 package org.hacklace.animator.displaybuffer;
 
-import org.hacklace.animator.ConversionUtil;
 import org.hacklace.animator.IllegalHacklaceConfigFileException;
 import org.hacklace.animator.IniConf;
 import org.hacklace.animator.ModusByte;
@@ -348,36 +347,7 @@ public abstract class DisplayBuffer implements Cloneable {
 	 * 
 	 * @return the raw string used in config files
 	 */
-	public String getRawString() {
-		StringBuilder stringBuilder = new StringBuilder();
-		String statusByteString = ConversionUtil.convertByteToString(modusByte
-				.getByte());
-		stringBuilder.append(statusByteString).append(",");
-		AnimationType animationType = getAnimationType();
-		if (animationType == AnimationType.TEXT) {
-			TextDisplayBuffer textDisplayBuffer = (TextDisplayBuffer) this;
-			stringBuilder.append(textDisplayBuffer.getText());
-		} else if (animationType == AnimationType.GRAPHIC) {
-			GraphicDisplayBuffer graphicDisplayBuffer = (GraphicDisplayBuffer) this;
-			byte[] columns = graphicDisplayBuffer.getColumnsAsBytes();
-			stringBuilder.append("$FF ");
-			for (byte column : columns) {
-				stringBuilder
-						.append(ConversionUtil.convertByteToString(column))
-						.append(" ");
-			}
-			stringBuilder.append("$FF,");
-		} else if (animationType == AnimationType.REFERENCE) {
-			ReferenceDisplayBuffer referenceDisplayBuffer = (ReferenceDisplayBuffer) this;
-			stringBuilder.append("~")
-					.append(referenceDisplayBuffer.getLetter());
-		} else {
-			MixedDisplayBuffer mixedDisplayBuffer = (MixedDisplayBuffer) this;
-			stringBuilder.append(mixedDisplayBuffer.getStringValue());
-		}
-		stringBuilder.append("\n");
-		return stringBuilder.toString();
-	}
+	public abstract String getRawString();
 
 	public int getMaxColumns() {
 		return MAX_COLUMNS;

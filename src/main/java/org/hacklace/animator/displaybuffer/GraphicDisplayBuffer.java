@@ -1,6 +1,7 @@
 package org.hacklace.animator.displaybuffer;
 
 import static org.hacklace.animator.ConversionUtil.convertAnimationByteTo7Booleans;
+import static org.hacklace.animator.ConversionUtil.convertBytesToString;
 
 import org.hacklace.animator.ConversionUtil;
 import org.hacklace.animator.IllegalHacklaceConfigFileException;
@@ -13,14 +14,15 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 		super();
 	}
 
-	public GraphicDisplayBuffer(ModusByte modusByte, String restOfLine, int lineNumber) throws IllegalHacklaceConfigFileException {
+	public GraphicDisplayBuffer(ModusByte modusByte, String restOfLine,
+			int lineNumber) throws IllegalHacklaceConfigFileException {
 		super();
 		this.modusByte = modusByte;
 		byte[] aniBytes = ConversionUtil.createByteArrayFromString(
-				restOfLine.substring(4, restOfLine.length() - 4),
-				lineNumber); // cut off $FF in beginning and end
+				restOfLine.substring(4, restOfLine.length() - 4), lineNumber); 
+		// cut off $FF in beginning and end
 		this.setDataFromBytes(aniBytes);
-	
+
 	}
 
 	public void setDataFromBytes(byte[] aniBytes) {
@@ -75,6 +77,11 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 
 	public void toggleColumnRow(int column, int row) {
 		data[column][row] = !data[column][row];
+	}
+
+	@Override
+	public String getRawString() {
+		return modusByte.getRawString() + "$FF " + convertBytesToString(getColumnsAsBytes()) + "FF,";
 	}
 
 }
