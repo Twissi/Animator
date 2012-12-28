@@ -44,8 +44,9 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 	private JTextField editTextField;
 	private JTextField rawInputTextField;
 	private LedPanel prevLedPanel; // display of the previous frame
-	private LedPanel ledPanel; // display/edit of the current frame
+	private LedPanel currentLedPanel; // display/edit of the current frame
 	private LedPanel nextLedPanel; // display of the next frame
+	private LedPanel textLedPanel; // display for text
 	private JSlider positionSlider;
 	private JLabel prevLabel;
 	private JLabel currentLabel;
@@ -76,6 +77,7 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 		c.gridheight = GridBagConstraints.REMAINDER;
 		add(optionsPanel, c);
 		// Right side, 4 rows, no spans
+		c.anchor = GridBagConstraints.NORTH;
 		c.gridheight = 1;
 		c.gridx = 1;
 		add(ledPanelPanel, c);
@@ -166,15 +168,21 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 		prevLedPanel.setEnabled(false);
 		c.gridx = 0;
 		ledPanelPanel.add(prevLedPanel, c);
-		ledPanel = new LedPanel(gridRows, gridCols);
-		ledPanel.addObserver(this);
+		currentLedPanel = new LedPanel(gridRows, gridCols);
+		currentLedPanel.addObserver(this);
 		c.gridx = 1;
-		ledPanelPanel.add(ledPanel, c);
+		ledPanelPanel.add(currentLedPanel, c);
 		nextLedPanel = new LedPanel(gridRows, gridCols);
 		nextLedPanel.setEnabled(false);
 		c.gridx = 2;
 		ledPanelPanel.add(nextLedPanel, c);
-		// second row: 3 labels for frame number
+		// second row: 1 big grid spanning all cols for text
+		textLedPanel = new LedPanel(gridRows, 5 * gridCols);
+		c.gridx = 0;
+		c.gridwidth = 3;
+		ledPanelPanel.add(textLedPanel, c);
+		c.gridwidth = 1;
+		// third row: 3 labels for frame number
 		c.gridy = 1;
 		c.gridx = 0;
 		prevLabel = new JLabel("-", null, SwingConstants.CENTER);
@@ -185,7 +193,7 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 		nextLabel = new JLabel("-", null, SwingConstants.CENTER);
 		c.gridx = 2;
 		ledPanelPanel.add(nextLabel, c);
-		// third row: One slider across all columns
+		// fourth row: One slider across all columns
 		c.gridy = 2;
 		c.gridx = 0;
 		c.gridwidth = 3;
@@ -296,8 +304,8 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 	 */
 
 	public void copyBufferToPanel(int position, LedPanel panel) {
-		for (int x = 0; x < gridCols; x++) {
-			for (int y = 0; y < gridRows; y++) {
+		for (int x = 0; x < panel.getCols(); x++) {
+			for (int y = 0; y < panel.getRows(); y++) {
 				panel.setLed(y, x,
 						bufferRef.getValueAt(x + gridCols * position, y));
 			}
@@ -332,7 +340,8 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 			prevLedPanel.clear();
 			prevLabel.setText("-");
 		}
-		copyBufferToPanel(currentPosition, ledPanel);
+		copyBufferToPanel(currentPosition, currentLedPanel);
+		copyBufferToPanel(currentPosition, textLedPanel);
 		currentLabel.setText(Integer.toString(currentPosition));
 		if (currentPosition < DisplayBuffer.getNumGrids() - 1) {
 			copyBufferToPanel(currentPosition + 1, nextLedPanel);
@@ -350,7 +359,15 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 	public void switchMode() {
 		// treat text buffers different from graphics buffers
 		if (bufferRef.getAnimationType() == AnimationType.TEXT) {
-			ledPanel.setEnabled(false);
+			// hide animation edit stuff
+			prevLedPanel.setVisible(false);
+			currentLedPanel.setVisible(false);
+			nextLedPanel.setVisible(false);
+			prevLabel.setVisible(false);
+			currentLabel.setVisible(false);
+			nextLabel.setVisible(false);
+			// show text edit stuff
+			textLedPanel.setVisible(true);
 			editTextPanel.setVisible(true);
 			virtualKeyboardPanel.setVisible(true);
 			String text = ((TextDisplayBuffer) bufferRef).getText();
@@ -359,7 +376,15 @@ public class EditAnimationPanel extends JPanel implements OptionsObserver,
 				editTextField.setText(text);
 			}
 		} else {
-			ledPanel.setEnabled(true);
+			// show animation edit stuff
+			prevLedPanel.setVisible(true);
+			currentLedPanel.setVisible(true);
+			nextLedPanel.setVisible(true);
+			prevLabel.setVisible(true);
+			currentLabel.setVisible(true);
+			nextLabel.setVisible(true);
+			// hide text edit stuff
+			textLedPanel.setVisible(false);
 			editTextPanel.setVisible(false);
 			virtualKeyboardPanel.setVisible(false);
 		}

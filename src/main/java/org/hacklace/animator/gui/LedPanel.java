@@ -1,5 +1,6 @@
 package org.hacklace.animator.gui;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +94,18 @@ public class LedPanel extends JPanel implements LedObserver {
 		}
 	}
 
+	@Override
+	public Dimension getPreferredSize() {
+		return new Dimension(gridCols * 15, gridRows * 15);
+	}
+	
+	public int getRows() {
+		return gridRows;
+	}
+	
+	public int getCols() {
+		return gridCols;
+	}
 
 //	public static void main(String[] args) throws InterruptedException {
 //		JFrame f = new JFrame("Test");

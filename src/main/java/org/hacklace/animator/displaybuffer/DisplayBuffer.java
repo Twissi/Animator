@@ -19,7 +19,7 @@ public abstract class DisplayBuffer implements Cloneable {
 	protected int position;
 
 	protected ModusByte modusByte;
-	
+
 	protected static int gridRows = IniConf.getInstance().rows();
 	protected static int gridCols = IniConf.getInstance().columns();
 
@@ -28,7 +28,7 @@ public abstract class DisplayBuffer implements Cloneable {
 		position = 0;
 		modusByte = new ModusByte();
 	}
-	
+
 	protected DisplayBuffer(ModusByte modusByte) {
 		this.modusByte = modusByte;
 	}
@@ -40,17 +40,21 @@ public abstract class DisplayBuffer implements Cloneable {
 			}
 		}
 	}
-	
+
 	/**
 	 * Top left corner is (0,0)
+	 * Note: For convenience this returns boolean false for non-existent coordinates.
+	 * 
 	 * @param x right (column)
 	 * @param y down (row)
 	 * @return
 	 */
 	public boolean getValueAt(int x, int y) {
+		if (x >= MAX_COLUMNS || y >= gridRows)
+			return false;
 		return data[x][y];
 	}
-	
+
 	public void setValueAt(int x, int y, boolean value) {
 		data[x][y] = value;
 	}
@@ -84,7 +88,8 @@ public abstract class DisplayBuffer implements Cloneable {
 
 		for (int column = 0; column < gridCols; column++) {
 			for (int row = 0; row < gridRows; row++) {
-				newGrid.setColumnRow(column, row, data[position + offset + column][row]);
+				newGrid.setColumnRow(column, row, data[position + offset
+						+ column][row]);
 			}
 		}
 
@@ -126,11 +131,11 @@ public abstract class DisplayBuffer implements Cloneable {
 	public void setDelay(Delay delay) {
 		this.modusByte.setDelay(delay);
 	}
-	
+
 	public void setStepWidth(StepWidth stepWidth) {
 		this.modusByte.setStepWidth(stepWidth);
 	}
-	
+
 	public void setSpeed(Speed speed) {
 		this.modusByte.setSpeed(speed);
 	}
@@ -142,7 +147,7 @@ public abstract class DisplayBuffer implements Cloneable {
 		return "DisplayBuffer";
 	}
 
-	public DisplayBuffer clone()  {
+	public DisplayBuffer clone() {
 		try {
 			DisplayBuffer copy = (DisplayBuffer) super.clone();
 			copy.modusByte = this.modusByte.clone();
@@ -151,13 +156,13 @@ public abstract class DisplayBuffer implements Cloneable {
 				boolean[] column = this.data[colIndex];
 				copy.data[colIndex] = column.clone();
 			}
-			return copy;			
+			return copy;
 		} catch (CloneNotSupportedException e) {
 			return null;
 		}
 
 	}
-	
+
 	public boolean getColumnRow(int column, int row) {
 		return data[column][row];
 	}
@@ -169,15 +174,24 @@ public abstract class DisplayBuffer implements Cloneable {
 	public ModusByte getStatusByte() {
 		return this.modusByte;
 	}
-	
+
 	/**
 	 * returns the total number of grids
+	 * 
 	 * @return
 	 */
 	public static int getNumGrids() {
 		return MAX_COLUMNS / gridCols;
 	}
-	
+
+	public int getRows() {
+		return gridRows;
+	}
+
+	public int getCols() {
+		return gridCols;
+	}
+
 	/**
 	 * 
 	 * @param cfgLine
@@ -187,14 +201,13 @@ public abstract class DisplayBuffer implements Cloneable {
 	 * @throws IllegalHacklaceConfigFileException
 	 */
 	public static DisplayBuffer createBufferFromLine(String cfgLine,
-			int lineNumber)
-			throws IllegalHacklaceConfigFileException {
+			int lineNumber) throws IllegalHacklaceConfigFileException {
 		String statusByteString = cfgLine.substring(0, 3);
 		ModusByte modusByte = new ModusByte(statusByteString, lineNumber);
 		if (modusByte.isEOF()) {
 			return null;
 		}
-		
+
 		// text or graphic animation?
 		StepWidth stepWidth = modusByte.getStepWidth();
 		DisplayBuffer buffer = null;
@@ -203,7 +216,7 @@ public abstract class DisplayBuffer implements Cloneable {
 			char letter = restOfLine.charAt(1);
 			ReferenceDisplayBuffer referenceDisplayBuffer = new ReferenceDisplayBuffer(
 					letter);
-	
+
 			buffer = referenceDisplayBuffer;
 		} else if (stepWidth == StepWidth.ONE) {
 			TextDisplayBuffer textDisplayBuffer = new TextDisplayBuffer(
@@ -228,9 +241,10 @@ public abstract class DisplayBuffer implements Cloneable {
 		buffer.setDelay(modusByte.getDelay());
 		return buffer;
 	}
-	
+
 	/**
 	 * Generates the raw string used in config files
+	 * 
 	 * @return the raw string used in config files
 	 */
 	public String getRawString() {
@@ -248,14 +262,15 @@ public abstract class DisplayBuffer implements Cloneable {
 			byte[] columns = graphicDisplayBuffer.getColumnsAsBytes();
 			stringBuilder.append("$FF ");
 			for (byte column : columns) {
-				stringBuilder.append(ConversionUtil.convertByteToString(column))
+				stringBuilder
+						.append(ConversionUtil.convertByteToString(column))
 						.append(" ");
 			}
 			stringBuilder.append("$FF,");
 		} else if (animationType == AnimationType.REFERENCE) {
 			ReferenceDisplayBuffer referenceDisplayBuffer = (ReferenceDisplayBuffer) this;
-			stringBuilder.append("~").append(
-					referenceDisplayBuffer.getLetter());
+			stringBuilder.append("~")
+					.append(referenceDisplayBuffer.getLetter());
 		} else {
 			MixedDisplayBuffer mixedDisplayBuffer = (MixedDisplayBuffer) this;
 			stringBuilder.append(mixedDisplayBuffer.getStringValue());
@@ -263,7 +278,7 @@ public abstract class DisplayBuffer implements Cloneable {
 		stringBuilder.append("\n");
 		return stringBuilder.toString();
 	}
-	
+
 	public int getMaxColumns() {
 		return MAX_COLUMNS;
 	}
