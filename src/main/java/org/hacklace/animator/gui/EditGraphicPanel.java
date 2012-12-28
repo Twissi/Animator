@@ -8,8 +8,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 
@@ -21,7 +19,6 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 	private LedPanel prevLedPanel; // display of the previous frame
 	private LedPanel currentLedPanel; // display/edit of the current frame
 	private LedPanel nextLedPanel; // display of the next frame
-	private JSlider positionSlider;
 	private JLabel prevLabel;
 	private JLabel currentLabel;
 	private JLabel nextLabel;
@@ -75,20 +72,7 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 		c.gridx = 0;
 		c.gridwidth = 3;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		positionSlider = new JSlider(SwingConstants.HORIZONTAL, 1);
-		positionSlider.setPaintTicks(true);
-		positionSlider.setSnapToTicks(true);
-		positionSlider.setMinorTickSpacing(1);
-		positionSlider.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				// ignore the event if we don't have a valid buffer yet
-				if (bufferRef == null)
-					return;
-				currentPosition = ((JSlider) arg0.getSource()).getValue();
-				setFromDisplayBuffer(bufferRef);
-			}
-		});
+		JSlider positionSlider = createPositionSlider();
 		ledPanelPanel.add(positionSlider, c);
 		return ledPanelPanel;
 	}

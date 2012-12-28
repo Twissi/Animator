@@ -11,7 +11,11 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.IniConf;
@@ -25,7 +29,6 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 
 	protected AnimationOptionsPanel optionsPanel;
 	protected JPanel rawInputPanel;
-	
 	protected JTextField rawInputTextField;
 	
 	protected DisplayBuffer bufferRef; // our internal temporary displayBuffer for
@@ -119,6 +122,32 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 		rawInputPanel.add(button);
 		return rawInputPanel;
 	}
+	
+	/**
+	 * The position slider is not created automatically.
+	 * Any child using it must call this function and add the slider somewhere in its ui.
+	 * 
+	 * It is implemented here because its functionality is always the same.
+	 * @return
+	 */
+	public JSlider createPositionSlider() {
+		JSlider slider = new JSlider(SwingConstants.HORIZONTAL, 1);
+		slider.setPaintTicks(true);
+		slider.setSnapToTicks(true);
+		slider.setMinorTickSpacing(1);
+		slider.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				// ignore the event if we don't have a valid buffer yet
+				if (bufferRef == null)
+					return;
+				currentPosition = ((JSlider) arg0.getSource()).getValue();
+				setFromDisplayBuffer(bufferRef);
+			}
+		});
+		slider.setMaximum(DisplayBuffer.getNumGrids() - 1);
+		return slider;
+	}
 
 	/*
 	 * see note below... public void copyGridDataToPanel(Grid grid, LedPanel
@@ -180,8 +209,6 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 
 	public void onSaveAnimation() {
 		saveBuffer();
-		AnimatorGui.getInstance().getHomePanel().setVisible(true);
-		// TODO this leaks... we need to close and free ourselves if possible!
 	}
 
 }

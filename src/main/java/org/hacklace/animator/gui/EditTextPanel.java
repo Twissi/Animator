@@ -9,6 +9,7 @@ import java.awt.event.KeyListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -38,6 +39,8 @@ public class EditTextPanel extends EditPanel {
 		panel.setLayout(new GridLayout(0, 1));
 		textLedPanel = new LedPanel(IniConf.getInstance().rows(), IniConf.getInstance().columns() * 5);
 		panel.add(textLedPanel);
+		JSlider positionSlider = createPositionSlider();
+		panel.add(positionSlider);
 		virtualKeyboardPanel = createVirtualKeyboardPanel();
 		panel.add(virtualKeyboardPanel);
 		textPanel = createTextPanel();
