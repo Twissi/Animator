@@ -194,7 +194,7 @@ public abstract class DisplayBuffer implements Cloneable {
 	 */
 	public static AnimationType restOfLineAnalyzeType(String restOfLine) {
 
-		// 0 or 1 chars cannot be reference/graphic/mixed
+		// 0 or 1 chars (plus spaces) cannot be reference/graphic/mixed
 		if (restOfLine.trim().length() < 2)
 			return AnimationType.TEXT;
 
@@ -232,17 +232,11 @@ public abstract class DisplayBuffer implements Cloneable {
 	/**
 	 * 
 	 * @param restOfLine
-	 * @return true for ~A etc, false for ~~, false for others, slightly
-	 *         illegitimately true for "~A " (trailing spaces)
+	 * @return true for ~A etc, false for ~~, false for others
 	 */
 	public static boolean restOfLineIsReference(String restOfLine) {
-		return restOfLine.startsWith("~") && restOfLine.trim().length() == 2
+		return restOfLine.startsWith("~") && restOfLine.length() == 2
 				&& restOfLine.charAt(1) != '~';
-		// Actually "~A " would have to be mixed, but the user
-		// may have entered the trailing space accidentally.
-		// It's not really legitimate to cut it off, but
-		// mixed buffers cannot be edited, so we do it anyway.
-		// Instead of the trailing space the user should use delay.
 	}
 
 	public static boolean fullLineIsReference(String fullLine) {
