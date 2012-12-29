@@ -70,12 +70,12 @@ public class ConversionUtil {
 
 	/**
 	 * 
-	 * @param aniString
+	 * @param aniString without the direct mode bytes ($FF)
 	 * @param lineNumber
 	 * @return a byte array with one byte for each hex sequence
 	 * @throws IllegalHacklaceConfigFileException
 	 */
-	public static byte[] createByteArrayFromString(String aniString,
+	public static byte[] convertAnimationStringToByteArray(String aniString,
 			int lineNumber) throws IllegalHacklaceConfigFileException {
 		final String separators = "[ ,;./:_+*|]";
 		byte[] aniBytes = new byte[200];
@@ -115,6 +115,19 @@ public class ConversionUtil {
 			mask >>= 1;
 		}
 		return returnArray;
+	}
+
+	public static byte convertBooleanArrayToByte(boolean[] array) {
+		// bit 0 in array = top pixel = bit 0 (right) in byte, 
+		// bit 6 in array = bottom  pixel = bit 6 (left) in byte
+		int value = 0;
+		int power = 1;
+		for (boolean bool : array) {
+			if (bool)
+				value += power; // set next bit
+			power *= 2;
+		}
+		return (byte) value;
 	}
 
 }

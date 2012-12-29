@@ -18,7 +18,7 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 			int lineNumber) throws IllegalHacklaceConfigFileException {
 		super();
 		this.modusByte = modusByte;
-		byte[] aniBytes = ConversionUtil.createByteArrayFromString(
+		byte[] aniBytes = ConversionUtil.convertAnimationStringToByteArray(
 				restOfLine.substring(4, restOfLine.length() - 4), lineNumber); 
 		// cut off $FF in beginning and end
 		this.setDataFromBytes(aniBytes);
@@ -44,7 +44,7 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 		for (int colIndex = 0; colIndex < MAX_COLUMNS; colIndex++) {
 			boolean[] bools = this.data[colIndex];
 			assert (bools.length == 7);
-			byte value = (byte) booleanArrayAsInt(bools);
+			byte value = (byte) ConversionUtil.convertBooleanArrayToByte(bools);
 			allByteColumns[colIndex] = value;
 			if (value != 0) {
 				numberOfUsedColumns = colIndex + 1;
@@ -54,19 +54,6 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 		System.arraycopy(allByteColumns, 0, usedByteColumns, 0,
 				numberOfUsedColumns);
 		return usedByteColumns;
-	}
-
-	public static int booleanArrayAsInt(boolean[] array) {
-		// bit 0 in array is the top pixel is bit 0 (right), 
-		// bit 6 is array the bottom  pixel bit 6 (left)
-		int value = 0;
-		int power = 1;
-		for (boolean bool : array) {
-			if (bool)
-				value += power; // set next bit
-			power *= 2;
-		}
-		return value;
 	}
 
 	@Override
