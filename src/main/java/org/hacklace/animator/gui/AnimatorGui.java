@@ -19,7 +19,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class AnimatorGui extends JFrame {
-	
+
 	private static final long serialVersionUID = 2757544085601062109L;
 
 	public static AnimatorGui instance;
@@ -73,7 +73,7 @@ public class AnimatorGui extends JFrame {
 		JMenu menuFile = new JMenu("File");
 		menuFile.add(new JMenuItem(new MenuActions.OpenAction()));
 		menuFile.add(new JMenuItem(new MenuActions.SaveAction()));
-	 	menuFile.add(new JMenuItem(new MenuActions.SaveAsAction()));
+		menuFile.add(new JMenuItem(new MenuActions.SaveAsAction()));
 		menuFile.add(new JMenuItem(new MenuActions.FlashAction()));
 		menuFile.add(new JMenuItem(new MenuActions.ExportBinAction()));
 		menuFile.add(new JMenuItem(new MenuActions.ExportGifAction()));
@@ -85,22 +85,23 @@ public class AnimatorGui extends JFrame {
 		menuHelp.add(new JMenuItem(new MenuActions.LoadExampleAction()));
 		menuHelp.add(new JMenuItem(new MenuActions.LoadDefaultAction()));
 		menuBar.add(menuHelp);
-		// 
+		//
 		setJMenuBar(menuBar);
 
 		contentPane = this.getContentPane();
 		homePanel = new HomePanel(hacklaceConfigManager, this);
 		contentPane.add(homePanel);
-		
+
 		// Set stuff
 		setTitle(title);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setPreferredSize(new Dimension(IniConf.getInstance().displayWidth(), IniConf.getInstance().displayHeight()));
+		setPreferredSize(new Dimension(IniConf.getInstance().displayWidth(),
+				IniConf.getInstance().displayHeight()));
 
 		pack();
 
 	}
-	
+
 	public HacklaceConfigManager getHacklaceConfigManager() {
 		return hacklaceConfigManager;
 	}
@@ -113,9 +114,17 @@ public class AnimatorGui extends JFrame {
 		homePanel.setVisible(true);
 		repaint();
 	}
-	
+
 	public void startEditMode(DisplayBuffer displayBuffer) {
 		editPanel = EditPanel.factory(displayBuffer);
+		if (editPanel == null) {
+			JOptionPane
+					.showMessageDialog(
+							null,
+							"This type of animation cannot be edited or is not supported yet.",
+							"Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 		homePanel.setVisible(false);
 		contentPane.add(editPanel);
 	}

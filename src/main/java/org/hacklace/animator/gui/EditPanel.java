@@ -52,11 +52,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 		case REFERENCE:
 			return new EditReferencePanel(displayBuffer);
 		case MIXED:
-			JOptionPane
-					.showMessageDialog(
-							null,
-							"This type of animation cannot be edited or is not supported yet.",
-							"Error", JOptionPane.ERROR_MESSAGE);
+			return null; // TODO mixed animations not supported yet
 		}
 		return null;
 	}
