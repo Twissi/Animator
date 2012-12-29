@@ -45,6 +45,7 @@ public class EditTextPanel extends EditPanel {
 		c.gridx = 0;
 		c.gridy = GridBagConstraints.RELATIVE;
 		textLedPanel = new LedPanel(IniConf.getInstance().rows(), IniConf.getInstance().columns() * 5);
+		textLedPanel.setEnabled(false);
 		panel.add(textLedPanel, c);
 		c.insets = new Insets(5, 5, 5, 5);
 		JSlider positionSlider = createPositionSlider();
