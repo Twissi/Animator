@@ -14,10 +14,6 @@ import javax.swing.JScrollPane;
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 
-// These warnings are unnecessary in Java 6 (and thus will give you a warning)
-// They are here to prevent developers on Java 7 to get lots of raw type 
-// and unchecked warnings and add the generics (thus breaking Java 6 compatibility)
-@SuppressWarnings({ "rawtypes", "unchecked" })
 public class HomePanel extends JPanel {
 	private static final long serialVersionUID = 1045750321890262891L;
 
