@@ -57,11 +57,14 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 	}
 
 	public static int booleanArrayAsInt(boolean[] array) {
+		// bit 0 in array is the top pixel is bit 0 (right), 
+		// bit 6 is array the bottom  pixel bit 6 (left)
 		int value = 0;
+		int power = 1;
 		for (boolean bool : array) {
-			value <<= 1; // shift left
 			if (bool)
-				value += 1; // set next bit
+				value += power; // set next bit
+			power *= 2;
 		}
 		return value;
 	}
@@ -81,7 +84,7 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 
 	@Override
 	public String getRawString() {
-		return modusByte.getRawString() + "$FF " + convertBytesToString(getColumnsAsBytes()) + "FF,";
+		return modusByte.getRawString() + "$FF " + convertBytesToString(getColumnsAsBytes()) + "$FF,";
 	}
 
 }

@@ -2,6 +2,7 @@ package org.hacklace.animator;
 
 import junit.framework.TestCase;
 
+import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.GraphicDisplayBuffer;
 import org.hacklace.animator.displaybuffer.Grid;
 
@@ -99,5 +100,21 @@ public class GraphicDisplayBufferTest extends TestCase {
 //		assertTrue(gdb1.getColumnRow(2, 3));
 //		assertTrue(!gdb2.getColumnRow(2, 3));
 	}
+	
+	public void testToRawString() {
+		GraphicDisplayBuffer buf = new GraphicDisplayBuffer();
+		buf.setColumnRow(0, 0, true);
+		String rawStringWithoutModusByte = buf.getRawString().substring(4);
+		assertEquals("$FF $01 $FF,", rawStringWithoutModusByte);
+	}
 
+	public void testFromRawString() throws IllegalHacklaceConfigFileException {
+		String rawString = "$04,$FF $01 $FF,";
+		GraphicDisplayBuffer buf = (GraphicDisplayBuffer) DisplayBuffer.createBufferFromLine(rawString, -1);
+		boolean topLeftLed = buf.getColumnRow(0, 0);
+		boolean bottomLeftLed = buf.getColumnRow(0, 6);
+		assertTrue(topLeftLed);
+		assertFalse(bottomLeftLed);
+	}
+	
 }
