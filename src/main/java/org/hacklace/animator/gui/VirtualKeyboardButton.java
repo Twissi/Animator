@@ -42,7 +42,7 @@ public class VirtualKeyboardButton extends JButton {
 	}
 
 	public String getString() {
-		return FontUtil.getRepresentationForIndex(imageIndex);
+		return FontUtil.getRawStringForIndex(imageIndex);
 	}
 
 	/* TESTING:

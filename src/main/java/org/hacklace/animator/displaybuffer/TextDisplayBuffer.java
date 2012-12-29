@@ -34,8 +34,9 @@ public class TextDisplayBuffer extends DisplayBuffer {
 	public void setText(String text) {
 		clearData();
 		this.text = text;
+
 		int totalAnimationByteIndex = 0;
-		loopOverText: for (int i = 0; i < text.length(); i++) {
+		loopOverText : for (int i = 0; i < text.length(); i++) {
 			int[] oneToFiveAnimationBytes = new int[0]; // one to five bytes
 			char c = text.charAt(i);
 
@@ -45,7 +46,7 @@ public class TextDisplayBuffer extends DisplayBuffer {
 			}
 			// escape characters ~, &, $
 			else {
-				i++;
+				i++; // first
 				// ignore escape character at the end of the string
 				if (i > text.length() - 1)
 					break loopOverText;
@@ -56,39 +57,43 @@ public class TextDisplayBuffer extends DisplayBuffer {
 							.getMinimumBytesForChar(c);
 				} else { // No, special chars or reference animation
 					switch (c) {
-					case '^': // (but not ^^) ^A for € etc.
-						oneToFiveAnimationBytes = FontUtil
-								.getMinimumBytesForSpecial(next);
-						break;
-					case '$': // (but not $$) $80 for € etc.
-						String charSetIndexAsThreeCharString = "$" + next;
-						i++;
-						// ignore if end of string
-						if (i > text.length() - 1)
-							break loopOverText;
-						charSetIndexAsThreeCharString += text.charAt(i);
-						if (isHexSequence(charSetIndexAsThreeCharString)) {
-							int charSetIndex = convertStringToInt(charSetIndexAsThreeCharString);
+						case '^' : // (but not ^^) ^A for € etc.
 							oneToFiveAnimationBytes = FontUtil
-									.getMinimumBytesForIndex(charSetIndex);
-						} else {
-							// probably the user is in the process of typing
+									.getMinimumBytesForSpecial(next);
+							break;
+						case '$' : // (but not $$) $80 for € etc.
+							String charSetIndexAsThreeCharString = "$" + next;
+							i++; // second
+							// ignore if end of string
+							if (i > text.length() - 1)
+								break loopOverText;
+							charSetIndexAsThreeCharString += text.charAt(i);
+							if (isHexSequence(charSetIndexAsThreeCharString)) {
+								int charSetIndex = convertStringToInt(charSetIndexAsThreeCharString);
+								oneToFiveAnimationBytes = FontUtil
+										.getMinimumBytesForIndex(charSetIndex);
+								i++; // third: there are actually four chars: $nn, i.e. one separator
+								     // (separator is comma in default config, but can be space and others)
+							} else {
+								// probably the user is in the process of typing
+								i--; // undo second
+								i--; // undo first
+								// temporarily just display the $ until the user
+								// has finished typing
+								oneToFiveAnimationBytes = FontUtil
+										.getMinimumBytesForChar('$');
+							}
+							break;
+						case '~' :
+							// TODO A reference to an animation in a text
+							// animation... What do?
+							// For a non-fatal fallback, display the escape
+							// sequence
+							// instead...
 							i--;
-							i--;
-							// temporarily just display the $ until the user has finished typing
 							oneToFiveAnimationBytes = FontUtil
-									.getMinimumBytesForChar('$');
-						}
-						break;
-					case '~':
-						// TODO A reference to an animation in a text
-						// animation... What do?
-						// For a non-fatal fallback, display the escape sequence
-						// instead...
-						i--;
-						oneToFiveAnimationBytes = FontUtil
-								.getMinimumBytesForChar(c);
-						break;
+									.getMinimumBytesForChar(c);
+							break;
 					}
 				}
 			}
@@ -118,10 +123,10 @@ public class TextDisplayBuffer extends DisplayBuffer {
 	public String toString() {
 		return getAnimationType().getDescription() + " " + text;
 	}
-	
+
 	@Override
 	public String getRawString() {
-		return this.modusByte.getRawString() + getText();
+		return modusByte.getRawString() + getText();
 	}
 
 }

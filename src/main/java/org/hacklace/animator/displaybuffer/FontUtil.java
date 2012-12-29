@@ -345,7 +345,7 @@ public class FontUtil {
 	 * @param index
 	 * @return e.g. $$, ^^, ~~, a, A, 
 	 */
-	public static String getRepresentationForIndex(int index) {
+	public static String getRawStringForIndex(int index) {
 		// special treatment
 		if (index == '$')
 			return "$$";
@@ -354,9 +354,9 @@ public class FontUtil {
 		if (index == '~')
 			return "~~";
 		if (index == 0x7F)
-			return "$7F";
+			return "$7F,";
 		if (index - SPECIAL_CHAR_OFFSET == '^')
-			return "$9D";
+			return "$9D,";
 		
 		// normal chars
 		if (LOWEST_INDEX <= index && index < LOWEST_SPECIAL_INDEX)
@@ -368,5 +368,5 @@ public class FontUtil {
 		
 		return "?";
 	}
-
+	
 }
