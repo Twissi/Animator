@@ -194,15 +194,16 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 	public void setFromDisplayBuffer(DisplayBuffer buffer) {
 		optionsPanel.setOptions(buffer.getSpeed(), buffer.getDelay(),
 				buffer.getDirection(), buffer.getStepWidth());
+		updateRawTextField();
 	}
 
-	public void updateFromRawText() {
+	public void updateRawTextField() {
 		String rawString = bufferRef.getRawString();
 		if (!rawInputTextField.getText().equals(rawString)) {
 			rawInputTextField.setText(rawString);
 		}
 	}
-
+	
 	/**
 	 * Switch our temporary DisplayBuffer to the original passed on startEdit
 	 * The buffer must not be touched anymore after this because we switch
@@ -224,18 +225,22 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 
 	public void onSpeedChanged(Speed newSpeed) {
 		bufferRef.setSpeed(newSpeed);
+		updateRawTextField();
 	}
 
 	public void onDelayChanged(Delay newDelay) {
 		bufferRef.setDelay(newDelay);
+		updateRawTextField();
 	}
 
 	public void onDirectionChanged(Direction newDirection) {
 		bufferRef.setDirection(newDirection);
+		updateRawTextField();
 	}
 
 	public void onStepChanged(StepWidth newStep) {
 		bufferRef.setStepWidth(newStep);
+		updateRawTextField();
 	}
 
 	public void onSaveAnimation() {
