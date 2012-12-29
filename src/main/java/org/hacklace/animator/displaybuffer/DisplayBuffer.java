@@ -57,8 +57,8 @@ public abstract class DisplayBuffer implements Cloneable {
 		data[x][y] = value;
 	}
 
-	public int getStepWidth() {
-		return modusByte.getStepWidth().getValue();
+	public StepWidth getStepWidth() {
+		return modusByte.getStepWidth();
 	}
 
 	public Direction getDirection() {

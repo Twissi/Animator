@@ -19,6 +19,7 @@ import javax.swing.event.ChangeListener;
 import org.hacklace.animator.enums.Delay;
 import org.hacklace.animator.enums.Direction;
 import org.hacklace.animator.enums.Speed;
+import org.hacklace.animator.enums.StepWidth;
 
 public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 	private static final long serialVersionUID = -2625306373507959134L;
@@ -27,6 +28,9 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 	private JRadioButton directionUni;
 	private JRadioButton directionBi;
 	private ButtonGroup directionButtons;
+	private JRadioButton stepOne;
+	private JRadioButton stepFive;
+	private ButtonGroup stepButtons;
 	private List<OptionsObserver> observerList;
 	
 	public AnimationOptionsPanel() {
@@ -50,14 +54,33 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 		return directionPanel;
 	}
 	
+	private JPanel createStepWidthPanel() {
+		JPanel stepWidthPanel = new JPanel();
+		stepWidthPanel.add(new JLabel("StepWidth:"));
+		stepButtons = new ButtonGroup();
+		stepOne = new JRadioButton("1");
+		stepOne.addChangeListener(this);
+		stepButtons.add(stepOne);
+		stepWidthPanel.add(stepOne);
+		stepFive = new JRadioButton("5");
+		stepFive.addChangeListener(this);
+		stepButtons.add(stepFive);
+		stepWidthPanel.add(stepFive);
+		return stepWidthPanel;
+	}
 	
-	public void setOptions(int speed, int delay, int direction) {
-		speedSlider.setValue(speed);
-		delaySlider.setValue(delay);
-		if (direction == 0) {
+	public void setOptions(Speed speed, Delay delay, Direction direction, StepWidth step) {
+		speedSlider.setValue(speed.getValue());
+		delaySlider.setValue(delay.getValue());
+		if (direction == Direction.FORWARD) {
 			directionUni.setSelected(true);
 		} else {
 			directionBi.setSelected(true);
+		}
+		if (step == StepWidth.ONE) {
+			stepOne.setSelected(true);
+		} else {
+			stepFive.setSelected(true);
 		}
 	}
 	
@@ -82,6 +105,14 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 					o.onDirectionChanged(Direction.FORWARD);
 				} else {
 					o.onDirectionChanged(Direction.BIDIRECTIONAL);
+				}
+			}
+		} else if (e.getSource().equals(stepOne) || e.getSource().equals(stepFive)) {
+			for (OptionsObserver o: observerList) {
+				if (stepOne.isSelected()) {
+					o.onStepChanged(StepWidth.ONE);
+				} else {
+					o.onStepChanged(StepWidth.FIVE);
 				}
 			}
 		}
@@ -111,6 +142,7 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 		delaySlider.addChangeListener(this);
 		add(delaySlider);
 		add(createDirectionPanel());
+		add(createStepWidthPanel());
 		JButton saveButton = new JButton(new SaveAnimationAction());
 		add(saveButton);
 		JButton cancelButton = new JButton(new CancelEditAction());

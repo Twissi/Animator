@@ -26,6 +26,7 @@ import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.enums.Delay;
 import org.hacklace.animator.enums.Direction;
 import org.hacklace.animator.enums.Speed;
+import org.hacklace.animator.enums.StepWidth;
 
 public abstract class EditPanel extends JPanel implements OptionsObserver {
 	private static final long serialVersionUID = -5137928768652375360L;
@@ -33,16 +34,18 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 	protected AnimationOptionsPanel optionsPanel;
 	protected JPanel rawInputPanel;
 	protected JTextField rawInputTextField;
-	
-	protected DisplayBuffer bufferRef; // our internal temporary displayBuffer for
+
+	protected DisplayBuffer bufferRef; // our internal temporary displayBuffer
+										// for
 										// editing
-	protected DisplayBuffer origBuffer; // keep a reference to the original buffer
+	protected DisplayBuffer origBuffer; // keep a reference to the original
+										// buffer
 										// for overwriting on save
 	protected int currentPosition = 0;
 
 	protected int gridRows = IniConf.getInstance().rows();
 	protected int gridCols = IniConf.getInstance().columns();
-	
+
 	public static EditPanel factory(DisplayBuffer displayBuffer) {
 		switch (displayBuffer.getAnimationType()) {
 		case TEXT:
@@ -56,10 +59,12 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * This is a helper function for developing layouts.
-	 * It doesn't work though, if you want to use it you have to fix the label so it actually uses minWidth/height
+	 * This is a helper function for developing layouts. It doesn't work though,
+	 * if you want to use it you have to fix the label so it actually uses
+	 * minWidth/height
+	 * 
 	 * @param text
 	 * @param color
 	 * @param minWidth
@@ -67,21 +72,22 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 	 * @return
 	 */
 	@SuppressWarnings("unused")
-	private JLabel createDebugLabel(String text, Color color, int minWidth, int minHeight) {
+	private JLabel createDebugLabel(String text, Color color, int minWidth,
+			int minHeight) {
 		JLabel label = new JLabel(text);
 		label.setBorder(BorderFactory.createLineBorder(Color.black));
 		label.setBackground(color);
 		label.setMinimumSize(new Dimension(minWidth, minHeight));
 		return label;
 	}
-	
+
 	public EditPanel(DisplayBuffer displayBuffer) {
 		bufferRef = displayBuffer.clone();
 		origBuffer = displayBuffer;
 		// common components for all types of edit panels
 		optionsPanel = new AnimationOptionsPanel();
 		rawInputPanel = createRawInputPanel();
-		
+
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
@@ -104,12 +110,13 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 		setFromDisplayBuffer(displayBuffer);
 		rawInputTextField.setText(bufferRef.getRawString());
 	}
-	
+
 	/**
-	 * Overwrite this in children to add components on the right side above the raw edit panel
+	 * Overwrite this in children to add components on the right side above the
+	 * raw edit panel
 	 */
 	protected abstract void addMoreComponents(JPanel panel);
-	
+
 	public JPanel createRawInputPanel() {
 		JPanel rawInputPanel = new JPanel();
 		JLabel label = new JLabel("Raw data:");
@@ -140,12 +147,13 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 		rawInputPanel.add(button);
 		return rawInputPanel;
 	}
-	
+
 	/**
-	 * The position slider is not created automatically.
-	 * Any child using it must call this function and add the slider somewhere in its ui.
+	 * The position slider is not created automatically. Any child using it must
+	 * call this function and add the slider somewhere in its ui.
 	 * 
 	 * It is implemented here because its functionality is always the same.
+	 * 
 	 * @return
 	 */
 	public JSlider createPositionSlider() {
@@ -184,10 +192,10 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 	}
 
 	public void setFromDisplayBuffer(DisplayBuffer buffer) {
-		optionsPanel.setOptions(buffer.getSpeed().getValue(), buffer.getDelay()
-				.getValue(), buffer.getDirection().getValue());
+		optionsPanel.setOptions(buffer.getSpeed(), buffer.getDelay(),
+				buffer.getDirection(), buffer.getStepWidth());
 	}
-	
+
 	public void updateFromRawText() {
 		String rawString = bufferRef.getRawString();
 		if (!rawInputTextField.getText().equals(rawString)) {
@@ -205,7 +213,8 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 				.getHacklaceConfigManager();
 		List<DisplayBuffer> list = cm.getList();
 		list.set(list.indexOf(origBuffer), bufferRef);
-		// null the buffer references - we rather have a NullpointerException than editing the wrong data! 
+		// null the buffer references - we rather have a NullpointerException
+		// than editing the wrong data!
 		bufferRef = null;
 		origBuffer = null;
 		// refresh list on home page because it contains the text for
@@ -223,6 +232,10 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 
 	public void onDirectionChanged(Direction newDirection) {
 		bufferRef.setDirection(newDirection);
+	}
+
+	public void onStepChanged(StepWidth newStep) {
+		bufferRef.setStepWidth(newStep);
 	}
 
 	public void onSaveAnimation() {
