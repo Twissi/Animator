@@ -134,6 +134,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 							rawString, 0);
 					// it worked without error, we can now switch buffers
 					bufferRef = tmp;
+					onRawTextChanged();
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(
 							null,
@@ -203,6 +204,11 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 			rawInputTextField.setText(rawString);
 		}
 	}
+	
+	/**
+	 * override this if you want to react on a change of the raw text
+	 */
+	public void onRawTextChanged() { }
 	
 	/**
 	 * Switch our temporary DisplayBuffer to the original passed on startEdit
