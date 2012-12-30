@@ -1,5 +1,11 @@
 package org.hacklace.animator.displaybuffer;
 
+import static org.hacklace.animator.ConversionUtil.convertStringToInt;
+import static org.hacklace.animator.ConversionUtil.isHexSequence;
+
+import java.util.LinkedList;
+import java.util.List;
+
 public class FontUtil {
 
 	public final static int LOWEST_INDEX = 0x20;
@@ -341,9 +347,11 @@ public class FontUtil {
 	}
 
 	/**
-	 * returns how the character with this index has to be represented in the config file
+	 * returns how the character with this index has to be represented in the
+	 * config file
+	 * 
 	 * @param index
-	 * @return e.g. $$, ^^, ~~, a, A, 
+	 * @return e.g. $$, ^^, ~~, a, A,
 	 */
 	public static String getRawStringForIndex(int index) {
 		// special treatment
@@ -357,16 +365,99 @@ public class FontUtil {
 			return "$7F,";
 		if (index - SPECIAL_CHAR_OFFSET == '^')
 			return "$9D,";
-		
+
 		// normal chars
 		if (LOWEST_INDEX <= index && index < LOWEST_SPECIAL_INDEX)
 			return "" + (char) index;
-		
+
 		// special chars
 		if (LOWEST_SPECIAL_INDEX <= index && index <= HIGHEST_INDEX)
-		  return "^" + (char) (index - SPECIAL_CHAR_OFFSET);
-		
+			return "^" + (char) (index - SPECIAL_CHAR_OFFSET);
+
 		return "?";
 	}
-	
+
+	/**
+	 * 
+	 * @param rawString
+	 *            text from a configuration line e.g. Hellö x~~y 10 ^A
+	 * @return animation bytes - minimum bytes incl. one blank line for each
+	 */
+	public static byte[] getBytesForRawString(String rawString) {
+		List<Integer> returnList = new LinkedList<Integer>();
+
+		loopOverRawString : for (int i = 0; i < rawString.length(); i++) {
+			int[] animationBytesForOneCharacter = null; // one to five bytes
+			char c = rawString.charAt(i);
+
+			// normal characters
+			if (c != '~' && c != '^' && c != '$') {
+				animationBytesForOneCharacter = getMinimumBytesForChar(c);
+			}
+			// escape characters ~, &, $
+			else {
+				i++; // first
+				// ignore escape character at the end of the string
+				if (i > rawString.length() - 1)
+					break loopOverRawString;
+				char next = rawString.charAt(i);
+				// escape for the character itself? I.e. ~~ ^^ $$
+				if (next == c) { // Yes, ~~ ^^ $$
+					animationBytesForOneCharacter = getMinimumBytesForChar(c);
+				} else { // No, special chars or reference animation
+					switch (c) {
+						case '^' : // (but not ^^) ^A for € etc.
+							animationBytesForOneCharacter = FontUtil
+									.getMinimumBytesForSpecial(next);
+							break;
+						case '$' : // (but not $$) $80 for € etc.
+							String charSetIndexAsThreeCharString = "$" + next;
+							i++; // second
+							// ignore if end of string
+							if (i > rawString.length() - 1)
+								break loopOverRawString;
+							charSetIndexAsThreeCharString += rawString
+									.charAt(i);
+							if (isHexSequence(charSetIndexAsThreeCharString)) {
+								int charSetIndex = convertStringToInt(charSetIndexAsThreeCharString);
+								animationBytesForOneCharacter = getMinimumBytesForIndex(charSetIndex);
+								i++; // third: there are actually four chars:
+										// $nn, i.e. one separator
+										// (separator is comma in default
+										// config, but can be space and others)
+							} else {
+								// probably the user is in the process of typing
+								i--; // undo second
+								i--; // undo first
+								// temporarily just display the $ until the user
+								// has finished typing
+								animationBytesForOneCharacter = getMinimumBytesForChar('$');
+							}
+							break;
+						case '~' :
+							// TODO A reference to an animation in a text
+							// animation... What do?
+							// For a non-fatal fallback, display the escape
+							// sequence (e.g. ~A) instead...
+							i--;
+							animationBytesForOneCharacter = getMinimumBytesForChar('~');
+							break;
+					}
+				}
+			}
+
+			for (int aniByte : animationBytesForOneCharacter) {
+				returnList.add(aniByte);
+			} // end loop over animation bytes for one character
+
+		} // end loop over text
+		byte[] returnArray = new byte[returnList.size()];
+		int i = 0;
+		for (int animationByte : returnList) {
+			byte b = (byte) animationByte;
+			returnArray[i++] = b;
+		}
+		return returnArray;
+	}
+
 }

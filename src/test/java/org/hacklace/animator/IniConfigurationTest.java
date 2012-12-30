@@ -18,17 +18,17 @@ public class IniConfigurationTest extends TestCase {
 	}
 	
 	public void testGridConf() {
-		assertEquals(5, conf.rows());
-		assertEquals(7, conf.columns());
+		assertEquals(7, conf.rows());
+		assertEquals(5, conf.columns());
 	}
 	
 	public void testDisplayConf() {
 		assertEquals(500, conf.displayHeight());
-		assertEquals(700, conf.displayWidth());
+		assertEquals(900, conf.displayWidth());
 	}
 	
 	public void testFlashConf() {
-		assertEquals("/sys/class/tty", conf.device());
+		assertEquals("/dev/ttyUSB0", conf.device());
 		assertEquals(2400, conf.baud());
 	}
 	

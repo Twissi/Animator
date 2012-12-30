@@ -9,9 +9,7 @@ public class ConversionUtil {
 	 * @return the byte represented by this (-128 to 127)
 	 */
 	public static byte convertStringToByte(String threeCharString) {
-		assert (threeCharString.length() == 3);
-		assert (threeCharString.charAt(0) == '$');
-		return (byte) Integer.parseInt(threeCharString.substring(1), 16);
+		return (byte) convertStringToInt(threeCharString);
 	}
 
 	/**
