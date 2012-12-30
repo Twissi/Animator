@@ -283,6 +283,11 @@ public enum PredefinedAnimation {
 		return animationBytes;
 	}
 
+	@Override
+	public String toString() {
+		return "~" + index + ": " + name;
+	}
+
 	/**
 	 * Returns the Predefined Animation
 	 * 
