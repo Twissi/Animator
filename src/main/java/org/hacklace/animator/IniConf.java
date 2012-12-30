@@ -98,5 +98,9 @@ public class IniConf {
 		}
 		
 		return Collections.unmodifiableList(delayList);
-	}	
+	}
+	
+	public int maxBytes() {
+		return conf.getInt("animation.maxbytes");
+	}
 }
