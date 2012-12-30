@@ -32,7 +32,7 @@ public class BinExporterTest extends TestCase {
 	}
 	
 	protected void tearDown() {
-		//output.delete();
+		output.delete();
 		exampleConf = null;
 		exampleFlash = null;
 	}
