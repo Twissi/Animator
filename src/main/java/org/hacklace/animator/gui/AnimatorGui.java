@@ -75,7 +75,8 @@ public class AnimatorGui extends JFrame {
 		menuFile.add(new JMenuItem(new MenuActions.SaveAction()));
 		menuFile.add(new JMenuItem(new MenuActions.SaveAsAction()));
 		menuFile.add(new JMenuItem(new MenuActions.FlashAction()));
-		menuFile.add(new JMenuItem(new MenuActions.ExportBinAction()));
+		// postponed to Release 2.0:
+		// menuFile.add(new JMenuItem(new MenuActions.ExportBinAction()));
 		menuFile.add(new JMenuItem(new MenuActions.ExportGifAction()));
 		menuFile.add(new JMenuItem(new MenuActions.CloseAction()));
 		menuBar.add(menuFile);
