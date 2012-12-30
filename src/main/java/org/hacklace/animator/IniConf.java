@@ -10,12 +10,17 @@ import org.apache.commons.configuration.HierarchicalINIConfiguration;
 
 public class IniConf {
 
-	private final static String configPath = "/animatorconf.ini";
+	private static String configPath = "/animatorconf.ini";
 	private HierarchicalINIConfiguration conf;
 	private static IniConf instance;
 
 	private IniConf(String path) {
-		URL url = this.getClass().getResource(path);
+		configPath = path;
+		reRead();
+	}
+	
+	public void reRead() {
+		URL url = this.getClass().getResource(configPath);
 		try {
 			conf = new HierarchicalINIConfiguration(url);
 		} catch (ConfigurationException e) {
@@ -25,7 +30,7 @@ public class IniConf {
 	}
 
 	private IniConf() {
-		this(configPath);
+		reRead();
 	}
 
 	public IniConf clone() {

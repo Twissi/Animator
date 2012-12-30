@@ -27,6 +27,7 @@ public class FlashExporter {
 
 	public FlashExporter() {
 		conf = IniConf.getInstance();
+		conf.reRead();
 	}
 
 	@SuppressWarnings("unchecked")
