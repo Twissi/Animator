@@ -1,13 +1,21 @@
 package org.hacklace.animator.gui;
 
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.hacklace.animator.IniConf;
+import org.hacklace.animator.displaybuffer.FontUtil;
 import org.hacklace.animator.displaybuffer.Grid;
 
 public class LedPanel extends JPanel implements LedObserver {
@@ -19,6 +27,8 @@ public class LedPanel extends JPanel implements LedObserver {
 
 	private Led[][] buttons;
 	private Grid grid;
+	private GridBagLayout layout;
+	private boolean isSpaced = false;
 	
 	private List<LedObserver> observerList;
 
@@ -50,15 +60,16 @@ public class LedPanel extends JPanel implements LedObserver {
 	}
 
 	private void initComponents() {
-		GridLayout layout = new GridLayout(gridRows, gridCols);
+		layout = new GridBagLayout();
 		setLayout(layout);
-
-		for (int row = 0; row < gridRows; row++) {
-			for (int column = 0; column < gridCols; column++) {
-				Led b = new Led(row, column, this);
+		GridBagConstraints c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.NORTHWEST;
+		for (c.gridy = 0; c.gridy < gridRows; c.gridy++) {
+			for (c.gridx = 0; c.gridx < gridCols; c.gridx++) {
+				Led b = new Led(c.gridy, c.gridx, this);
 				b.addActionListener(new ToggleLedActionListener(grid, b));
-				buttons[column][row] = b;
-				add(b);
+				buttons[c.gridx][c.gridy] = b;
+				add(b, c);
 			}
 		}
 	}
@@ -81,6 +92,20 @@ public class LedPanel extends JPanel implements LedObserver {
 		}
 	}
 	
+	private void updateGridSpacing() {
+		GridBagConstraints c = new GridBagConstraints();
+		if (isSpaced) {
+			c.insets = new Insets(0, 0, 0, 5);
+		}
+		for (int i = 0; i < gridCols; i++) {
+			if (i % 5 == 4) {
+				layout.setConstraints(buttons[i][0], c);
+			}
+		}
+		revalidate();
+		repaint();
+	}
+
 	public void addObserver(LedObserver o) {
 		observerList.add(o);
 	}
@@ -106,13 +131,28 @@ public class LedPanel extends JPanel implements LedObserver {
 	public int getCols() {
 		return gridCols;
 	}
+	
+	public void toggleSpacing() {
+		isSpaced = !isSpaced;
+		updateGridSpacing();
+	}
 
 //	public static void main(String[] args) throws InterruptedException {
 //		JFrame f = new JFrame("Test");
-//		LedPanel p = new LedPanel(7, 5);
-//		f.add(p);
-//		f.pack();
+//		final LedPanel p = new LedPanel(7, 50);
 //		f.setSize(500, 700);
+//		f.getContentPane().setLayout(new GridLayout());
+//		f.getContentPane().add(p);
+//		JButton button = new JButton("Toggle spacing");
+//		button.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				p.toggleSpacing();
+//			}}
+//		);
+//		f.getContentPane().add(button);
+//		
+//		f.pack();
 //		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //		f.setVisible(true);
 //		for (int i = FontUtil.LOWEST_INDEX; i < FontUtil.HIGHEST_INDEX + 1; i++) {
