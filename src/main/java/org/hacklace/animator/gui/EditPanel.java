@@ -78,6 +78,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 	}
 
 	public EditPanel(DisplayBuffer displayBuffer) {
+		setBackground(Color.RED);
 		bufferRef = displayBuffer.clone();
 		origBuffer = displayBuffer;
 		// common components for all types of edit panels

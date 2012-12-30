@@ -18,11 +18,11 @@ public abstract class DisplayBuffer implements Cloneable {
 
 	protected ModusByte modusByte = new ModusByte();
 
-	protected static int gridRows = IniConf.getInstance().rows();
-	protected static int gridCols = IniConf.getInstance().columns();
+	protected final static int GRID_ROWS = IniConf.getInstance().rows();
+	protected final static int GRID_COLS = IniConf.getInstance().columns();
 
 	protected DisplayBuffer() {
-		data = new boolean[MAX_COLUMNS][gridRows];
+		data = new boolean[MAX_COLUMNS][GRID_ROWS];
 		modusByte = new ModusByte();
 	}
 
@@ -32,7 +32,7 @@ public abstract class DisplayBuffer implements Cloneable {
 
 	protected void clearData() {
 		for (int x = 0; x < MAX_COLUMNS; x++) {
-			for (int y = 0; y < gridRows; y++) {
+			for (int y = 0; y < GRID_ROWS; y++) {
 				data[x][y] = false;
 			}
 		}
@@ -49,7 +49,7 @@ public abstract class DisplayBuffer implements Cloneable {
 	 * @return
 	 */
 	public boolean getValueAt(int x, int y) {
-		if (x >= MAX_COLUMNS || y >= gridRows)
+		if (x >= MAX_COLUMNS || y >= GRID_ROWS)
 			return false;
 		return data[x][y];
 	}
@@ -101,7 +101,7 @@ public abstract class DisplayBuffer implements Cloneable {
 		try {
 			DisplayBuffer copy = (DisplayBuffer) super.clone();
 			copy.modusByte = this.modusByte.clone();
-			copy.data = new boolean[MAX_COLUMNS][gridRows];
+			copy.data = new boolean[MAX_COLUMNS][GRID_ROWS];
 			for (int colIndex = 0; colIndex < this.data.length; colIndex++) {
 				boolean[] column = this.data[colIndex];
 				copy.data[colIndex] = column.clone();
@@ -123,15 +123,7 @@ public abstract class DisplayBuffer implements Cloneable {
 	 * @return
 	 */
 	public static int getNumGrids() {
-		return MAX_COLUMNS / gridCols;
-	}
-
-	public int getRows() {
-		return gridRows;
-	}
-
-	public int getCols() {
-		return gridCols;
+		return MAX_COLUMNS / GRID_COLS;
 	}
 
 	/**
@@ -171,10 +163,6 @@ public abstract class DisplayBuffer implements Cloneable {
 	 * @return the raw string used in config files
 	 */
 	public abstract String getRawString();
-
-	public int getMaxColumns() {
-		return MAX_COLUMNS;
-	}
 
 	/**
 	 * under certain circumstances the buffer cannot be saved. modusByte 0 means
