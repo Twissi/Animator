@@ -24,7 +24,7 @@ public class IniConfigurationTest extends TestCase {
 	
 	public void testDisplayConf() {
 		assertEquals(500, conf.displayHeight());
-		assertEquals(900, conf.displayWidth());
+		assertEquals(980, conf.displayWidth());
 	}
 	
 	public void testFlashConf() {

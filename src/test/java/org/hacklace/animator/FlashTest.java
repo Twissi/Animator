@@ -44,7 +44,7 @@ public class FlashTest extends TestCase {
 	
 	@Test
 	public void testReadEqualsWrite()
-			throws IllegalHacklaceConfigLineException, IOException {
+			throws IllegalHacklaceConfigFileException, IOException {
 		manager.readFile(exampleConf);
 		InputStream stream = new ByteArrayInputStream(manager.getRawString().getBytes(
 				HacklaceConfigManager.HACKLACE_CHARSET));

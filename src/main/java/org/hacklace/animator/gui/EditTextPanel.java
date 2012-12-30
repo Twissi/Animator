@@ -35,7 +35,7 @@ public class EditTextPanel extends EditPanel {
 
 	public EditTextPanel(DisplayBuffer displayBuffer) {
 		super(displayBuffer);
-		textEditField.setText(((TextDisplayBuffer)bufferRef).getText());
+		textEditField.setText(((TextDisplayBuffer) bufferRef).getText());
 	}
 
 	@Override
@@ -44,7 +44,8 @@ public class EditTextPanel extends EditPanel {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = GridBagConstraints.RELATIVE;
-		textLedPanel = new LedPanel(IniConf.getInstance().rows(), IniConf.getInstance().columns() * 5);
+		textLedPanel = new LedPanel(IniConf.getInstance().rows(), IniConf
+				.getInstance().columns() * 5);
 		textLedPanel.setEnabled(false);
 		panel.add(textLedPanel, c);
 		c.insets = new Insets(5, 5, 5, 5);
@@ -174,11 +175,11 @@ public class EditTextPanel extends EditPanel {
 	}
 
 	@Override
-	public void setFromDisplayBuffer(DisplayBuffer buffer)	{
+	public void setFromDisplayBuffer(DisplayBuffer buffer) {
 		super.setFromDisplayBuffer(buffer);
 		copyBufferToPanel(currentPosition, textLedPanel);
 	}
-	
+
 	@Override
 	public void onRawTextChanged() {
 		textEditField.setText(((TextDisplayBuffer) bufferRef).getText());

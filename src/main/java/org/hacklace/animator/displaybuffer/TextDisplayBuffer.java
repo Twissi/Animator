@@ -3,7 +3,7 @@ package org.hacklace.animator.displaybuffer;
 import static org.hacklace.animator.ConversionUtil.convertAnimationByteTo7Booleans;
 
 import org.hacklace.animator.IllegalHacklaceConfigLineException;
-import org.hacklace.animator.ModusByte;
+import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.enums.AnimationType;
 
 public class TextDisplayBuffer extends DisplayBuffer {
@@ -15,10 +15,10 @@ public class TextDisplayBuffer extends DisplayBuffer {
 		this.text = "";
 	}
 
-	public TextDisplayBuffer(ModusByte modusByte, String text) throws IllegalHacklaceConfigLineException {
+	public TextDisplayBuffer(FullConfigLine fullLine) throws IllegalHacklaceConfigLineException {
 		super();
-		this.modusByte = modusByte;
-		setText(text);
+		this.modusByte = fullLine.getModusByte();
+		setText(fullLine.getRestOfLine().getValue());
 	}
 
 	public String getText() {

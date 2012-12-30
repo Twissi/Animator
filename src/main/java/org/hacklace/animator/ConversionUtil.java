@@ -1,5 +1,7 @@
 package org.hacklace.animator;
 
+import org.hacklace.animator.configuration.DirectMode;
+
 public class ConversionUtil {
 
 	/**
@@ -68,30 +70,27 @@ public class ConversionUtil {
 
 	/**
 	 * 
-	 * @param aniString without the direct mode bytes ($FF)
+	 * @param directMode without the direct mode bytes ($FF)
 	 * @return a byte array with one byte for each hex sequence
 	 * @throws IllegalHacklaceConfigLineException
 	 */
-	public static byte[] convertAnimationStringToByteArray(String aniString) throws IllegalHacklaceConfigLineException {
-		final String separators = "[ ,;./:_+*|]";
+	public static byte[] convertAnimationStringToByteArray(DirectMode directMode) throws IllegalHacklaceConfigLineException {
+		String aniString = directMode.getValue();
+		final String separators = "[ ,;.:/_|]";
 		byte[] aniBytes = new byte[200];
 		String[] aniByteStrings = aniString.split(separators);
 		if (aniBytes.length > 200) {
 			throw new IllegalHacklaceConfigLineException(
 					"Illegal hacklace configuration file: More than 200 bytes.");
-
 		}
+
 		int index = 0;
-
 		for (String aniByteString : aniByteStrings) {
-
 			byte aniByte = ConversionUtil.convertStringToByte(aniByteString);
 			aniBytes[index] = aniByte;
 			index++;
-
 		}
 		return aniBytes;
-
 	}
 
 	/**

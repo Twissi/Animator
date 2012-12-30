@@ -5,7 +5,7 @@ import static org.hacklace.animator.ConversionUtil.convertBytesToString;
 
 import org.hacklace.animator.ConversionUtil;
 import org.hacklace.animator.IllegalHacklaceConfigLineException;
-import org.hacklace.animator.ModusByte;
+import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.enums.AnimationType;
 
 public class GraphicDisplayBuffer extends DisplayBuffer {
@@ -14,11 +14,10 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 		super();
 	}
 
-	public GraphicDisplayBuffer(ModusByte modusByte, String restOfLine) throws IllegalHacklaceConfigLineException {
+	public GraphicDisplayBuffer(FullConfigLine fullLine) throws IllegalHacklaceConfigLineException {
 		super();
-		this.modusByte = modusByte;
-		byte[] aniBytes = ConversionUtil.convertAnimationStringToByteArray(
-				restOfLine.substring(4, restOfLine.length() - 4)); 
+		this.modusByte = fullLine.getModusByte();
+		byte[] aniBytes = ConversionUtil.convertAnimationStringToByteArray(fullLine.getRestOfLine().getDirectMode()); 
 		// cut off $FF in beginning and end
 		this.setDataFromBytes(aniBytes);
 

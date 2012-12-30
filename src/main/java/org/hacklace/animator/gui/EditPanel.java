@@ -36,11 +36,9 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 	protected JTextField rawInputTextField;
 
 	protected DisplayBuffer bufferRef; // our internal temporary displayBuffer
-										// for
-										// editing
+										// for editing
 	protected DisplayBuffer origBuffer; // keep a reference to the original
-										// buffer
-										// for overwriting on save
+										// buffer for overwriting on save
 	protected int currentPosition = 0;
 
 	protected int gridRows = IniConf.getInstance().rows();
@@ -130,8 +128,8 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 			public void actionPerformed(ActionEvent arg0) {
 				String rawString = rawInputTextField.getText().trim();
 				try {
-					DisplayBuffer tmp = DisplayBuffer.createBufferFromLine(
-							rawString);
+					DisplayBuffer tmp = DisplayBuffer
+							.createBufferFromLine(rawString);
 					// it worked without error, we can now switch buffers
 					bufferRef = tmp;
 					onRawTextChanged();

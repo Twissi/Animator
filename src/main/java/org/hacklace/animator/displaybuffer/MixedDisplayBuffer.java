@@ -1,7 +1,7 @@
 package org.hacklace.animator.displaybuffer;
 
 import org.hacklace.animator.IllegalHacklaceConfigLineException;
-import org.hacklace.animator.ModusByte;
+import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.enums.AnimationType;
 
 public class MixedDisplayBuffer extends DisplayBuffer {
@@ -13,10 +13,11 @@ public class MixedDisplayBuffer extends DisplayBuffer {
 
 	protected String stringValue;
 
-	public MixedDisplayBuffer(ModusByte modusByte, String value)  throws IllegalHacklaceConfigLineException {
+	public MixedDisplayBuffer(FullConfigLine fullLine)
+			throws IllegalHacklaceConfigLineException {
 		super();
-		this.modusByte = modusByte;
-		this.stringValue = value;
+		this.modusByte = fullLine.getModusByte();
+		this.stringValue = fullLine.getRestOfLine().getValue();
 	}
 
 	public MixedDisplayBuffer() {
@@ -35,7 +36,7 @@ public class MixedDisplayBuffer extends DisplayBuffer {
 	public AnimationType getAnimationType() {
 		return AnimationType.MIXED;
 	}
-	
+
 	@Override
 	public String getRawString() {
 		return this.modusByte.getRawString() + getStringValue();
