@@ -257,6 +257,8 @@ public class MenuActions {
 							"Cannot write to file.", "Error",
 							JOptionPane.ERROR_MESSAGE);
 				}
+			} else {
+				new SaveAsAction().actionPerformed(e);
 			}
 		}
 	}
