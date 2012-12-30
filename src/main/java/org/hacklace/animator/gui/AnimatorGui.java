@@ -6,6 +6,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.IllegalHacklaceConfigFileException;
@@ -100,7 +101,7 @@ public class AnimatorGui extends JFrame {
 
 		// Set stuff
 		setTitle(title);
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		setPreferredSize(new Dimension(IniConf.getInstance().displayWidth(),
 				IniConf.getInstance().displayHeight()));
 
