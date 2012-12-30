@@ -1,7 +1,6 @@
 package org.hacklace.animator.gui;
 
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
 
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
@@ -9,33 +8,27 @@ import javax.swing.JOptionPane;
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.enums.AnimationType;
+import org.hacklace.animator.enums.PredefinedAnimation;
 
 public class AnimationListActions {
 
-	private static String[] makeStringArray(char start, char end) {
-		String[] result = new String[end - start + 1];
-		for (int i = 0; i < end - start + 1; i++) {
-			result[i] = "" + (char)(start + i);
-		}
-		return result;
-	}
-
 	public static int askForReference(char selectedLetter) {
-		String[] options = makeStringArray('A', 'F');
-		String letter = "" + selectedLetter;
-		int selected = Arrays.asList(options).indexOf(letter);
-		if (selected == -1) selected = 0; // if not in list anymore or invalid, preselect 'A'
-		String result = (String) JOptionPane
+		PredefinedAnimation selected = null;
+		for (PredefinedAnimation animation: PredefinedAnimation.values()) {
+			if (animation.getIndex() == selectedLetter) {
+				selected = animation;
+			}
+		}
+		PredefinedAnimation result = (PredefinedAnimation) JOptionPane
 				.showInputDialog(
 						AnimatorGui.getInstance(),
 						"Please select the number of the referenced animation. A is the first, B the second, etc.",
 						"Animation number",
-						JOptionPane.QUESTION_MESSAGE, null, options,
-						options[selected]);
+						JOptionPane.QUESTION_MESSAGE, null, PredefinedAnimation.values(),
+						selected);
 		if (result == null)
 			return -1; // cancel
-		return result.charAt(0);
-		
+		return result.getIndex();
 	}
 	
 	public static class AddAction extends AbstractAction {
