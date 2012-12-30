@@ -57,6 +57,8 @@ public class AnimatorGui extends JFrame {
 		currentFile = file;
 		if (currentFile != null && currentFile.getName() != "") {
 			setTitle(currentFile.getName() + " - " + title);
+		} else {
+			setTitle(title);
 		}
 
 	}

@@ -55,7 +55,9 @@ public class MenuActions {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			loadResource("/Default_Konfiguration.txt");
-			AnimatorGui.getInstance().stopEditMode();
+			AnimatorGui app = AnimatorGui.getInstance();
+			app.stopEditMode();
+			app.setCurrentFile(null);
 		}
 
 	}
@@ -71,7 +73,9 @@ public class MenuActions {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			loadResource("/example.cfg");
-			AnimatorGui.getInstance().stopEditMode();
+			AnimatorGui app = AnimatorGui.getInstance();
+			app.stopEditMode();
+			app.setCurrentFile(null);
 		}
 
 	}
