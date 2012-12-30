@@ -30,6 +30,7 @@ public class EditReferencePanel extends EditPanel {
 		previewPanel.setEnabled(false);
 		panel.add(previewPanel, c);
 		c.insets = new Insets(5, 5, 5, 5);
+		c.fill = GridBagConstraints.HORIZONTAL;
 		JSlider positionSlider = createPositionSlider();
 		panel.add(positionSlider, c);
 	}

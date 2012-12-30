@@ -10,12 +10,14 @@ import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
+import org.hacklace.animator.enums.StepWidth;
 
 public class EditGraphicPanel extends EditPanel implements LedObserver {
 
 	private static final long serialVersionUID = -8224406641046738423L;
 
 	private JPanel ledPanelPanel;
+	private GridBagLayout ledPanelPanelLayout;
 	private LedPanel prevLedPanel; // display of the previous frame
 	private LedPanel currentLedPanel; // display/edit of the current frame
 	private LedPanel nextLedPanel; // display of the next frame
@@ -33,6 +35,27 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 		panel.add(ledPanelPanel);
 	}
 
+	private void setGridSpacing(boolean isSpaced) {
+		GridBagConstraints c = new GridBagConstraints();
+		if (isSpaced) {
+			c.insets = new Insets(5, 5, 5, 5);
+		} else {
+			c.insets = new Insets(0, 0, 0, 0);
+		}
+		ledPanelPanelLayout.setConstraints(prevLedPanel, c);
+		ledPanelPanelLayout.setConstraints(currentLedPanel, c);
+		ledPanelPanelLayout.setConstraints(nextLedPanel, c);
+		ledPanelPanel.revalidate();
+		ledPanelPanel.repaint();
+	}
+	
+	@Override
+	public void onStepChanged(StepWidth newStep) {
+		super.onStepChanged(newStep);
+		setGridSpacing(newStep == StepWidth.FIVE);
+	}
+
+	
 	/**
 	 * Generate the panel of LedPanels for the edit view
 	 * 
@@ -40,7 +63,8 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 	 */
 	private JPanel createLedPanelPanel() {
 		JPanel ledPanelPanel = new JPanel();
-		ledPanelPanel.setLayout(new GridBagLayout());
+		ledPanelPanelLayout = new GridBagLayout();
+		ledPanelPanel.setLayout(ledPanelPanelLayout);
 		GridBagConstraints c = new GridBagConstraints();
 		// first row: 3 LedPanels
 		c.insets = new Insets(5, 5, 5, 5);
