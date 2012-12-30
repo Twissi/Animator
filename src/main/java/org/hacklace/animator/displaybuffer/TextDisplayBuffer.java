@@ -35,17 +35,12 @@ public class TextDisplayBuffer extends DisplayBuffer {
 
 		byte[] animationBytes = FontUtil.getBytesForRawString(text);
 
+		clearData();
+		
 		int i = 0;
 		for (byte aniByte : animationBytes) {
 			boolean[] bits = convertAnimationByteTo7Booleans(aniByte);
 			data[i++] = bits;
-		}
-
-		// clear all bits after the last column
-		for (int column = animationBytes.length; column < MAX_COLUMNS; column++) {
-			for (int row = 0; row < gridRows /* 7 */; row++) {
-				data[column][row] = false;
-			}
 		}
 	}
 

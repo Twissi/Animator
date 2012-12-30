@@ -1,12 +1,20 @@
 package org.hacklace.animator.gui;
 
-import javax.swing.JPanel;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+
+import org.hacklace.animator.IniConf;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 
 public class EditReferencePanel extends EditPanel {
 
 	private static final long serialVersionUID = 1648909855223726429L;
+	
+	private LedPanel previewPanel;
 
 	public EditReferencePanel(DisplayBuffer displayBuffer) {
 		super(displayBuffer);
@@ -14,14 +22,21 @@ public class EditReferencePanel extends EditPanel {
 
 	@Override
 	protected void addMoreComponents(JPanel panel) {
-		// TODO Auto-generated method stub
-		
+		panel.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridy = GridBagConstraints.RELATIVE;
+		previewPanel = new LedPanel(IniConf.getInstance().rows(), IniConf.getInstance().columns() * 5);
+		previewPanel.setEnabled(false);
+		panel.add(previewPanel, c);
+		c.insets = new Insets(5, 5, 5, 5);
+		JSlider positionSlider = createPositionSlider();
+		panel.add(positionSlider, c);
 	}
 
 	@Override
 	public void setFromDisplayBuffer(DisplayBuffer buffer) {
 		super.setFromDisplayBuffer(buffer);
-		// TODO Auto-generated method stub
-		
+		copyBufferToPanel(currentPosition, previewPanel);
 	}
 }

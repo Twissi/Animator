@@ -1,7 +1,10 @@
 package org.hacklace.animator.displaybuffer;
 
+import static org.hacklace.animator.ConversionUtil.convertAnimationByteTo7Booleans;
+
 import org.hacklace.animator.ModusByte;
 import org.hacklace.animator.enums.AnimationType;
+import org.hacklace.animator.enums.PredefinedAnimation;
 
 public class ReferenceDisplayBuffer extends DisplayBuffer {
 
@@ -10,7 +13,7 @@ public class ReferenceDisplayBuffer extends DisplayBuffer {
 	public ReferenceDisplayBuffer(ModusByte modusByte, char letter) {
 		super();
 		this.modusByte = modusByte;
-		this.letter = letter;
+		setLetter(letter);
 	}
 
 	public ReferenceDisplayBuffer(char whichAnimation) {
@@ -30,6 +33,16 @@ public class ReferenceDisplayBuffer extends DisplayBuffer {
 
 	public void setLetter(char letter) {
 		this.letter = letter;
+		clearData();
+		for (PredefinedAnimation animation: PredefinedAnimation.values()) {
+			if (animation.getIndex() == letter) {
+				int i = 0;
+				for (int aniByte : animation.getAnimationBytes()) {
+					boolean[] bits = convertAnimationByteTo7Booleans((byte)aniByte);
+					data[i++] = bits;
+				}
+			}
+		}
 	}
 
 	@Override
