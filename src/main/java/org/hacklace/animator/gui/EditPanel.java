@@ -204,12 +204,13 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 			rawInputTextField.setText(rawString);
 		}
 	}
-	
+
 	/**
 	 * override this if you want to react on a change of the raw text
 	 */
-	public void onRawTextChanged() { }
-	
+	public void onRawTextChanged() {
+	}
+
 	/**
 	 * Switch our temporary DisplayBuffer to the original passed on startEdit
 	 * The buffer must not be touched anymore after this because we switch
@@ -249,8 +250,11 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 		updateRawTextField();
 	}
 
-	public void onSaveAnimation() {
+	public boolean onSaveAnimation() {
+		if (!bufferRef.isSaveable())
+			return false; // cannot save
 		saveBuffer();
+		return true; // saved
 	}
 
 }

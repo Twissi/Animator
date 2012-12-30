@@ -9,6 +9,7 @@ import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
@@ -32,13 +33,13 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 	private JRadioButton stepFive;
 	private ButtonGroup stepButtons;
 	private List<OptionsObserver> observerList;
-	
+
 	public AnimationOptionsPanel() {
 		observerList = new ArrayList<OptionsObserver>();
 		removeAll();
 		initComponents();
 	}
-	
+
 	private JPanel createDirectionPanel() {
 		JPanel directionPanel = new JPanel();
 		directionPanel.add(new JLabel("Direction:"));
@@ -53,7 +54,7 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 		directionPanel.add(directionBi);
 		return directionPanel;
 	}
-	
+
 	private JPanel createStepWidthPanel() {
 		JPanel stepWidthPanel = new JPanel();
 		stepWidthPanel.add(new JLabel("StepWidth:"));
@@ -68,8 +69,9 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 		stepWidthPanel.add(stepFive);
 		return stepWidthPanel;
 	}
-	
-	public void setOptions(Speed speed, Delay delay, Direction direction, StepWidth step) {
+
+	public void setOptions(Speed speed, Delay delay, Direction direction,
+			StepWidth step) {
 		speedSlider.setValue(speed.getValue());
 		delaySlider.setValue(delay.getValue());
 		if (direction == Direction.FORWARD) {
@@ -83,32 +85,34 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 			stepFive.setSelected(true);
 		}
 	}
-	
+
 	public void addObserver(OptionsObserver o) {
 		observerList.add(o);
 	}
-	
+
 	public void stateChanged(ChangeEvent e) {
 		if (e.getSource().equals(speedSlider)) {
-			for (OptionsObserver o: observerList) {
-				int intSpeed = ((JSlider)e.getSource()).getValue();
+			for (OptionsObserver o : observerList) {
+				int intSpeed = ((JSlider) e.getSource()).getValue();
 				o.onSpeedChanged(Speed.fromInt(intSpeed));
 			}
 		} else if (e.getSource().equals(delaySlider)) {
-			for (OptionsObserver o: observerList) {
-				int intDelay = ((JSlider)e.getSource()).getValue();
+			for (OptionsObserver o : observerList) {
+				int intDelay = ((JSlider) e.getSource()).getValue();
 				o.onDelayChanged(Delay.fromInt(intDelay));
 			}
-		} else if (e.getSource().equals(directionUni) || e.getSource().equals(directionBi)) {
-			for (OptionsObserver o: observerList) {
+		} else if (e.getSource().equals(directionUni)
+				|| e.getSource().equals(directionBi)) {
+			for (OptionsObserver o : observerList) {
 				if (directionUni.isSelected()) {
 					o.onDirectionChanged(Direction.FORWARD);
 				} else {
 					o.onDirectionChanged(Direction.BIDIRECTIONAL);
 				}
 			}
-		} else if (e.getSource().equals(stepOne) || e.getSource().equals(stepFive)) {
-			for (OptionsObserver o: observerList) {
+		} else if (e.getSource().equals(stepOne)
+				|| e.getSource().equals(stepFive)) {
+			for (OptionsObserver o : observerList) {
 				if (stepOne.isSelected()) {
 					o.onStepChanged(StepWidth.ONE);
 				} else {
@@ -120,21 +124,18 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 
 	private void initComponents() {
 		// one column grid layout
-		setLayout(new GridLayout(0,1));
+		setLayout(new GridLayout(0, 1));
 		add(new JLabel("Options"));
 		add(new JLabel("Speed:"));
-		speedSlider = new JSlider(
-				SwingConstants.HORIZONTAL, 
-				Speed.values().length - 1
-				);
+		speedSlider = new JSlider(SwingConstants.HORIZONTAL,
+				Speed.values().length - 1);
 		speedSlider.setPaintTicks(true);
 		speedSlider.setSnapToTicks(true);
 		speedSlider.setMinorTickSpacing(1);
 		speedSlider.addChangeListener(this);
 		add(speedSlider);
 		add(new JLabel("Delay:"));
-		delaySlider = new JSlider(
-				SwingConstants.HORIZONTAL, 
+		delaySlider = new JSlider(SwingConstants.HORIZONTAL,
 				Delay.values().length - 1);
 		delaySlider.setPaintTicks(true);
 		delaySlider.setSnapToTicks(true);
@@ -148,16 +149,26 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 		JButton cancelButton = new JButton(new CancelEditAction());
 		add(cancelButton);
 	}
-	
+
 	class SaveAnimationAction extends AbstractAction {
 		private static final long serialVersionUID = -5813301123661228603L;
+
 		public SaveAnimationAction() {
 			super("Save");
 		}
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			for (OptionsObserver o: observerList) {
-				o.onSaveAnimation();
+			for (OptionsObserver o : observerList) {
+				if (!o.onSaveAnimation()) {
+					// false = save not possible
+					JOptionPane
+							.showMessageDialog(
+									null,
+									"The buffer can not be saved. Due to a technical restriction the combination of your selected options is not possible (Modus byte must not be zero).",
+									"Error saving", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 				AnimatorGui.getInstance().stopEditMode();
 			}
 		}
@@ -165,9 +176,11 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 
 	class CancelEditAction extends AbstractAction {
 		private static final long serialVersionUID = 8730578405697706858L;
+
 		public CancelEditAction() {
 			super("Cancel");
 		}
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			AnimatorGui.getInstance().stopEditMode();

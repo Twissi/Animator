@@ -10,5 +10,5 @@ public interface OptionsObserver {
 	public void onDelayChanged(Delay newDelay);
 	public void onDirectionChanged(Direction newDirection);
 	public void onStepChanged(StepWidth newStep);
-	public void onSaveAnimation();
+	public boolean onSaveAnimation();
 }

@@ -346,5 +346,13 @@ public abstract class DisplayBuffer implements Cloneable {
 	public int getMaxColumns() {
 		return MAX_COLUMNS;
 	}
+	
+	/**
+	 * under certain circumstances the buffer cannot be saved. modusByte 0 means "EOF" so this can't be used.
+	 * @return
+	 */
+	public boolean isSaveable() {
+		return (modusByte.getByte() != 0);
+	}
 
 }
