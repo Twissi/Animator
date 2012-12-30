@@ -13,6 +13,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
 import org.hacklace.animator.HacklaceConfigManager;
+import org.hacklace.animator.IniConf;
 import org.hacklace.animator.exporter.BinExporter;
 import org.hacklace.animator.exporter.FlashExporter;
 
@@ -142,6 +143,15 @@ public class MenuActions {
 		public void actionPerformed(ActionEvent e) {
 			AnimatorGui app = AnimatorGui.getInstance();
 			HacklaceConfigManager cm = app.getHacklaceConfigManager();
+			int bytesUsed = cm.getBytesUsed();
+			int maxBytes = IniConf.getInstance().maxBytes();
+			if (bytesUsed > maxBytes) {
+				JOptionPane.showMessageDialog(null, "Error flashing hacklace: Animation list too big ("
+						+ bytesUsed + "/" + maxBytes + " Bytes)",
+						"Error", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			
 			FlashExporter flashExporter = new FlashExporter();
 			ByteArrayInputStream stream;
 			try {

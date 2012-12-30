@@ -1,18 +1,28 @@
 package org.hacklace.animator.gui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.hacklace.animator.HacklaceConfigManager;
+import org.hacklace.animator.IniConf;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
+import org.hacklace.animator.exporter.FlashExporter;
 
 public class HomePanel extends JPanel {
 	private static final long serialVersionUID = 1045750321890262891L;
@@ -20,11 +30,14 @@ public class HomePanel extends JPanel {
 	JList animationList;
 	// Java 7: JList<DisplayBuffer> animationList;
 	DefaultListModel animationListData;
-
 	// Java 7: DefaultListModel<DisplayBuffer> animationListData;
+	
+	private JLabel infoLabel;
+	private HacklaceConfigManager hacklaceConfigManager;
 
-	public HomePanel(HacklaceConfigManager hacklaceConfigManager,
+	public HomePanel(HacklaceConfigManager hcm,
 			AnimatorGui animatorGui) {
+		hacklaceConfigManager = hcm;
 		animationListData = new DefaultListModel();
 		// Java 7: animationListData = new DefaultListModel<DisplayBuffer>();
 		animationList = new JList(animationListData);
@@ -54,6 +67,34 @@ public class HomePanel extends JPanel {
 		c.gridx = 0;
 		add(new JButton(new AnimationListActions.AddAction(this,
 				hacklaceConfigManager)), c);
+		infoLabel = new JLabel("");
+		add(infoLabel, c);
+		addComponentListener(new ComponentListener() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+			}
+
+			@Override
+			public void componentMoved(ComponentEvent e) {
+			}
+
+			@Override
+			public void componentShown(ComponentEvent e) {
+				updateInfoLabel();
+			}
+
+			@Override
+			public void componentHidden(ComponentEvent e) {
+			}
+		});
+	}
+	
+	private void updateInfoLabel()  {
+		int bytesUsed = hacklaceConfigManager.getBytesUsed();
+		int maxBytes = IniConf.getInstance().maxBytes();
+		if (bytesUsed > maxBytes) infoLabel.setForeground(Color.red);
+		else infoLabel.setForeground(Color.black);
+		infoLabel.setText(bytesUsed + " / " + maxBytes + " Bytes used.");
 	}
 
 	/**
@@ -70,6 +111,7 @@ public class HomePanel extends JPanel {
 		}
 		if (keepIndex)
 			animationList.setSelectedIndex(index);
+		updateInfoLabel();
 	}
 
 	/**
