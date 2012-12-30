@@ -36,8 +36,17 @@ public class Grid {
 		return data[column][row];
 	}
 
-	public void setDataFromBytes(int[] aniBytes) {
+	private void clearData() {
 		for (int column = 0; column < columns; column++) {
+			for (int row = 0; row < rows; row++) {
+				this.data[column][row] = false;
+			}
+		}
+	}
+	
+	public void setDataFromBytes(int[] aniBytes) {
+		clearData();
+		for (int column = 0; column < aniBytes.length; column++) {
 			byte mask = 1;
 
 			for (int i = 0; i < rows; i++) {
