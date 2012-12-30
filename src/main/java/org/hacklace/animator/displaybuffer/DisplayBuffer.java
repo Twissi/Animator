@@ -13,7 +13,7 @@ public abstract class DisplayBuffer implements Cloneable {
 
 	protected boolean[][] data;
 
-	public static final int MAX_COLUMNS = 200;
+	public static final int MAX_COLUMNS = IniConf.getInstance().maxColumns();
 
 	protected ModusByte modusByte = new ModusByte();
 
