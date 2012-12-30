@@ -18,7 +18,7 @@ import org.hacklace.animator.exporter.BinExporter;
 import org.hacklace.animator.exporter.FlashExporter;
 
 public class MenuActions {
-	
+
 	private static String confirmationText = "Any changes to the current animation list will be lost. Do you really want to continue?";
 	private static String confirmationTitle = "Really?";
 
@@ -26,14 +26,13 @@ public class MenuActions {
 		System.out.println("Performing " + clazz.getSimpleName()
 				+ " - doesn't do anything right now");
 	}
-	
+
 	protected static boolean confirm(String text, String title) {
-		// if no file is loaded
-		if (AnimatorGui.getInstance().getCurrentFile() == null) return true;
-		int result = JOptionPane.showConfirmDialog(null, text, title, JOptionPane.OK_CANCEL_OPTION);
+		int result = JOptionPane.showConfirmDialog(null, text, title,
+				JOptionPane.OK_CANCEL_OPTION);
 		return (result == JOptionPane.OK_OPTION);
 	}
-	
+
 	protected static boolean confirm() {
 		return confirm(confirmationText, confirmationTitle);
 	}
@@ -68,7 +67,8 @@ public class MenuActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (!confirm()) return;
+			if (!confirm())
+				return;
 			loadResource("/Default_Konfiguration.txt");
 			AnimatorGui app = AnimatorGui.getInstance();
 			app.stopEditMode();
@@ -87,7 +87,8 @@ public class MenuActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (!confirm()) return;
+			if (!confirm())
+				return;
 			loadResource("/example.cfg");
 			AnimatorGui app = AnimatorGui.getInstance();
 			app.stopEditMode();
@@ -137,15 +138,17 @@ public class MenuActions {
 			} // Java 7: (IOException | UnsupportedCommOperationException |
 				// PortInUseException ex)
 			catch (IOException ex) {
-				JOptionPane.showMessageDialog(null, "Error writing file: "
-						+ ex, "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null,
+						"Error writing file: " + ex, "Error",
+						JOptionPane.ERROR_MESSAGE);
 			}
 			if (stream != null) {
 				try {
 					stream.close();
 				} catch (IOException ex) {
-					JOptionPane.showMessageDialog(null, "Error closing stream: "
-							+ ex, "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null,
+							"Error closing stream: " + ex, "Error",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}
@@ -166,12 +169,13 @@ public class MenuActions {
 			int bytesUsed = cm.getBytesUsed();
 			int maxBytes = IniConf.getInstance().maxBytes();
 			if (bytesUsed > maxBytes) {
-				JOptionPane.showMessageDialog(null, "Error flashing hacklace: Animation list too big ("
-						+ bytesUsed + "/" + maxBytes + " Bytes)",
+				JOptionPane.showMessageDialog(null,
+						"Error flashing hacklace: Animation list too big ("
+								+ bytesUsed + "/" + maxBytes + " Bytes)",
 						"Error", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			
+
 			FlashExporter flashExporter = new FlashExporter();
 			ByteArrayInputStream stream;
 			try {
@@ -288,7 +292,8 @@ public class MenuActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (!confirm("Do you really want to quit?", "Quit?")) return;
+			if (!confirm("Do you really want to quit?", "Quit?"))
+				return;
 			AnimatorGui.getInstance().dispose();
 		}
 	}
@@ -312,6 +317,25 @@ public class MenuActions {
 			// System.out.println("HelpSet "+ helpHS +" not found")
 			// return;
 			// }
+		}
+	}
+
+	public static class NewAction extends AbstractAction {
+
+		private static final long serialVersionUID = -1969161857609413789L;
+
+		public NewAction() {
+			super("New");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (!confirm()) return;
+			AnimatorGui app = AnimatorGui.getInstance();
+			app.getHomePanel().clear();
+			app.getHacklaceConfigManager().clear();
+			app.stopEditMode();
+			app.setCurrentFile(null);
 		}
 	}
 

@@ -64,27 +64,10 @@ public class HomePanel extends JPanel {
 				hacklaceConfigManager)), c);
 		infoLabel = new JLabel("");
 		add(infoLabel, c);
-		addComponentListener(new ComponentListener() {
-			@Override
-			public void componentResized(ComponentEvent e) {
-			}
-
-			@Override
-			public void componentMoved(ComponentEvent e) {
-			}
-
-			@Override
-			public void componentShown(ComponentEvent e) {
-				updateInfoLabel();
-			}
-
-			@Override
-			public void componentHidden(ComponentEvent e) {
-			}
-		});
+		updateInfoLabel();
 	}
 	
-	private void updateInfoLabel()  {
+	public void updateInfoLabel()  {
 		int bytesUsed = hacklaceConfigManager.getBytesUsed();
 		int maxBytes = IniConf.getInstance().maxBytes();
 		if (bytesUsed > maxBytes) infoLabel.setForeground(Color.red);

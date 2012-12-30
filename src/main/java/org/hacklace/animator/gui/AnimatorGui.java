@@ -75,6 +75,7 @@ public class AnimatorGui extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		// file menu
 		JMenu menuFile = new JMenu("File");
+		menuFile.add(new JMenuItem(new MenuActions.NewAction()));
 		menuFile.add(new JMenuItem(new MenuActions.OpenAction()));
 		menuFile.add(new JMenuItem(new MenuActions.SaveAction()));
 		menuFile.add(new JMenuItem(new MenuActions.SaveAsAction()));
@@ -123,6 +124,7 @@ public class AnimatorGui extends JFrame {
 			editPanel = null;
 		}
 		homePanel.setVisible(true);
+		homePanel.updateInfoLabel();
 		repaint();
 	}
 
