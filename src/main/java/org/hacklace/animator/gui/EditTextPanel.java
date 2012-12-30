@@ -49,7 +49,9 @@ public class EditTextPanel extends EditPanel {
 		panel.add(textLedPanel, c);
 		c.insets = new Insets(5, 5, 5, 5);
 		JSlider positionSlider = createPositionSlider();
+		c.fill = GridBagConstraints.HORIZONTAL;
 		panel.add(positionSlider, c);
+		c.fill = GridBagConstraints.NONE;
 		c.insets = new Insets(0, 0, 0, 0);
 		virtualKeyboardPanel = createVirtualKeyboardPanel();
 		panel.add(virtualKeyboardPanel, c);
