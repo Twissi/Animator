@@ -1,9 +1,10 @@
-package org.hacklace.animator.gui;
+package org.hacklace.animator.gui.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import org.hacklace.animator.displaybuffer.Grid;
+import org.hacklace.animator.gui.LedInterface;
 
 public class ToggleLedActionListener implements ActionListener {
 

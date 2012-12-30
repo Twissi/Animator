@@ -1,4 +1,4 @@
-package org.hacklace.animator.gui;
+package org.hacklace.animator.gui.actions;
 
 import gnu.io.PortInUseException;
 import gnu.io.UnsupportedCommOperationException;
@@ -16,6 +16,9 @@ import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.IniConf;
 import org.hacklace.animator.exporter.BinExporter;
 import org.hacklace.animator.exporter.FlashExporter;
+import org.hacklace.animator.gui.AnimatorGui;
+import org.hacklace.animator.gui.FileChooser;
+import org.hacklace.animator.gui.HomePanel;
 
 public class MenuActions {
 

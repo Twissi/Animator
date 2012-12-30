@@ -20,6 +20,7 @@ import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.IllegalHacklaceConfigFileException;
 import org.hacklace.animator.IniConf;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
+import org.hacklace.animator.gui.actions.MenuActions;
 
 public class AnimatorGui extends JFrame {
 

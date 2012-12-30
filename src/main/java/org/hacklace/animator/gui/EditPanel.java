@@ -5,14 +5,11 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
@@ -27,6 +24,7 @@ import org.hacklace.animator.enums.Delay;
 import org.hacklace.animator.enums.Direction;
 import org.hacklace.animator.enums.Speed;
 import org.hacklace.animator.enums.StepWidth;
+import org.hacklace.animator.gui.actions.RawInputApplyActionListener;
 
 public abstract class EditPanel extends JPanel implements OptionsObserver {
 	private static final long serialVersionUID = -5137928768652375360L;
@@ -123,26 +121,8 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 		rawInputTextField.setText("");
 		rawInputPanel.add(rawInputTextField);
 		JButton button = new JButton("Apply");
-		button.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				String rawString = rawInputTextField.getText().trim();
-				try {
-					DisplayBuffer tmp = DisplayBuffer
-							.createBufferFromLine(rawString);
-					// it worked without error, we can now switch buffers
-					bufferRef = tmp;
-					onRawTextChanged();
-				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(
-							null,
-							"Invalid raw string supplied. Message: "
-									+ ex.toString(), "Error",
-							JOptionPane.ERROR_MESSAGE);
-				}
-				setFromDisplayBuffer(bufferRef);
-			}
-		});
+		button.addActionListener(new RawInputApplyActionListener(
+				rawInputTextField, this));
 		rawInputPanel.add(button);
 		return rawInputPanel;
 	}
@@ -191,6 +171,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 	}
 
 	public void setFromDisplayBuffer(DisplayBuffer buffer) {
+		bufferRef = buffer;
 		optionsPanel.setOptions(buffer.getSpeed(), buffer.getDelay(),
 				buffer.getDirection(), buffer.getStepWidth());
 		updateRawTextField();

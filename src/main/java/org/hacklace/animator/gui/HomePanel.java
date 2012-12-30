@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.IniConf;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
+import org.hacklace.animator.gui.actions.AnimationListActions;
 
 public class HomePanel extends JPanel {
 	private static final long serialVersionUID = 1045750321890262891L;

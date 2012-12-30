@@ -1,4 +1,4 @@
-package org.hacklace.animator.gui;
+package org.hacklace.animator.gui.actions;
 
 import java.awt.event.ActionEvent;
 
@@ -9,6 +9,8 @@ import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.enums.AnimationType;
 import org.hacklace.animator.enums.PredefinedAnimation;
+import org.hacklace.animator.gui.AnimatorGui;
+import org.hacklace.animator.gui.HomePanel;
 
 public class AnimationListActions {
 

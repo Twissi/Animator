@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 
 import org.hacklace.animator.IniConf;
 import org.hacklace.animator.displaybuffer.Grid;
+import org.hacklace.animator.gui.actions.ToggleLedActionListener;
 
 public class LedPanel extends JPanel implements LedObserver {
 
