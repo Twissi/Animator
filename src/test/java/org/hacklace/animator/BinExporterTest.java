@@ -1,0 +1,55 @@
+package org.hacklace.animator;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
+import junit.framework.TestCase;
+import junitx.framework.FileAssert;
+
+import org.hacklace.animator.exporter.BinExporter;
+import org.junit.Test;
+
+public class BinExporterTest extends TestCase {
+
+	private File exampleConf;
+	private File exampleFlash;
+	private File output;
+	private HacklaceConfigManager manager;
+	private BinExporter binExporter;
+	
+	protected void setUp() throws IOException {
+		manager = new HacklaceConfigManager();
+		output = File.createTempFile("test.hack", null);
+		URL url = this.getClass().getResource("/configs/example.hack");
+		exampleConf = new File(url.getFile());
+		url = this.getClass().getResource("/configs/example.bin");
+		exampleFlash = new File(url.getFile());
+		binExporter = new BinExporter();
+	}
+	
+	protected void tearDown() {
+		//output.delete();
+		exampleConf = null;
+		exampleFlash = null;
+	}
+	
+	@Test
+	public void testReadEqualsWrite()
+			throws IllegalHacklaceConfigFileException, IOException {
+		manager.readFile(exampleConf);
+		InputStream stream = new ByteArrayInputStream(manager.getRawString().getBytes(
+				HacklaceConfigManager.HACKLACE_CHARSET));
+		binExporter.write(stream, output);
+		// pad with zeros
+		long toWrite = 256 - output.length();
+		FileOutputStream fos = new FileOutputStream(output, true);
+		while (toWrite-- > 0) fos.write(0);
+		fos.close();
+		FileAssert.assertBinaryEquals(exampleFlash, output);
+	}
+
+}
