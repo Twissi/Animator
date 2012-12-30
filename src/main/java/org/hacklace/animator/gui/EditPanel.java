@@ -131,7 +131,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 				String rawString = rawInputTextField.getText().trim();
 				try {
 					DisplayBuffer tmp = DisplayBuffer.createBufferFromLine(
-							rawString, 0);
+							rawString);
 					// it worked without error, we can now switch buffers
 					bufferRef = tmp;
 					onRawTextChanged();

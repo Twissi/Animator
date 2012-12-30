@@ -136,15 +136,13 @@ public abstract class DisplayBuffer implements Cloneable {
 	/**
 	 * 
 	 * @param cfgLine
-	 * @param lineNumber
 	 * @return a DisplayBuffer for the input line, or null for $00, (the last
 	 *         line)
 	 * @throws IllegalHacklaceConfigLineException
 	 */
-	public static DisplayBuffer createBufferFromLine(String cfgLine,
-			int lineNumber) throws IllegalHacklaceConfigLineException {
+	public static DisplayBuffer createBufferFromLine(String cfgLine) throws IllegalHacklaceConfigLineException {
 		String modusByteString = cfgLine.substring(0, 3);
-		ModusByte modusByte = new ModusByte(modusByteString, lineNumber);
+		ModusByte modusByte = new ModusByte(modusByteString);
 		if (modusByte.isEOF()) {
 			return null;
 		}
@@ -152,20 +150,19 @@ public abstract class DisplayBuffer implements Cloneable {
 		String restOfLine = getRestOfLine(cfgLine);
 		AnimationType animationType = restOfLineAnalyzeType(restOfLine);
 		DisplayBuffer displayBuffer = createDisplayBuffer(modusByte,
-				animationType, restOfLine, lineNumber);
+				animationType, restOfLine);
 		return displayBuffer;
 
 	}
 
 	private static DisplayBuffer createDisplayBuffer(ModusByte modusByte,
-			AnimationType animationType, String restOfLine, int lineNumber)
+			AnimationType animationType, String restOfLine)
 			throws IllegalHacklaceConfigLineException {
 		switch (animationType) {
 			case TEXT :
 				return new TextDisplayBuffer(modusByte, restOfLine);
 			case GRAPHIC :
-				return new GraphicDisplayBuffer(modusByte, restOfLine,
-						lineNumber);
+				return new GraphicDisplayBuffer(modusByte, restOfLine);
 			case REFERENCE :
 				return new ReferenceDisplayBuffer(modusByte,
 						restOfLine.charAt(1));

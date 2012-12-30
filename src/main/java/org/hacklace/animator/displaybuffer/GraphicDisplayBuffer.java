@@ -14,12 +14,11 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 		super();
 	}
 
-	public GraphicDisplayBuffer(ModusByte modusByte, String restOfLine,
-			int lineNumber) throws IllegalHacklaceConfigLineException {
+	public GraphicDisplayBuffer(ModusByte modusByte, String restOfLine) throws IllegalHacklaceConfigLineException {
 		super();
 		this.modusByte = modusByte;
 		byte[] aniBytes = ConversionUtil.convertAnimationStringToByteArray(
-				restOfLine.substring(4, restOfLine.length() - 4), lineNumber); 
+				restOfLine.substring(4, restOfLine.length() - 4)); 
 		// cut off $FF in beginning and end
 		this.setDataFromBytes(aniBytes);
 

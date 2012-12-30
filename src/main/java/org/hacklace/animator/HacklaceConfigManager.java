@@ -37,27 +37,32 @@ public class HacklaceConfigManager {
 	}
 
 	public void readStream(InputStream stream)
-			throws IllegalHacklaceConfigLineException, IOException {
+			throws IllegalHacklaceConfigFileException, IOException {
 		DataInputStream in = new DataInputStream(stream);
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new InputStreamReader(in, HACKLACE_CHARSET));
 			String cfgLine;
 			int lineNumber = 0;
-			loop: while ((cfgLine = br.readLine()) != null) {
+			loop : while ((cfgLine = br.readLine()) != null) {
 				lineNumber++;
 				if (cfgLine.trim().equals("")) {
 					// ignore empty lines (especially at end of file)
 					continue loop;
 				}
-				DisplayBuffer displayBuffer = DisplayBuffer
-						.createBufferFromLine(cfgLine, lineNumber);
+				DisplayBuffer displayBuffer;
+				try {
+					displayBuffer = DisplayBuffer.createBufferFromLine(cfgLine);
+				} catch (IllegalHacklaceConfigLineException ex) {
+					throw new IllegalHacklaceConfigFileException(ex, lineNumber);
+				}
 				if (displayBuffer != null /* $00 = EOF */) {
 					list.add(displayBuffer);
 				} else {
 					break loop;
 				}
 			}
+
 		} finally {
 			if (br != null) {
 				br.close();
@@ -66,7 +71,7 @@ public class HacklaceConfigManager {
 	}
 
 	public void readFile(File file) throws IOException,
-			IllegalHacklaceConfigLineException {
+			IllegalHacklaceConfigFileException {
 		FileInputStream fstream = new FileInputStream(file);
 		readStream(fstream);
 	}
@@ -108,8 +113,24 @@ public class HacklaceConfigManager {
 		return gdb;
 	}
 
+	/**
+	 * 
+	 * @param whichAnimation
+	 *            The consumer has to make sure that this is a valid animation
+	 *            reference, as the potential exception is suppressed
+	 * @return
+	 */
 	public ReferenceDisplayBuffer addReferenceDisplayBuffer(char whichAnimation) {
-		ReferenceDisplayBuffer rdb = new ReferenceDisplayBuffer(whichAnimation);
+		ReferenceDisplayBuffer rdb = null;
+		try {
+			rdb = new ReferenceDisplayBuffer(whichAnimation);
+		} catch (IllegalHacklaceConfigLineException e) {
+			// do nothing, as this is not supposed to happen, the caller needs
+			// to make sure the animation is valid
+			// e.g. by selecting it from a dropdown list
+			e.printStackTrace();
+		}
+		assert (rdb != null);
 		addDisplayBuffer(rdb);
 		return rdb;
 	}

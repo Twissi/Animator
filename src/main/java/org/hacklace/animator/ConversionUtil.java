@@ -69,19 +69,16 @@ public class ConversionUtil {
 	/**
 	 * 
 	 * @param aniString without the direct mode bytes ($FF)
-	 * @param lineNumber
 	 * @return a byte array with one byte for each hex sequence
 	 * @throws IllegalHacklaceConfigLineException
 	 */
-	public static byte[] convertAnimationStringToByteArray(String aniString,
-			int lineNumber) throws IllegalHacklaceConfigLineException {
+	public static byte[] convertAnimationStringToByteArray(String aniString) throws IllegalHacklaceConfigLineException {
 		final String separators = "[ ,;./:_+*|]";
 		byte[] aniBytes = new byte[200];
 		String[] aniByteStrings = aniString.split(separators);
 		if (aniBytes.length > 200) {
 			throw new IllegalHacklaceConfigLineException(
-					"Illegal hacklace configuration file: More than 200 bytes in line "
-							+ lineNumber + ".");
+					"Illegal hacklace configuration file: More than 200 bytes.");
 
 		}
 		int index = 0;

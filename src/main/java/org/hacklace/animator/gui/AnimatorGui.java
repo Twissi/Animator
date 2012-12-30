@@ -1,5 +1,13 @@
 package org.hacklace.animator.gui;
 
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
+
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -9,17 +17,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import org.hacklace.animator.HacklaceConfigManager;
-import org.hacklace.animator.IllegalHacklaceConfigLineException;
+import org.hacklace.animator.IllegalHacklaceConfigFileException;
 import org.hacklace.animator.IniConf;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
-
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.IOException;
 
 public class AnimatorGui extends JFrame {
 
@@ -177,11 +177,10 @@ public class AnimatorGui extends JFrame {
 			setCurrentFile(file);
 		} catch (IOException ex) {
 			JOptionPane.showMessageDialog(null,
-					"Cannot read from file. Message: " + ex.toString(),
+					"Cannot read from file. " + ex.getMessage(),
 					"Error", JOptionPane.ERROR_MESSAGE);
-		} catch (IllegalHacklaceConfigLineException ex) {
-			JOptionPane.showMessageDialog(null,
-					"Illegal hacklace config file. Message: " + ex.toString(),
+		} catch (IllegalHacklaceConfigFileException ex) {
+			JOptionPane.showMessageDialog(null, ex.getMessage(),
 					"Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
