@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 
+import org.hacklace.animator.IniConf;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.enums.StepWidth;
 
@@ -127,7 +128,7 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 		}
 		copyBufferToPanel(currentPosition, currentLedPanel);
 		currentLabel.setText(Integer.toString(currentPosition));
-		if (currentPosition < DisplayBuffer.getNumGrids() - 1) {
+		if (currentPosition < IniConf.getInstance().getNumGrids() - 1) {
 			copyBufferToPanel(currentPosition + 1, nextLedPanel);
 			nextLabel.setText(Integer.toString(currentPosition + 1));
 		} else {
@@ -141,7 +142,7 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 		// newValue);
 		bufferRef
 				.setValueAt(column + gridCols * currentPosition, row, newValue);
-		rawInputTextField.setText(bufferRef.getRawString());
+		rawInputTextFieldFullLine.setText(bufferRef.getRawString());
 	}
 
 }

@@ -115,4 +115,13 @@ public class IniConf {
 	public int maxColumns() {
 		return conf.getInt("animation.maxcolumns");
 	}
+
+	/**
+	 * returns the total number of grids as max columns divided by columns
+	 * 
+	 * @return
+	 */
+	public int getNumGrids() {
+		return maxColumns() / columns();
+	}
 }

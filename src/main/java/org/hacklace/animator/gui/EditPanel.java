@@ -31,7 +31,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 
 	protected AnimationOptionsPanel optionsPanel;
 	protected JPanel rawInputPanel;
-	protected JTextField rawInputTextField;
+	protected JTextField rawInputTextFieldFullLine;
 
 	protected DisplayBuffer bufferRef; // our internal temporary displayBuffer
 										// for editing
@@ -78,7 +78,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 	}
 
 	public EditPanel(DisplayBuffer displayBuffer) {
-		bufferRef = displayBuffer.clone();
+		bufferRef = displayBuffer.clone(); 
 		origBuffer = displayBuffer;
 		// common components for all types of edit panels
 		optionsPanel = new AnimationOptionsPanel();
@@ -99,12 +99,13 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 		JPanel editDetailsPanel = new JPanel();
 		addMoreComponents(editDetailsPanel);
 		add(editDetailsPanel, c);
-		c.gridy = 1;
+		c.gridx = 0;
+		c.gridy = 2;
+		c.gridwidth = 2;
 		add(rawInputPanel, c);
 		optionsPanel.addObserver(this);
 		// set options and data from the display buffer
 		setFromDisplayBuffer(displayBuffer);
-		rawInputTextField.setText(bufferRef.getRawString());
 	}
 
 	/**
@@ -117,12 +118,12 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 		JPanel rawInputPanel = new JPanel();
 		JLabel label = new JLabel("Raw data:");
 		rawInputPanel.add(label);
-		rawInputTextField = new JTextField(DisplayBuffer.getNumGrids());
-		rawInputTextField.setText("");
-		rawInputPanel.add(rawInputTextField);
+		rawInputTextFieldFullLine = new JTextField(IniConf.getInstance().getNumGrids());
+		rawInputTextFieldFullLine.setText("");
+		rawInputPanel.add(rawInputTextFieldFullLine);
 		JButton button = new JButton("Apply");
 		button.addActionListener(new RawInputApplyActionListener(
-				rawInputTextField, this));
+				rawInputTextFieldFullLine, this));
 		rawInputPanel.add(button);
 		return rawInputPanel;
 	}
@@ -150,7 +151,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 				setFromDisplayBuffer(bufferRef);
 			}
 		});
-		slider.setMaximum(DisplayBuffer.getNumGrids() - 1);
+		slider.setMaximum(IniConf.getInstance().getNumGrids() - 1);
 		return slider;
 	}
 
@@ -179,8 +180,8 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 
 	public void updateRawTextField() {
 		String rawString = bufferRef.getRawString();
-		if (!rawInputTextField.getText().equals(rawString)) {
-			rawInputTextField.setText(rawString);
+		if (!rawInputTextFieldFullLine.getText().equals(rawString)) {
+			rawInputTextFieldFullLine.setText(rawString);
 		}
 	}
 

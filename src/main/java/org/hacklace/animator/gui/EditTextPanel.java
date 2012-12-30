@@ -127,13 +127,13 @@ public class EditTextPanel extends EditPanel {
 
 	private JPanel createTextPanel() {
 		textPanel = new JPanel();
-		textEditField = new JTextField(DisplayBuffer.getNumGrids());
+		final int numGrids = IniConf.getInstance().getNumGrids();
+		textEditField = new JTextField(numGrids);
 		PlainDocument doc = new PlainDocument();
 		doc.setDocumentFilter(new DocumentFilter() {
 			public void insertString(FilterBypass fb, int offs, String str,
 					AttributeSet a) throws BadLocationException {
-				if ((fb.getDocument().getLength() + str.length()) <= DisplayBuffer
-						.getNumGrids())
+				if ((fb.getDocument().getLength() + str.length()) <= numGrids)
 					super.insertString(fb, offs, str, a);
 				else
 					Toolkit.getDefaultToolkit().beep();
@@ -141,8 +141,7 @@ public class EditTextPanel extends EditPanel {
 
 			public void replace(FilterBypass fb, int offs, int length,
 					String str, AttributeSet a) throws BadLocationException {
-				if ((fb.getDocument().getLength() + str.length() - length) <= DisplayBuffer
-						.getNumGrids())
+				if ((fb.getDocument().getLength() + str.length() - length) <= numGrids)
 					super.replace(fb, offs, length, str, a);
 				else
 					Toolkit.getDefaultToolkit().beep();

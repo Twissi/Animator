@@ -118,15 +118,6 @@ public abstract class DisplayBuffer implements Cloneable {
 	}
 
 	/**
-	 * returns the total number of grids
-	 * 
-	 * @return
-	 */
-	public static int getNumGrids() {
-		return MAX_COLUMNS / GRID_COLS;
-	}
-
-	/**
 	 * 
 	 * @param cfgLine
 	 * @return a DisplayBuffer for the input line, or null for $00, (the last
