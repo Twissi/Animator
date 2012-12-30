@@ -6,10 +6,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -22,7 +18,6 @@ import javax.swing.JScrollPane;
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.IniConf;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
-import org.hacklace.animator.exporter.FlashExporter;
 
 public class HomePanel extends JPanel {
 	private static final long serialVersionUID = 1045750321890262891L;
