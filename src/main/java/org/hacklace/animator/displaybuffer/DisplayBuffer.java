@@ -1,6 +1,6 @@
 package org.hacklace.animator.displaybuffer;
 
-import org.hacklace.animator.IllegalHacklaceConfigFileException;
+import org.hacklace.animator.IllegalHacklaceConfigLineException;
 import org.hacklace.animator.IniConf;
 import org.hacklace.animator.ModusByte;
 import org.hacklace.animator.enums.AnimationType;
@@ -139,10 +139,10 @@ public abstract class DisplayBuffer implements Cloneable {
 	 * @param lineNumber
 	 * @return a DisplayBuffer for the input line, or null for $00, (the last
 	 *         line)
-	 * @throws IllegalHacklaceConfigFileException
+	 * @throws IllegalHacklaceConfigLineException
 	 */
 	public static DisplayBuffer createBufferFromLine(String cfgLine,
-			int lineNumber) throws IllegalHacklaceConfigFileException {
+			int lineNumber) throws IllegalHacklaceConfigLineException {
 		String modusByteString = cfgLine.substring(0, 3);
 		ModusByte modusByte = new ModusByte(modusByteString, lineNumber);
 		if (modusByte.isEOF()) {
@@ -159,7 +159,7 @@ public abstract class DisplayBuffer implements Cloneable {
 
 	private static DisplayBuffer createDisplayBuffer(ModusByte modusByte,
 			AnimationType animationType, String restOfLine, int lineNumber)
-			throws IllegalHacklaceConfigFileException {
+			throws IllegalHacklaceConfigLineException {
 		switch (animationType) {
 			case TEXT :
 				return new TextDisplayBuffer(modusByte, restOfLine);

@@ -137,9 +137,9 @@ public class ModusByte implements Cloneable {
 	}
 
 	public ModusByte(String modusByteString, int line)
-			throws IllegalHacklaceConfigFileException {
+			throws IllegalHacklaceConfigLineException {
 		if (!ConversionUtil.isHexSequence(modusByteString)) {
-			throw new IllegalHacklaceConfigFileException("Modus string "
+			throw new IllegalHacklaceConfigLineException("Modus string "
 					+ modusByteString + " is not hex ($nn) in line " + line + ".");
 		}
 		this.bits = ConversionUtil.convertStringToByte(modusByteString);

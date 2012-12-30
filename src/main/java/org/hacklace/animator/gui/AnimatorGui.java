@@ -9,7 +9,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import org.hacklace.animator.HacklaceConfigManager;
-import org.hacklace.animator.IllegalHacklaceConfigFileException;
+import org.hacklace.animator.IllegalHacklaceConfigLineException;
 import org.hacklace.animator.IniConf;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 
@@ -179,7 +179,7 @@ public class AnimatorGui extends JFrame {
 			JOptionPane.showMessageDialog(null,
 					"Cannot read from file. Message: " + ex.toString(),
 					"Error", JOptionPane.ERROR_MESSAGE);
-		} catch (IllegalHacklaceConfigFileException ex) {
+		} catch (IllegalHacklaceConfigLineException ex) {
 			JOptionPane.showMessageDialog(null,
 					"Illegal hacklace config file. Message: " + ex.toString(),
 					"Error", JOptionPane.ERROR_MESSAGE);

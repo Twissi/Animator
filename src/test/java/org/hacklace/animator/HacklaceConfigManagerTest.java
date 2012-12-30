@@ -31,10 +31,10 @@ public class HacklaceConfigManagerTest extends TestCase {
 	 * disk. These files have to be binary equal.
 	 * 
 	 * @throws IOException
-	 * @throws IllegalHacklaceConfigFileException
+	 * @throws IllegalHacklaceConfigLineException
 	 */
 	public void testReadEqualsWrite()
-			throws IllegalHacklaceConfigFileException, IOException {
+			throws IllegalHacklaceConfigLineException, IOException {
 		manager.readFile(exampleConf);
 		manager.writeFile(output);
 		FileAssert.assertBinaryEquals(exampleConf, output);

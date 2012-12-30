@@ -108,7 +108,7 @@ public class GraphicDisplayBufferTest extends TestCase {
 		assertEquals("$FF $01 $FF,", rawStringWithoutModusByte);
 	}
 
-	public void testFromRawString() throws IllegalHacklaceConfigFileException {
+	public void testFromRawString() throws IllegalHacklaceConfigLineException {
 		String rawString = "$04,$FF $01 $FF,";
 		GraphicDisplayBuffer buf = (GraphicDisplayBuffer) DisplayBuffer.createBufferFromLine(rawString, -1);
 		boolean topLeftLed = buf.getColumnRow(0, 0);

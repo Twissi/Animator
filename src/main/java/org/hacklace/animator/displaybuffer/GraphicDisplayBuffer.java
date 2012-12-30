@@ -4,7 +4,7 @@ import static org.hacklace.animator.ConversionUtil.convertAnimationByteTo7Boolea
 import static org.hacklace.animator.ConversionUtil.convertBytesToString;
 
 import org.hacklace.animator.ConversionUtil;
-import org.hacklace.animator.IllegalHacklaceConfigFileException;
+import org.hacklace.animator.IllegalHacklaceConfigLineException;
 import org.hacklace.animator.ModusByte;
 import org.hacklace.animator.enums.AnimationType;
 
@@ -15,7 +15,7 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 	}
 
 	public GraphicDisplayBuffer(ModusByte modusByte, String restOfLine,
-			int lineNumber) throws IllegalHacklaceConfigFileException {
+			int lineNumber) throws IllegalHacklaceConfigLineException {
 		super();
 		this.modusByte = modusByte;
 		byte[] aniBytes = ConversionUtil.convertAnimationStringToByteArray(

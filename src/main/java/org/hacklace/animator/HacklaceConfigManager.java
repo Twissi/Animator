@@ -37,7 +37,7 @@ public class HacklaceConfigManager {
 	}
 
 	public void readStream(InputStream stream)
-			throws IllegalHacklaceConfigFileException, IOException {
+			throws IllegalHacklaceConfigLineException, IOException {
 		DataInputStream in = new DataInputStream(stream);
 		BufferedReader br = null;
 		try {
@@ -66,7 +66,7 @@ public class HacklaceConfigManager {
 	}
 
 	public void readFile(File file) throws IOException,
-			IllegalHacklaceConfigFileException {
+			IllegalHacklaceConfigLineException {
 		FileInputStream fstream = new FileInputStream(file);
 		readStream(fstream);
 	}
