@@ -3,19 +3,13 @@ package org.hacklace.animator.gui;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.hacklace.animator.IniConf;
-import org.hacklace.animator.displaybuffer.FontUtil;
 import org.hacklace.animator.displaybuffer.Grid;
 
 public class LedPanel extends JPanel implements LedObserver {
