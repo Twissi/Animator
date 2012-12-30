@@ -15,6 +15,8 @@ import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 
@@ -97,11 +99,17 @@ public class AnimatorGui extends JFrame {
 
 		// Set stuff
 		setTitle(title);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setPreferredSize(new Dimension(IniConf.getInstance().displayWidth(),
 				IniConf.getInstance().displayHeight()));
 
 		pack();
+		
+		addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                    new MenuActions.CloseAction().actionPerformed(null);
+            }
+    });
 
 	}
 

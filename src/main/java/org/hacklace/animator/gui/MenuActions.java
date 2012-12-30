@@ -18,10 +18,24 @@ import org.hacklace.animator.exporter.BinExporter;
 import org.hacklace.animator.exporter.FlashExporter;
 
 public class MenuActions {
+	
+	private static String confirmationText = "Any changes to the current animation list will be lost. Do you really want to continue?";
+	private static String confirmationTitle = "Really?";
 
 	protected static void doNothing(Class<? extends Object> clazz) {
 		System.out.println("Performing " + clazz.getSimpleName()
 				+ " - doesn't do anything right now");
+	}
+	
+	protected static boolean confirm(String text, String title) {
+		// if no file is loaded
+		if (AnimatorGui.getInstance().getCurrentFile() == null) return true;
+		int result = JOptionPane.showConfirmDialog(null, text, title, JOptionPane.OK_CANCEL_OPTION);
+		return (result == JOptionPane.OK_OPTION);
+	}
+	
+	protected static boolean confirm() {
+		return confirm(confirmationText, confirmationTitle);
 	}
 
 	private static void loadResource(String fileName) {
@@ -54,6 +68,7 @@ public class MenuActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			if (!confirm()) return;
 			loadResource("/Default_Konfiguration.txt");
 			AnimatorGui app = AnimatorGui.getInstance();
 			app.stopEditMode();
@@ -72,6 +87,7 @@ public class MenuActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			if (!confirm()) return;
 			loadResource("/example.cfg");
 			AnimatorGui app = AnimatorGui.getInstance();
 			app.stopEditMode();
@@ -272,7 +288,8 @@ public class MenuActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.exit(0);
+			if (!confirm("Do you really want to quit?", "Quit?")) return;
+			AnimatorGui.getInstance().dispose();
 		}
 	}
 
