@@ -10,14 +10,16 @@ import org.hacklace.animator.enums.PredefinedAnimation;
 public class ReferenceDisplayBuffer extends DisplayBuffer {
 
 	private char letter;
+	private PredefinedAnimation animation;
 
-	public ReferenceDisplayBuffer(FullConfigLine fullLine) throws IllegalHacklaceConfigLineException {
-		super();
-		this.modusByte = fullLine.getModusByte();
+	public ReferenceDisplayBuffer(FullConfigLine fullLine)
+			throws IllegalHacklaceConfigLineException {
+		super(fullLine.getModusByte());
 		setLetter(fullLine.getSixthChar());
 	}
 
-	public ReferenceDisplayBuffer(char whichAnimation)  throws IllegalHacklaceConfigLineException {
+	public ReferenceDisplayBuffer(char whichAnimation)
+			throws IllegalHacklaceConfigLineException {
 		super();
 		this.letter = whichAnimation;
 		// default modus byte is already set
@@ -32,25 +34,28 @@ public class ReferenceDisplayBuffer extends DisplayBuffer {
 		return this.letter;
 	}
 
+	/**
+	 * side effect: updata data (pixels)
+	 * @param letter
+	 */
 	public void setLetter(char letter) {
 		this.letter = letter;
 		clearData();
-		for (PredefinedAnimation animation: PredefinedAnimation.values()) {
-			if (animation.getIndex() == letter) {
-				int i = 0;
-				for (int aniByte : animation.getAnimationBytes()) {
-					boolean[] bits = convertAnimationByteTo7Booleans((byte)aniByte);
-					data[i++] = bits;
-				}
-			}
+		animation = PredefinedAnimation
+				.getPredefinedAnimationByIndex(letter);
+		int i = 0;
+		for (int aniByte : animation.getAnimationBytes()) {
+			boolean[] bits = convertAnimationByteTo7Booleans((byte) aniByte);
+			data[i++] = bits;
 		}
 	}
 
 	@Override
 	public String toString() {
-		return getAnimationType().getDescription() + " ~" + letter;
+		
+		return getAnimationType().getDescription() +" "+ animation.toString();
 	}
-	
+
 	@Override
 	public String getRawStringForRestOfLine() {
 		return "~" + this.getLetter();

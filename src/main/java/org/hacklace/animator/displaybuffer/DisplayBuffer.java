@@ -12,7 +12,7 @@ import org.hacklace.animator.enums.StepWidth;
 
 public abstract class DisplayBuffer implements Cloneable {
 
-	protected boolean[][] data;
+	protected boolean[][] data = new boolean[MAX_COLUMNS][GRID_ROWS];
 
 	public static final int MAX_COLUMNS = IniConf.getInstance().maxColumns();
 
@@ -22,7 +22,6 @@ public abstract class DisplayBuffer implements Cloneable {
 	protected final static int GRID_COLS = IniConf.getInstance().columns();
 
 	protected DisplayBuffer() {
-		data = new boolean[MAX_COLUMNS][GRID_ROWS];
 		modusByte = new ModusByte();
 	}
 
