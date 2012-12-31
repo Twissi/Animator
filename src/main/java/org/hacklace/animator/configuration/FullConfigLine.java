@@ -17,6 +17,15 @@ public class FullConfigLine {
 		this.fullLineString = fullLineString;
 	}
 
+	public FullConfigLine(ModusByte modusByte, DirectMode directMode) {
+		this.fullLineString = modusByte.getRawString() + "$FF "
+				+ directMode.getValue() + "$FF,";
+	}
+
+	public FullConfigLine(ModusByte modusByte, RestOfConfigLine restOfLine) {
+		this.fullLineString = modusByte.getRawString() + restOfLine.getValue();
+	}
+
 	public boolean isValid() {
 		if (fullLineString == null)
 			return false;

@@ -2,6 +2,7 @@ package org.hacklace.animator;
 
 import junit.framework.TestCase;
 
+import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.GraphicDisplayBuffer;
 import org.hacklace.animator.displaybuffer.Grid;
@@ -110,7 +111,8 @@ public class GraphicDisplayBufferTest extends TestCase {
 
 	public void testFromRawString() throws IllegalHacklaceConfigLineException {
 		String rawString = "$04,$FF $01 $FF,";
-		GraphicDisplayBuffer buf = (GraphicDisplayBuffer) DisplayBuffer.createBufferFromLine(rawString);
+		FullConfigLine fullLine = new FullConfigLine(rawString);
+		DisplayBuffer buf = DisplayBuffer.createBufferFromLine(fullLine);
 		boolean topLeftLed = buf.getColumnRow(0, 0);
 		boolean bottomLeftLed = buf.getColumnRow(0, 6);
 		assertTrue(topLeftLed);

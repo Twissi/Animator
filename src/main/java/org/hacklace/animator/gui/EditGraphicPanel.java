@@ -97,15 +97,15 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 		GridBagConstraints c = new GridBagConstraints();
 		// first row: 3 LedPanels
 		c.insets = new Insets(5, 5, 5, 5);
-		prevLedPanel = new LedPanel(gridRows, gridCols);
+		prevLedPanel = new LedPanel(GRID_ROWS, GRID_COLS);
 		prevLedPanel.setEnabled(false);
 		c.gridx = 0;
 		ledPanelPanel.add(prevLedPanel, c);
-		currentLedPanel = new LedPanel(gridRows, gridCols);
+		currentLedPanel = new LedPanel(GRID_ROWS, GRID_COLS);
 		currentLedPanel.addObserver(this);
 		c.gridx = 1;
 		ledPanelPanel.add(currentLedPanel, c);
-		nextLedPanel = new LedPanel(gridRows, gridCols);
+		nextLedPanel = new LedPanel(GRID_ROWS, GRID_COLS);
 		nextLedPanel.setEnabled(false);
 		c.gridx = 2;
 		ledPanelPanel.add(nextLedPanel, c);
@@ -168,7 +168,7 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 	public void onLedChange(int row, int column, boolean newValue) {
 		// System.out.println("LED Changed: " + row + "/" + column + " to " +
 		// newValue);
-		buffer.setValueAt(column + gridCols * currentPosition, row, newValue);
+		buffer.setValueAt(column + GRID_COLS * currentPosition, row, newValue);
 		updateRawTextFields();
 	}
 

@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
+import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.gui.EditPanel;
 
@@ -16,10 +17,10 @@ public abstract class AbstractRawInputApplyActionListener implements
 	@Override
 	abstract public void actionPerformed(ActionEvent arg0);
 
-	protected void bufferFromString(String rawString) {
+	protected void bufferFromString(FullConfigLine fullLine) {
 		try {
 			DisplayBuffer buffer = DisplayBuffer
-					.createBufferFromLine(rawString);
+					.createBufferFromLine(fullLine);
 			// it worked without error, we can now switch buffers
 			editPanel.setFromDisplayBuffer(buffer);
 			editPanel.onRawTextChanged();

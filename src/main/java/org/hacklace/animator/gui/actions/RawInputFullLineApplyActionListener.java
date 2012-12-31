@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JTextField;
 
+import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.gui.EditPanel;
 
 public class RawInputFullLineApplyActionListener extends
@@ -20,6 +21,7 @@ public class RawInputFullLineApplyActionListener extends
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		String rawString = rawInputFullLineTextField.getText();
-		bufferFromString(rawString);
+		FullConfigLine fullLine = new FullConfigLine(rawString);
+		bufferFromString(fullLine);
 	}
 }

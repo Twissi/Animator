@@ -42,8 +42,8 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 										// buffer for overwriting on save
 	protected int currentPosition = 0;
 
-	protected int gridRows = IniConf.getInstance().rows();
-	protected int gridCols = IniConf.getInstance().columns();
+	public static final int GRID_ROWS = IniConf.getInstance().rows();
+	public static final int GRID_COLS = IniConf.getInstance().columns();
 
 	public static EditPanel factory(DisplayBuffer displayBuffer) {
 		switch (displayBuffer.getAnimationType()) {
@@ -208,7 +208,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 		for (int x = 0; x < panel.getCols(); x++) {
 			for (int y = 0; y < panel.getRows(); y++) {
 				panel.setLed(y, x,
-						buffer.getValueAt(x + gridCols * position, y));
+						buffer.getValueAt(x + GRID_COLS * position, y));
 			}
 		}
 	}

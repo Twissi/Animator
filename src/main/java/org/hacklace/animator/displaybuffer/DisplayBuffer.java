@@ -128,10 +128,8 @@ public abstract class DisplayBuffer implements Cloneable {
 	 *         line)
 	 * @throws IllegalHacklaceConfigLineException
 	 */
-	public static DisplayBuffer createBufferFromLine(String fullConfigLineString)
+	public static DisplayBuffer createBufferFromLine(FullConfigLine fullLine)
 			throws IllegalHacklaceConfigLineException {
-		FullConfigLine fullLine = new FullConfigLine(fullConfigLineString);
-
 		ModusByte modusByte = fullLine.getModusByte();
 		if (modusByte.isEOF()) {
 			return null;

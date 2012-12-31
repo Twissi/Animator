@@ -15,8 +15,7 @@ public class MixedDisplayBuffer extends DisplayBuffer {
 
 	public MixedDisplayBuffer(FullConfigLine fullLine)
 			throws IllegalHacklaceConfigLineException {
-		super();
-		this.modusByte = fullLine.getModusByte();
+		super(fullLine.getModusByte());
 		this.stringValue = fullLine.getRestOfLine().getValue();
 	}
 

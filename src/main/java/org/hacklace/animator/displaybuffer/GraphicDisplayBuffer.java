@@ -15,8 +15,7 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 	}
 
 	public GraphicDisplayBuffer(FullConfigLine fullLine) throws IllegalHacklaceConfigLineException {
-		super();
-		this.modusByte = fullLine.getModusByte();
+		super(fullLine.getModusByte());
 		byte[] aniBytes = ConversionUtil.convertAnimationStringToByteArray(fullLine.getRestOfLine().getDirectMode()); 
 		// cut off $FF in beginning and end
 		this.setDataFromBytes(aniBytes);

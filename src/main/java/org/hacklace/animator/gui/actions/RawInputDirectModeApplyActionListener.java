@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 
 import org.hacklace.animator.ModusByte;
+import org.hacklace.animator.configuration.DirectMode;
+import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.gui.EditPanel;
 
 public class RawInputDirectModeApplyActionListener extends AbstractRawInputApplyActionListener {
@@ -20,7 +22,8 @@ public class RawInputDirectModeApplyActionListener extends AbstractRawInputApply
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		ModusByte modusByte = editPanel.getDisplayBuffer().getModusByte();
-		String rawString = modusByte.getRawString() + "$FF " + rawInputRestOfLineTextField.getText() + "$FF,";
-		bufferFromString(rawString);
+		DirectMode directMode = new DirectMode(rawInputRestOfLineTextField.getText());
+		FullConfigLine fullLine = new FullConfigLine(modusByte, directMode);
+		bufferFromString(fullLine);
 	}
 }

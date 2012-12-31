@@ -15,6 +15,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.GraphicDisplayBuffer;
 import org.hacklace.animator.displaybuffer.MixedDisplayBuffer;
@@ -42,17 +43,18 @@ public class HacklaceConfigManager {
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new InputStreamReader(in, HACKLACE_CHARSET));
-			String cfgLine;
+			String fullConfigLineString;
 			int lineNumber = 0;
-			loop : while ((cfgLine = br.readLine()) != null) {
+			loop : while ((fullConfigLineString = br.readLine()) != null) {
 				lineNumber++;
-				if (cfgLine.trim().equals("")) {
+				if (fullConfigLineString.trim().equals("")) {
 					// ignore empty lines (especially at end of file)
 					continue loop;
 				}
+				FullConfigLine fullLine = new FullConfigLine(fullConfigLineString);
 				DisplayBuffer displayBuffer;
 				try {
-					displayBuffer = DisplayBuffer.createBufferFromLine(cfgLine);
+					displayBuffer = DisplayBuffer.createBufferFromLine(fullLine);
 				} catch (IllegalHacklaceConfigLineException ex) {
 					throw new IllegalHacklaceConfigFileException(ex, lineNumber);
 				}

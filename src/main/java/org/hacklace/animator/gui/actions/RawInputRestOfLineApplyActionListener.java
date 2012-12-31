@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 
 import org.hacklace.animator.ModusByte;
+import org.hacklace.animator.configuration.FullConfigLine;
+import org.hacklace.animator.configuration.RestOfConfigLine;
 import org.hacklace.animator.gui.EditPanel;
 
 public class RawInputRestOfLineApplyActionListener extends AbstractRawInputApplyActionListener {
@@ -20,8 +22,9 @@ public class RawInputRestOfLineApplyActionListener extends AbstractRawInputApply
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		ModusByte modusByte = editPanel.getDisplayBuffer().getModusByte();
-		String rawString = modusByte.getRawString() + rawInputRestOfLineTextField.getText();
-		bufferFromString(rawString);
+		RestOfConfigLine restOfLine = new RestOfConfigLine(rawInputRestOfLineTextField.getText());
+		FullConfigLine fullLine = new FullConfigLine(modusByte, restOfLine);
+		bufferFromString(fullLine);
 	}
 	
 

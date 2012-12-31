@@ -16,8 +16,7 @@ public class TextDisplayBuffer extends DisplayBuffer {
 	}
 
 	public TextDisplayBuffer(FullConfigLine fullLine) throws IllegalHacklaceConfigLineException {
-		super();
-		this.modusByte = fullLine.getModusByte();
+		super(fullLine.getModusByte());
 		setText(fullLine.getRestOfLine().getValue());
 	}
 
