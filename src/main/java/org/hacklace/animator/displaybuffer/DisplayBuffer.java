@@ -90,6 +90,10 @@ public abstract class DisplayBuffer implements Cloneable {
 		this.modusByte.setSpeed(speed);
 	}
 
+	public ModusByte getModusByte() {
+		return modusByte;
+	}
+
 	public abstract AnimationType getAnimationType();
 
 	@Override
@@ -149,11 +153,22 @@ public abstract class DisplayBuffer implements Cloneable {
 	}
 
 	/**
-	 * Generates the raw string used in config files
+	 * Generates the raw string used in config files for the whole line
+	 * including modus byte
 	 * 
 	 * @return the raw string used in config files
 	 */
-	public abstract String getRawString();
+	public final FullConfigLine getRawString() {
+		return new FullConfigLine(modusByte.getRawString()
+				+ getRawStringForRestOfLine());
+	}
+
+	/**
+	 * without modus byte
+	 * 
+	 * @return
+	 */
+	public abstract String getRawStringForRestOfLine();
 
 	/**
 	 * under certain circumstances the buffer cannot be saved. modusByte 0 means

@@ -52,8 +52,8 @@ public class ReferenceDisplayBuffer extends DisplayBuffer {
 	}
 	
 	@Override
-	public String getRawString() {
-		return this.modusByte.getRawString() + "~" + this.getLetter();
+	public String getRawStringForRestOfLine() {
+		return "~" + this.getLetter();
 	}
 
 }

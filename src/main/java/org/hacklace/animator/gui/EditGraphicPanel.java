@@ -4,14 +4,18 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import org.hacklace.animator.IniConf;
+import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.enums.StepWidth;
+import org.hacklace.animator.gui.actions.RawInputDirectModeApplyActionListener;
 
 public class EditGraphicPanel extends EditPanel implements LedObserver {
 
@@ -25,9 +29,34 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 	private JLabel prevLabel;
 	private JLabel currentLabel;
 	private JLabel nextLabel;
+	private JTextField rawInputDirectModeTextField;
 
 	public EditGraphicPanel(DisplayBuffer displayBuffer) {
 		super(displayBuffer);
+	}
+
+	@Override
+	protected int createRawDataDirectModeElements(JPanel rawInputPanel,
+			GridBagConstraints c) {
+		JLabel label = new JLabel("Direct mode raw data (no $FF):");
+		rawInputPanel.add(label, c);
+		rawInputDirectModeTextField = new JTextField(IniConf.getInstance()
+				.getNumGrids() - 2);
+		c.gridx = 1;
+		rawInputPanel.add(rawInputDirectModeTextField, c);
+		JButton button = new JButton("Apply");
+		button.addActionListener(new RawInputDirectModeApplyActionListener(
+				rawInputDirectModeTextField, this));
+		c.gridx = 2;
+		rawInputPanel.add(button, c);
+
+		return 1;
+	}
+
+	@Override
+	protected void updateRawDataDirectModeTextField(FullConfigLine fullLine) {
+		rawInputDirectModeTextField.setText(fullLine.getRestOfLine()
+				.getDirectMode().getValue());
 	}
 
 	@Override
@@ -49,14 +78,13 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 		ledPanelPanel.revalidate();
 		ledPanelPanel.repaint();
 	}
-	
+
 	@Override
 	public void onStepChanged(StepWidth newStep) {
 		super.onStepChanged(newStep);
 		setGridSpacing(newStep == StepWidth.FIVE);
 	}
 
-	
 	/**
 	 * Generate the panel of LedPanels for the edit view
 	 * 
@@ -140,9 +168,8 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 	public void onLedChange(int row, int column, boolean newValue) {
 		// System.out.println("LED Changed: " + row + "/" + column + " to " +
 		// newValue);
-		bufferRef
-				.setValueAt(column + gridCols * currentPosition, row, newValue);
-		rawInputTextFieldFullLine.setText(bufferRef.getRawString());
+		buffer.setValueAt(column + gridCols * currentPosition, row, newValue);
+		updateRawTextFields();
 	}
 
 }

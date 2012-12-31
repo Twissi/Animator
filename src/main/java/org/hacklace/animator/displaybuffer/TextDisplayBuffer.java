@@ -56,8 +56,8 @@ public class TextDisplayBuffer extends DisplayBuffer {
 	}
 
 	@Override
-	public String getRawString() {
-		return modusByte.getRawString() + getText();
+	public String getRawStringForRestOfLine() {
+		return getText();
 	}
 
 }

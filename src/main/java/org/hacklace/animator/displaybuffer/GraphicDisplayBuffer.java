@@ -68,8 +68,12 @@ public class GraphicDisplayBuffer extends DisplayBuffer {
 	}
 
 	@Override
-	public String getRawString() {
-		return modusByte.getRawString() + "$FF " + convertBytesToString(getColumnsAsBytes()) + "$FF,";
+	public String getRawStringForRestOfLine() {
+		return "$FF " + getRawStringForDirectMode() + "$FF,";
+	}
+	
+	public String getRawStringForDirectMode() {
+		return convertBytesToString(getColumnsAsBytes());
 	}
 
 }

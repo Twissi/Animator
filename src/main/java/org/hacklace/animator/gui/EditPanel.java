@@ -19,22 +19,25 @@ import javax.swing.event.ChangeListener;
 
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.IniConf;
+import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.enums.Delay;
 import org.hacklace.animator.enums.Direction;
 import org.hacklace.animator.enums.Speed;
 import org.hacklace.animator.enums.StepWidth;
-import org.hacklace.animator.gui.actions.RawInputApplyActionListener;
+import org.hacklace.animator.gui.actions.RawInputFullLineApplyActionListener;
+import org.hacklace.animator.gui.actions.RawInputRestOfLineApplyActionListener;
 
 public abstract class EditPanel extends JPanel implements OptionsObserver {
 	private static final long serialVersionUID = -5137928768652375360L;
 
 	protected AnimationOptionsPanel optionsPanel;
 	protected JPanel rawInputPanel;
-	protected JTextField rawInputTextFieldFullLine;
+	protected JTextField rawInputRestOfLineTextField;
+	protected JTextField rawInputFullLineTextField;
 
-	protected DisplayBuffer bufferRef; // our internal temporary displayBuffer
-										// for editing
+	protected DisplayBuffer buffer; // our internal temporary displayBuffer
+									// for editing
 	protected DisplayBuffer origBuffer; // keep a reference to the original
 										// buffer for overwriting on save
 	protected int currentPosition = 0;
@@ -77,8 +80,8 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 		return label;
 	}
 
-	public EditPanel(DisplayBuffer displayBuffer) {
-		bufferRef = displayBuffer.clone(); 
+	protected EditPanel(DisplayBuffer displayBuffer) {
+		buffer = displayBuffer.clone();
 		origBuffer = displayBuffer;
 		// common components for all types of edit panels
 		optionsPanel = new AnimationOptionsPanel();
@@ -114,17 +117,56 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 	 */
 	protected abstract void addMoreComponents(JPanel panel);
 
-	public JPanel createRawInputPanel() {
+	/**
+	 * overwrite this only in the graphic panel
+	 * 
+	 * @param rawInputPanel
+	 * @param c
+	 * @return the line number with which to continue (0 in general, 1 for
+	 *         graphic)
+	 */
+	protected int createRawDataDirectModeElements(JPanel rawInputPanel,
+			GridBagConstraints c) {
+		return 0;
+	}
+
+	protected JPanel createRawInputPanel() {
 		JPanel rawInputPanel = new JPanel();
-		JLabel label = new JLabel("Raw data:");
-		rawInputPanel.add(label);
-		rawInputTextFieldFullLine = new JTextField(IniConf.getInstance().getNumGrids());
-		rawInputTextFieldFullLine.setText("");
-		rawInputPanel.add(rawInputTextFieldFullLine);
+
+		rawInputPanel.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.NORTHWEST;
+
+		int line = createRawDataDirectModeElements(rawInputPanel, c);
+
+		JLabel label = new JLabel("Raw data without modus byte:");
+		c.gridx = 0;
+		c.gridy = line;
+		rawInputPanel.add(label, c);
+		rawInputRestOfLineTextField = new JTextField(IniConf.getInstance()
+				.getNumGrids());
+		c.gridx = 1;
+		rawInputPanel.add(rawInputRestOfLineTextField, c);
 		JButton button = new JButton("Apply");
-		button.addActionListener(new RawInputApplyActionListener(
-				rawInputTextFieldFullLine, this));
-		rawInputPanel.add(button);
+		button.addActionListener(new RawInputRestOfLineApplyActionListener(
+				rawInputRestOfLineTextField, this));
+		c.gridx = 2;
+		rawInputPanel.add(button, c);
+
+		label = new JLabel("Raw data with modus byte:");
+		c.gridx = 0;
+		c.gridy = line + 1;
+		rawInputPanel.add(label, c);
+		rawInputFullLineTextField = new JTextField(IniConf.getInstance()
+				.getNumGrids() + 1);
+		c.gridx = 1;
+		rawInputPanel.add(rawInputFullLineTextField, c);
+		button = new JButton("Apply");
+		button.addActionListener(new RawInputFullLineApplyActionListener(
+				rawInputFullLineTextField, this));
+		c.gridx = 2;
+		rawInputPanel.add(button, c);
+
 		return rawInputPanel;
 	}
 
@@ -136,7 +178,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 	 * 
 	 * @return
 	 */
-	public JSlider createPositionSlider() {
+	protected JSlider createPositionSlider() {
 		JSlider slider = new JSlider(SwingConstants.HORIZONTAL, 1);
 		slider.setPaintTicks(true);
 		slider.setSnapToTicks(true);
@@ -145,10 +187,10 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				// ignore the event if we don't have a valid buffer yet
-				if (bufferRef == null)
+				if (buffer == null)
 					return;
 				currentPosition = ((JSlider) arg0.getSource()).getValue();
-				setFromDisplayBuffer(bufferRef);
+				setFromDisplayBuffer(buffer);
 			}
 		});
 		slider.setMaximum(IniConf.getInstance().getNumGrids() - 1);
@@ -162,27 +204,37 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 	 * } }
 	 */
 
-	public void copyBufferToPanel(int position, LedPanel panel) {
+	protected void copyBufferToPanel(int position, LedPanel panel) {
 		for (int x = 0; x < panel.getCols(); x++) {
 			for (int y = 0; y < panel.getRows(); y++) {
 				panel.setLed(y, x,
-						bufferRef.getValueAt(x + gridCols * position, y));
+						buffer.getValueAt(x + gridCols * position, y));
 			}
 		}
 	}
 
 	public void setFromDisplayBuffer(DisplayBuffer buffer) {
-		bufferRef = buffer;
+		this.buffer = buffer;
 		optionsPanel.setOptions(buffer.getSpeed(), buffer.getDelay(),
 				buffer.getDirection(), buffer.getStepWidth());
-		updateRawTextField();
+		updateRawTextFields();
 	}
 
-	public void updateRawTextField() {
-		String rawString = bufferRef.getRawString();
-		if (!rawInputTextFieldFullLine.getText().equals(rawString)) {
-			rawInputTextFieldFullLine.setText(rawString);
-		}
+	protected void updateRawTextFields() {
+		FullConfigLine fullLine = buffer.getRawString();
+		rawInputFullLineTextField.setText(fullLine.getValue());
+		rawInputRestOfLineTextField
+				.setText(fullLine.getRestOfLine().getValue());
+		updateRawDataDirectModeTextField(fullLine);
+	}
+
+	/**
+	 * only overwrite for graphic animations (does nothing otherwise)
+	 * 
+	 * @param fullLine
+	 */
+	protected void updateRawDataDirectModeTextField(FullConfigLine fullLine) {
+		// do nothing
 	}
 
 	/**
@@ -200,10 +252,10 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 		HacklaceConfigManager cm = AnimatorGui.getInstance()
 				.getHacklaceConfigManager();
 		List<DisplayBuffer> list = cm.getList();
-		list.set(list.indexOf(origBuffer), bufferRef);
+		list.set(list.indexOf(origBuffer), buffer);
 		// null the buffer references - we rather have a NullpointerException
 		// than editing the wrong data!
-		bufferRef = null;
+		buffer = null;
 		origBuffer = null;
 		// refresh list on home page because it contains the text for
 		// TextDisplayBuffers
@@ -211,30 +263,34 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 	}
 
 	public void onSpeedChanged(Speed newSpeed) {
-		bufferRef.setSpeed(newSpeed);
-		updateRawTextField();
+		buffer.setSpeed(newSpeed);
+		updateRawTextFields();
 	}
 
 	public void onDelayChanged(Delay newDelay) {
-		bufferRef.setDelay(newDelay);
-		updateRawTextField();
+		buffer.setDelay(newDelay);
+		updateRawTextFields();
 	}
 
 	public void onDirectionChanged(Direction newDirection) {
-		bufferRef.setDirection(newDirection);
-		updateRawTextField();
+		buffer.setDirection(newDirection);
+		updateRawTextFields();
 	}
 
 	public void onStepChanged(StepWidth newStep) {
-		bufferRef.setStepWidth(newStep);
-		updateRawTextField();
+		buffer.setStepWidth(newStep);
+		updateRawTextFields();
 	}
 
 	public boolean onSaveAnimation() {
-		if (!bufferRef.isSaveable())
+		if (!buffer.isSaveable())
 			return false; // cannot save
 		saveBuffer();
 		return true; // saved
+	}
+
+	public DisplayBuffer getDisplayBuffer() {
+		return buffer;
 	}
 
 }

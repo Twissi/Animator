@@ -38,8 +38,8 @@ public class MixedDisplayBuffer extends DisplayBuffer {
 	}
 
 	@Override
-	public String getRawString() {
-		return this.modusByte.getRawString() + getStringValue();
+	public String getRawStringForRestOfLine() {
+		return getStringValue();
 	}
 
 }
