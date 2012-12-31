@@ -54,7 +54,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 		case REFERENCE:
 			return new EditReferencePanel(displayBuffer);
 		case MIXED:
-			return null; // TODO mixed animations not supported yet
+			return new EditMixedPanel(displayBuffer);
 		}
 		return null;
 	}

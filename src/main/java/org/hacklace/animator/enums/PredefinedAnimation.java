@@ -259,7 +259,9 @@ public enum PredefinedAnimation {
 			0x1C, 0x32, 0x2A, 0x2A, 0x1C, // frame 6
 			0x1C, 0x2A, 0x2A, 0x2A, 0x1C, // frame 7
 			0x1C, 0x26, 0x2A, 0x2A, 0x1C, // frame 8
-	});
+	}), LADY('V', "Lady", new int[] { // invalid
+	})
+	;
 
 	private final char index;
 	private final String name;

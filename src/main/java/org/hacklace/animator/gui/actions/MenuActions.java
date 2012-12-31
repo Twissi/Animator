@@ -56,6 +56,7 @@ public class MenuActions {
 			JOptionPane.showMessageDialog(null,
 					"Cannot read from file. Error: " + ex, "Error",
 					JOptionPane.ERROR_MESSAGE);
+			ex.printStackTrace();
 			AnimatorGui.getInstance().getHomePanel().reset();
 		}
 	}
