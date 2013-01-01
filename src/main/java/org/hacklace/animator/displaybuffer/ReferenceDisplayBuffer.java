@@ -21,9 +21,8 @@ public class ReferenceDisplayBuffer extends DisplayBuffer {
 	public ReferenceDisplayBuffer(char whichAnimation)
 			throws IllegalHacklaceConfigLineException {
 		super();
-		this.letter = whichAnimation;
-		this.animation = PredefinedAnimation.getPredefinedAnimationByIndex(whichAnimation);
 		// default modus byte is already set
+		setLetter(whichAnimation);	
 	}
 
 	@Override
