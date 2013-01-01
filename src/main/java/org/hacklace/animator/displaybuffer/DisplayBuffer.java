@@ -19,7 +19,6 @@ public abstract class DisplayBuffer implements Cloneable {
 	protected ModusByte modusByte = new ModusByte();
 
 	protected final static int GRID_ROWS = IniConf.getInstance().rows();
-	protected final static int GRID_COLS = IniConf.getInstance().columns();
 
 	protected DisplayBuffer() {
 		modusByte = new ModusByte();
@@ -38,8 +37,9 @@ public abstract class DisplayBuffer implements Cloneable {
 	}
 
 	/**
-	 * Top left corner is (0,0) Note: For convenience this returns boolean false
-	 * for non-existent coordinates.
+	 * Top left corner is (0,0). Note: For convenience this returns boolean
+	 * false for non-existent coordinates. This is currently needed
+	 * because text buffers can exceed the 200 columns TODO
 	 * 
 	 * @param x
 	 *            right (column)
@@ -48,8 +48,10 @@ public abstract class DisplayBuffer implements Cloneable {
 	 * @return
 	 */
 	public boolean getValueAt(int x, int y) {
+
 		if (x >= MAX_COLUMNS || y >= GRID_ROWS)
 			return false;
+
 		return data[x][y];
 	}
 
