@@ -10,7 +10,6 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import org.hacklace.animator.IniConf;
-import org.hacklace.animator.displaybuffer.Grid;
 import org.hacklace.animator.gui.actions.ToggleLedActionListener;
 
 public class LedPanel extends JPanel implements LedObserver {
@@ -21,7 +20,6 @@ public class LedPanel extends JPanel implements LedObserver {
 	private final int gridCols;
 
 	private Led[][] buttons;
-	private Grid grid;
 	private GridBagLayout layout;
 	private boolean isSpaced = false;
 	
@@ -32,7 +30,6 @@ public class LedPanel extends JPanel implements LedObserver {
 		this.gridCols = columns;
 
 		buttons = new Led[gridCols][gridRows];
-		grid = new Grid(gridRows, gridCols);
 		observerList = new ArrayList<LedObserver>();
 
 		initComponents();
@@ -62,7 +59,7 @@ public class LedPanel extends JPanel implements LedObserver {
 		for (c.gridy = 0; c.gridy < gridRows; c.gridy++) {
 			for (c.gridx = 0; c.gridx < gridCols; c.gridx++) {
 				Led b = new Led(c.gridy, c.gridx, this);
-				b.addActionListener(new ToggleLedActionListener(grid, b));
+				b.addActionListener(new ToggleLedActionListener(b));
 				buttons[c.gridx][c.gridy] = b;
 				add(b, c);
 			}
