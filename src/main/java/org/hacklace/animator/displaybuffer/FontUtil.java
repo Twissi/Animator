@@ -383,7 +383,7 @@ public class FontUtil {
 	 *            text from a configuration line e.g. Hellö x~~y 10 ^A
 	 * @return animation bytes - minimum bytes incl. one blank line for each
 	 */
-	public static byte[] getBytesForRawString(String rawString) {
+	public static int[] getIntsForRawString(String rawString) {
 		List<Integer> returnList = new LinkedList<Integer>();
 
 		loopOverRawString : for (int i = 0; i < rawString.length(); i++) {
@@ -451,13 +451,28 @@ public class FontUtil {
 			} // end loop over animation bytes for one character
 
 		} // end loop over text
-		byte[] returnArray = new byte[returnList.size()];
+		int[] returnArray = new int[returnList.size()];
 		int i = 0;
 		for (int animationByte : returnList) {
-			byte b = (byte) animationByte;
-			returnArray[i++] = b;
+			returnArray[i++] = animationByte;
 		}
 		return returnArray;
 	}
 
+	/**
+	 * 
+	 * @param rawString
+	 *            text from a configuration line e.g. Hellö x~~y 10 ^A
+	 * @return animation bytes - minimum bytes incl. one blank line for each
+	 */
+	public static byte[] getBytesForRawString(String rawString) {
+		int[] intArray = getIntsForRawString(rawString);
+		byte[] returnArray = new byte[intArray.length];
+		int i = 0;
+		for (int animationByte : intArray) {
+			returnArray[i++] = (byte) animationByte;
+		}
+		return returnArray;
+	}
+	
 }
