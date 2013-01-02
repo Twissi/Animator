@@ -1,5 +1,6 @@
 package org.hacklace.animator.displaybuffer;
 
+import org.hacklace.animator.ConversionUtil;
 import org.hacklace.animator.IllegalHacklaceConfigLineException;
 import org.hacklace.animator.IniConf;
 import org.hacklace.animator.ModusByte;
@@ -10,7 +11,7 @@ import org.hacklace.animator.enums.Direction;
 import org.hacklace.animator.enums.Speed;
 import org.hacklace.animator.enums.StepWidth;
 
-public abstract class DisplayBuffer implements Cloneable {
+public abstract class DisplayBuffer implements Cloneable, Size {
 
 	protected boolean[][] data = new boolean[MAX_COLUMNS][GRID_ROWS];
 
@@ -49,7 +50,7 @@ public abstract class DisplayBuffer implements Cloneable {
 	 */
 	public boolean getValueAt(int x, int y) {
 
-		if (x >= MAX_COLUMNS || y >= GRID_ROWS)
+		if (x >= data.length || y >= GRID_ROWS)
 			return false;
 
 		return data[x][y];
@@ -177,6 +178,27 @@ public abstract class DisplayBuffer implements Cloneable {
 	 */
 	public boolean isSaveable() {
 		return (modusByte.getByte() != 0);
+	}
+	
+	@Override
+	public int getNumColumns() {
+		return data.length;
+	}
+
+	@Override
+	public abstract int getNumBytes();
+	
+	protected int countUsedColumns() {
+		int numberOfUsedColumns = 0;
+		for (int colIndex = 0; colIndex < data.length; colIndex++) {
+			boolean[] bools = this.data[colIndex];
+			assert (bools.length == 7);
+			byte value = ConversionUtil.convertBooleanArrayToByte(bools);
+			if (value != 0) {
+				numberOfUsedColumns = colIndex + 1;
+			}
+		}
+		return numberOfUsedColumns;
 	}
 
 }

@@ -7,7 +7,7 @@ import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.enums.AnimationType;
 import org.hacklace.animator.enums.PredefinedAnimation;
 
-public class ReferenceDisplayBuffer extends DisplayBuffer {
+public class ReferenceDisplayBuffer extends DisplayBuffer implements Size {
 
 	private char letter;
 	private PredefinedAnimation animation;
@@ -22,7 +22,7 @@ public class ReferenceDisplayBuffer extends DisplayBuffer {
 			throws IllegalHacklaceConfigLineException {
 		super();
 		// default modus byte is already set
-		setLetter(whichAnimation);	
+		setLetter(whichAnimation);
 	}
 
 	@Override
@@ -36,13 +36,13 @@ public class ReferenceDisplayBuffer extends DisplayBuffer {
 
 	/**
 	 * side effect: updata data (pixels)
+	 * 
 	 * @param letter
 	 */
 	public void setLetter(char letter) {
 		this.letter = letter;
 		clearData();
-		animation = PredefinedAnimation
-				.getPredefinedAnimationByIndex(letter);
+		animation = PredefinedAnimation.getPredefinedAnimationByIndex(letter);
 		int i = 0;
 		for (int aniByte : animation.getAnimationBytes()) {
 			boolean[] bits = convertAnimationByteTo7Booleans((byte) aniByte);
@@ -52,13 +52,18 @@ public class ReferenceDisplayBuffer extends DisplayBuffer {
 
 	@Override
 	public String toString() {
-		
-		return getAnimationType().getDescription() +" "+ animation.toString();
+
+		return getAnimationType().getDescription() + " " + animation.toString();
 	}
 
 	@Override
 	public String getRawStringForRestOfLine() {
 		return "~" + this.getLetter();
+	}
+
+	@Override
+	public int getNumBytes() {
+		return 4;
 	}
 
 }

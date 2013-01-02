@@ -6,7 +6,7 @@ import org.hacklace.animator.IllegalHacklaceConfigLineException;
 import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.enums.AnimationType;
 
-public class TextDisplayBuffer extends DisplayBuffer {
+public class TextDisplayBuffer extends DisplayBuffer implements Size {
 
 	private String text;
 
@@ -57,6 +57,13 @@ public class TextDisplayBuffer extends DisplayBuffer {
 	@Override
 	public String getRawStringForRestOfLine() {
 		return getText();
+	}
+
+	@Override
+	public int getNumBytes() {
+		return 1 // modus byte
+		+ countUsedColumns() //
+		+ 1; // line end
 	}
 
 }

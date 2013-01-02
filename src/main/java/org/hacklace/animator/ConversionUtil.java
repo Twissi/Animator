@@ -45,14 +45,14 @@ public class ConversionUtil {
 	 * 
 	 * @param number
 	 *            -128 to 127
-	 * @return $nn a String of length 3
+	 * @return $nn, a String of length 4
 	 */
 	public static String convertByteToString(byte number) {
 		int value = number;
 		if (value < 0)
 			value += 256;
 		String leadingZero = (value < 0x10) ? "0" : "";
-		return "$" + leadingZero + Integer.toString(value, 16).toUpperCase();
+		return "$" + leadingZero + Integer.toString(value, 16).toUpperCase()+",";
 	}
 
 	/**
@@ -63,22 +63,22 @@ public class ConversionUtil {
 	public static String convertBytesToString(byte[] numbers) {
 		StringBuilder sb = new StringBuilder();
 		for (byte number : numbers) {
-			sb.append(convertByteToString(number)).append(" ");;
+			sb.append(convertByteToString(number));
 		}
 		return sb.toString();
 	}
 
 	/**
 	 * 
-	 * @param directMode without the direct mode bytes ($FF)
+	 * @param directMode
+	 *            without the direct mode bytes ($FF)
 	 * @return a byte array with one byte for each hex sequence
 	 * @throws IllegalHacklaceConfigLineException
 	 */
 	public static byte[] convertAnimationStringToByteArray(DirectMode directMode) {
 		String aniString = directMode.getValue();
-		final String separators = "[ ,;.:/_|]";
 		byte[] aniBytes = new byte[200];
-		String[] aniByteStrings = aniString.split(separators);
+		String[] aniByteStrings = aniString.split(IniConf.separatorsRegEx);
 
 		int index = 0;
 		for (String aniByteString : aniByteStrings) {
@@ -108,8 +108,8 @@ public class ConversionUtil {
 	}
 
 	public static byte convertBooleanArrayToByte(boolean[] array) {
-		// bit 0 in array = top pixel = bit 0 (right) in byte, 
-		// bit 6 in array = bottom  pixel = bit 6 (left) in byte
+		// bit 0 in array = top pixel = bit 0 (right) in byte,
+		// bit 6 in array = bottom pixel = bit 6 (left) in byte
 		int value = 0;
 		int power = 1;
 		for (boolean bool : array) {
@@ -118,6 +118,16 @@ public class ConversionUtil {
 			power *= 2;
 		}
 		return (byte) value;
+	}
+
+	public static boolean isBitSet(byte bits, int index) {
+		final byte mask = (byte) Math.pow(2, index);
+		byte result = (byte) (mask & bits);
+		if (result == 0) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 }

@@ -179,7 +179,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 	 * @return
 	 */
 	protected JSlider createPositionSlider() {
-		JSlider slider = new JSlider(SwingConstants.HORIZONTAL, 1);
+		JSlider slider = new JSlider(SwingConstants.HORIZONTAL, 0, getMaximumGrid(), 0);
 		slider.setPaintTicks(true);
 		slider.setSnapToTicks(true);
 		slider.setMinorTickSpacing(1);
@@ -195,6 +195,10 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 		});
 		slider.setMaximum(IniConf.getInstance().getNumGrids() - 1);
 		return slider;
+	}
+	
+	protected int getMaximumGrid() {
+		return IniConf.getInstance().getNumGrids() - 1;
 	}
 
 	/*

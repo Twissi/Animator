@@ -2,26 +2,17 @@ package org.hacklace.animator.displaybuffer;
 
 import static org.hacklace.animator.ConversionUtil.convertAnimationByteTo7Booleans;
 
-import org.hacklace.animator.IllegalHacklaceConfigLineException;
-import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.enums.AnimationType;
 import org.hacklace.animator.enums.PredefinedAnimation;
 
-public class ReferenceElement extends AnimationElement {
+public class ReferenceElement extends AnimationPart implements Size {
 	private char letter;
 	private PredefinedAnimation animation;
 
-	public ReferenceElement(FullConfigLine fullLine)
-			throws IllegalHacklaceConfigLineException {
-		super(fullLine.getModusByte());
-		setLetter(fullLine.getSixthChar());
-	}
-
-	public ReferenceElement(char whichAnimation)
-			throws IllegalHacklaceConfigLineException {
+	public ReferenceElement(char whichAnimation) {
 		super();
 		// default modus byte is already set
-		setLetter(whichAnimation);	
+		setLetter(whichAnimation);
 	}
 
 	@Override
@@ -35,13 +26,13 @@ public class ReferenceElement extends AnimationElement {
 
 	/**
 	 * side effect: updata data (pixels)
+	 * 
 	 * @param letter
 	 */
-	public void setLetter(char letter) {
+	private void setLetter(char letter) {
 		this.letter = letter;
-		clearData();
-		animation = PredefinedAnimation
-				.getPredefinedAnimationByIndex(letter);
+		animation = PredefinedAnimation.getPredefinedAnimationByIndex(letter);
+		data = new boolean[animation.getAnimationBytes().length][];
 		int i = 0;
 		for (int aniByte : animation.getAnimationBytes()) {
 			boolean[] bits = convertAnimationByteTo7Booleans((byte) aniByte);
@@ -51,12 +42,22 @@ public class ReferenceElement extends AnimationElement {
 
 	@Override
 	public String toString() {
-		
-		return getAnimationType().getDescription() +" "+ animation.toString();
+
+		return getAnimationType().getDescription() + " " + animation.toString();
 	}
 
 	@Override
-	public String getRawStringForRestOfLine() {
+	public String getRawString() {
 		return "~" + this.getLetter();
+	}
+
+	@Override
+	public boolean isClickEditable() {
+		return false;
+	}
+
+	@Override
+	public int getNumBytes() {
+		return 2;
 	}
 }

@@ -3,32 +3,32 @@ package org.hacklace.animator.displaybuffer;
 import static org.hacklace.animator.ConversionUtil.convertAnimationByteTo7Booleans;
 import static org.hacklace.animator.ConversionUtil.convertBytesToString;
 
+import java.util.ArrayList;
+
 import org.hacklace.animator.ConversionUtil;
-import org.hacklace.animator.IllegalHacklaceConfigLineException;
-import org.hacklace.animator.configuration.FullConfigLine;
+import org.hacklace.animator.configuration.RestOfConfigLine;
 import org.hacklace.animator.enums.AnimationType;
 
-public class GraphicDisplayBuffer extends DisplayBuffer implements Size {
+public class GraphicsPart extends AnimationPart {
 
-	public GraphicDisplayBuffer() {
+	public GraphicsPart(RestOfConfigLine partialLine) {
 		super();
-	}
-
-	public GraphicDisplayBuffer(FullConfigLine fullLine)
-			throws IllegalHacklaceConfigLineException {
-		super(fullLine.getModusByte());
 		byte[] aniBytes = ConversionUtil
-				.convertAnimationStringToByteArray(fullLine.getRestOfLine()
-						.getDirectMode());
+				.convertAnimationStringToByteArray(partialLine.getDirectMode());
 		// cut off $FF in beginning and end
-		this.setDataFromBytes(aniBytes);
+		this.data = new boolean[aniBytes.length][];
+		for (int column = 0; column < aniBytes.length; column++) {
+			this.data[column] = convertAnimationByteTo7Booleans(aniBytes[column]);
+		}
 
 	}
 
-	public void setDataFromBytes(byte[] aniBytes) {
-		for (int column = 0; column < aniBytes.length; column++) {
-			byte aniByte = aniBytes[column];
-			this.data[column] = convertAnimationByteTo7Booleans(aniByte);
+	public GraphicsPart(ArrayList<GraphicByte> graphicByteList) {
+		super();
+		this.data = new boolean[graphicByteList.size()][];
+		for (int i = 0; i < graphicByteList.size(); i++) {
+			data[i] = convertAnimationByteTo7Booleans(graphicByteList.get(i)
+					.getByte());
 		}
 	}
 
@@ -44,7 +44,7 @@ public class GraphicDisplayBuffer extends DisplayBuffer implements Size {
 		for (int colIndex = 0; colIndex < data.length; colIndex++) {
 			boolean[] bools = this.data[colIndex];
 			assert (bools.length == 7);
-			byte value = ConversionUtil.convertBooleanArrayToByte(bools);
+			byte value = (byte) ConversionUtil.convertBooleanArrayToByte(bools);
 			allByteColumns[colIndex] = value;
 			if (value != 0) {
 				numberOfUsedColumns = colIndex + 1;
@@ -70,18 +70,27 @@ public class GraphicDisplayBuffer extends DisplayBuffer implements Size {
 	}
 
 	@Override
-	public String getRawStringForRestOfLine() {
+	public String getRawString() {
 		return "$FF " + getRawStringForDirectMode() + "$FF,";
 	}
 
+	/**
+	 * without beginning and ending $FF,
+	 * 
+	 * @return
+	 */
 	public String getRawStringForDirectMode() {
 		return convertBytesToString(getColumnsAsBytes());
 	}
 
 	@Override
-	public int getNumBytes() {
-		return 1 // modus byte
-		+ countUsedColumns() //
-		+ 1; // line end
+	public boolean isClickEditable() {
+		return true;
 	}
+
+	@Override
+	public int getNumBytes() {
+		return data.length;
+	}
+
 }

@@ -32,13 +32,7 @@ public class ModusByte implements Cloneable {
 	 *            from 7 to 0
 	 */
 	protected boolean isBitSet(int index) {
-		byte mask = (byte) Math.pow(2, index);
-		byte result = (byte) (mask & bits);
-		if (result == 0) {
-			return false;
-		} else {
-			return true;
-		}
+		return ConversionUtil.isBitSet(bits, index);
 	}
 
 	public boolean isEOF() {
@@ -154,7 +148,7 @@ public class ModusByte implements Cloneable {
 	 * @return e.g. "$45," (4 chars)
 	 */
 	public String getRawString() {
-		return ConversionUtil.convertByteToString(this.bits)+",";
+		return ConversionUtil.convertByteToString(this.bits);
 	}
 
 }
