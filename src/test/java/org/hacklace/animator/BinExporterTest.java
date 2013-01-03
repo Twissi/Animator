@@ -23,7 +23,7 @@ public class BinExporterTest extends TestCase {
 	
 	protected void setUp() throws IOException {
 		manager = new HacklaceConfigManager();
-		output = File.createTempFile("test.hack", null);
+		output = File.createTempFile("test.bin", null);
 		URL url = this.getClass().getResource("/configs/example.hack");
 		exampleConf = new File(url.getFile());
 		url = this.getClass().getResource("/configs/example.bin");
@@ -44,11 +44,13 @@ public class BinExporterTest extends TestCase {
 		InputStream stream = new ByteArrayInputStream(manager.getRawString().getBytes(
 				HacklaceConfigManager.HACKLACE_CHARSET));
 		binExporter.write(stream, output);
-		// pad with zeros
-		long toWrite = 256 - output.length();
-		FileOutputStream fos = new FileOutputStream(output, true);
-		while (toWrite-- > 0) fos.write(0);
-		fos.close();
+		if (output.length() < 256) {
+			// pad with zeros
+			long toWrite = 256 - output.length();
+			FileOutputStream fos = new FileOutputStream(output, true);
+			while (toWrite-- > 0) fos.write(0);
+			fos.close();
+		}
 		FileAssert.assertBinaryEquals(exampleFlash, output);
 	}
 

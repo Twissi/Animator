@@ -1,5 +1,7 @@
 package org.hacklace.animator;
 
+import java.io.ByteArrayOutputStream;
+
 import org.hacklace.animator.configuration.DirectMode;
 
 public class ConversionUtil {
@@ -52,7 +54,8 @@ public class ConversionUtil {
 		if (value < 0)
 			value += 256;
 		String leadingZero = (value < 0x10) ? "0" : "";
-		return "$" + leadingZero + Integer.toString(value, 16).toUpperCase()+",";
+		return "$" + leadingZero + Integer.toString(value, 16).toUpperCase()
+				+ ",";
 	}
 
 	/**
@@ -128,6 +131,65 @@ public class ConversionUtil {
 		} else {
 			return true;
 		}
+	}
+
+	/**
+	 * Converts a string representing an animation line to a byte array the same
+	 * way the hacklace does when flashing. We are only using a subset of the
+	 * functionality though because we are working on lines, not full files.
+	 * 
+	 * @see https://github.com/fabster/Hacklace/blob/master/Hacklace.c
+	 * @param s
+	 * @return
+	 */
+	private enum FlashState {
+		EE_NORMAL, EE_SPECIAL_CHAR, EE_HEX_CODE;
+	}
+
+	public static byte[] convertFlashStringToBytes(String s) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		FlashState state = FlashState.EE_NORMAL; // start after the escape
+													// sequences have been
+													// received
+		char val = 0;
+		loop: for (int i = 0; i < s.length(); i++) {
+			char ch = s.charAt(i);
+			switch (state) {
+			case EE_NORMAL:
+				if (ch == '^') {
+					state = FlashState.EE_SPECIAL_CHAR;
+				} else if (ch == '$') {
+					val = 0;
+					state = FlashState.EE_HEX_CODE;
+				} else if (ch == 10 || ch == 13) {
+					break loop;
+				} // EOL, we do not represent this as \0 but stop here
+				else if (ch >= ' ') {
+					baos.write(ch);
+				}
+				break;
+			case EE_SPECIAL_CHAR:
+				baos.write(ch + 63);
+				state = FlashState.EE_NORMAL;
+				break;
+			case EE_HEX_CODE:
+				if (ch >= 'A') {
+					ch -= ('A' - '9' - 1);
+				}
+				ch -= '0'; // map characters '0'..'9' and 'A'..'F' to values
+							// 0..15
+				if (ch > 15) { // any character below '0' or above 'F'
+								// terminates hex input
+					baos.write(val);
+					state = FlashState.EE_NORMAL;
+				} else {
+					val <<= 4;
+					val += ch;
+				}
+				break;
+			}
+		}
+		return baos.toByteArray();
 	}
 
 }

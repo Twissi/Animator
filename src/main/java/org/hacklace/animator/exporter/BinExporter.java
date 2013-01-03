@@ -25,14 +25,8 @@ public class BinExporter {
 				HacklaceConfigManager.HACKLACE_CHARSET));
 		String cfgLine;
 		while ((cfgLine = br.readLine()) != null) {
-			// write statusbyte
-			String statusByteString = cfgLine.substring(0, 3);
-			cfgLine = cfgLine.substring(4).trim();
-			int statusByteInt = ConversionUtil.convertStringToByte(statusByteString);
-			if (statusByteInt == 0) continue;
-			out.write(statusByteInt);
 			// write rest of line
-			for (char c : cfgLine.toCharArray()) {
+			for (byte c: ConversionUtil.convertFlashStringToBytes(cfgLine)) {
 				out.write(c);
 			}
 			out.write(0x00);
