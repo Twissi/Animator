@@ -1,6 +1,7 @@
 package org.hacklace.animator.exporter;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -12,6 +13,12 @@ import org.hacklace.animator.ConversionUtil;
 import org.hacklace.animator.HacklaceConfigManager;
 
 public class BinExporter {
+	
+	public void write(String rawString, File out) throws IOException {
+		ByteArrayInputStream stream = new ByteArrayInputStream(rawString.getBytes(
+				HacklaceConfigManager.HACKLACE_CHARSET));
+		write(stream, out);
+	}
 
 	public void write(InputStream in, File out) throws IOException {
 		FileOutputStream fos = new FileOutputStream(out);

@@ -4,10 +4,8 @@ import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -46,9 +44,8 @@ public class FlashTest extends TestCase {
 	public void testReadEqualsWrite()
 			throws IllegalHacklaceConfigFileException, IOException {
 		manager.readFile(exampleConf);
-		InputStream stream = new ByteArrayInputStream(manager.getRawString().getBytes(
-				HacklaceConfigManager.HACKLACE_CHARSET));
-		flashExporter.writeTo(stream, output);
+		String rawString = manager.getRawString();
+		flashExporter.writeTo(rawString, output);
 		FileAssert.assertBinaryEquals(exampleFlash, output);
 	}
 	

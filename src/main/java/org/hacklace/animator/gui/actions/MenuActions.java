@@ -4,7 +4,6 @@ import gnu.io.PortInUseException;
 import gnu.io.UnsupportedCommOperationException;
 
 import java.awt.event.ActionEvent;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -134,26 +133,14 @@ public class MenuActions {
 			AnimatorGui app = AnimatorGui.getInstance();
 			HacklaceConfigManager cm = app.getHacklaceConfigManager();
 			BinExporter binExporter = new BinExporter();
-			ByteArrayInputStream stream = null;
 			try {
-				stream = new ByteArrayInputStream(cm.getRawString().getBytes(
-						HacklaceConfigManager.HACKLACE_CHARSET));
-				binExporter.write(stream, saveAsFile);
+				binExporter.write(cm.getRawString(), saveAsFile);
 			} // Java 7: (IOException | UnsupportedCommOperationException |
 				// PortInUseException ex)
 			catch (IOException ex) {
 				JOptionPane.showMessageDialog(null,
 						"Error writing file: " + ex, "Error",
 						JOptionPane.ERROR_MESSAGE);
-			}
-			if (stream != null) {
-				try {
-					stream.close();
-				} catch (IOException ex) {
-					JOptionPane.showMessageDialog(null,
-							"Error closing stream: " + ex, "Error",
-							JOptionPane.ERROR_MESSAGE);
-				}
 			}
 		}
 	}
@@ -181,11 +168,8 @@ public class MenuActions {
 			}
 
 			FlashExporter flashExporter = new FlashExporter();
-			ByteArrayInputStream stream;
 			try {
-				stream = new ByteArrayInputStream(cm.getRawString().getBytes(
-						HacklaceConfigManager.HACKLACE_CHARSET));
-				flashExporter.write(stream);
+				flashExporter.write(cm.getRawString());
 				JOptionPane.showMessageDialog(null,
 						"Hacklace successfully flashed.", "Flashed",
 						JOptionPane.INFORMATION_MESSAGE);

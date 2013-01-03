@@ -5,6 +5,7 @@ import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 import gnu.io.UnsupportedCommOperationException;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -15,6 +16,7 @@ import java.net.PortUnreachableException;
 import java.util.Enumeration;
 import java.util.LinkedList;
 
+import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.IniConf;
 
 /**
@@ -74,7 +76,7 @@ public class FlashExporter {
 		write(fis);
 		fis.close();
 	}
-
+	
 	/**
 	 * Write contents of stream inputStream to serial port
 	 * @param stream
@@ -87,6 +89,15 @@ public class FlashExporter {
 		serialPort = initSerialPort(getPortIdentifier());
 		OutputStream serialOut = serialPort.getOutputStream();
 		writeTo(inputStream, serialOut);
+		serialOut.close();
+		serialPort.close();
+		close();
+	}
+	
+	public void write(String rawString) throws UnsupportedCommOperationException, PortInUseException, IOException {
+		serialPort = initSerialPort(getPortIdentifier());
+		OutputStream serialOut = serialPort.getOutputStream();
+		writeTo(rawString, serialOut);
 		serialOut.close();
 		serialPort.close();
 		close();
@@ -127,7 +138,19 @@ public class FlashExporter {
 
 		out.write((byte) 27);
 	}
+	
+	public void writeTo(String rawString, OutputStream out) throws IOException {
+		InputStream stream = new ByteArrayInputStream(rawString.getBytes(
+				HacklaceConfigManager.HACKLACE_CHARSET));
+		writeTo(stream, out);
+	}
 
+	public void writeTo(String rawString, File outFile) throws IOException {
+		InputStream stream = new ByteArrayInputStream(rawString.getBytes(
+				HacklaceConfigManager.HACKLACE_CHARSET));
+		writeTo(stream, outFile);
+	}
+	
 	@SuppressWarnings("unchecked")
 	// TODO Add help that user has to be part of the corresponding group
 	public LinkedList<CommPortIdentifier> listPorts() {

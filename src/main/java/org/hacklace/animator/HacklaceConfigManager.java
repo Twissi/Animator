@@ -1,7 +1,6 @@
 package org.hacklace.animator;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
@@ -195,13 +194,10 @@ public class HacklaceConfigManager {
 	public int getBytesUsed() {
 		FlashExporter flashExporter = new FlashExporter();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		ByteArrayInputStream in;
 		try {
 			// Note: There is not much we can do about the exceptions here. They
 			// should never occur!
-			in = new ByteArrayInputStream(getRawString().getBytes(
-					HacklaceConfigManager.HACKLACE_CHARSET));
-			flashExporter.writeTo(in, out);
+			flashExporter.writeTo(getRawString(), out);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
