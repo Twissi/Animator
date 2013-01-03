@@ -73,7 +73,7 @@ public class MenuActions {
 		public void actionPerformed(ActionEvent e) {
 			if (!confirm())
 				return;
-			loadResource("/Default_Konfiguration.txt");
+			loadResource("/Default_Konfiguration.txt.hack");
 			AnimatorGui app = AnimatorGui.getInstance();
 			app.stopEditMode();
 			app.setCurrentFile(null);
@@ -93,7 +93,7 @@ public class MenuActions {
 		public void actionPerformed(ActionEvent e) {
 			if (!confirm())
 				return;
-			loadResource("/example.cfg");
+			loadResource("/example.hack");
 			AnimatorGui app = AnimatorGui.getInstance();
 			app.stopEditMode();
 			app.setCurrentFile(null);

@@ -158,13 +158,4 @@ public class FlashExporter {
 		}
 	}
 
-	public static void main(String[] args)
-			throws UnsupportedCommOperationException, PortInUseException,
-			IOException {
-		FlashExporter e = new FlashExporter();
-		e.listPorts();
-		// File f = new
-		// File(e.getClass().getResource("/example.cfg").getFile());
-		// e.write(f );
-	}
 }
