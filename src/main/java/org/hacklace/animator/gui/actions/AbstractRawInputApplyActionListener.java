@@ -7,7 +7,6 @@ import javax.swing.JOptionPane;
 
 import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
-import org.hacklace.animator.gui.AnimatorGui;
 import org.hacklace.animator.gui.EditPanel;
 
 public abstract class AbstractRawInputApplyActionListener implements
