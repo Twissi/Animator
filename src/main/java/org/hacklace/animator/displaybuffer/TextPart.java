@@ -4,16 +4,17 @@ import static org.hacklace.animator.ConversionUtil.convertAnimationByteTo7Boolea
 
 import java.util.List;
 
+import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.enums.AnimationType;
 
 public class TextPart extends AnimationPart implements Size {
 
 	private String rawString = "";
 	
-	public TextPart(String rawString) {
+	public TextPart(String rawString, ErrorContainer errorContainer) {
 		this.rawString = rawString;
 
-		byte[] animationBytes = FontUtil.getBytesForRawString(rawString);
+		byte[] animationBytes = FontUtil.getBytesForRawString(rawString, errorContainer);
 		this.data = new boolean[animationBytes.length][];
 
 		int i = 0;

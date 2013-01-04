@@ -18,12 +18,17 @@ public class ErrorElement {
 	public ErrorType getType() {
 		return type;
 	}
-
+	
 	public String getMessage() {
 		return message;
 	}
 	
 	public boolean isFailure() {
 		return type.isFailure();
+	}
+
+	@Override
+	public String toString() {
+		return getType().getDescription()+" "+getMessage();
 	}
 }

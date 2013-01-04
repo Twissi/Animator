@@ -6,15 +6,16 @@ import static org.hacklace.animator.ConversionUtil.convertBytesToString;
 import java.util.ArrayList;
 
 import org.hacklace.animator.ConversionUtil;
+import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.configuration.RestOfConfigLine;
 import org.hacklace.animator.enums.AnimationType;
 
 public class GraphicsPart extends AnimationPart {
 
-	public GraphicsPart(RestOfConfigLine partialLine) {
+	public GraphicsPart(RestOfConfigLine partialLine, ErrorContainer errorContainer) {
 		super();
 		byte[] aniBytes = ConversionUtil
-				.convertAnimationStringToByteArray(partialLine.getDirectMode());
+				.convertAnimationStringToByteArray(partialLine.getDirectMode(), errorContainer );
 		// cut off $FF in beginning and end
 		this.data = new boolean[aniBytes.length][];
 		for (int column = 0; column < aniBytes.length; column++) {
@@ -28,7 +29,7 @@ public class GraphicsPart extends AnimationPart {
 		this.data = new boolean[graphicByteList.size()][];
 		for (int i = 0; i < graphicByteList.size(); i++) {
 			data[i] = convertAnimationByteTo7Booleans(graphicByteList.get(i)
-					.getByte());
+					.getByte(new ErrorContainer())); // leave this, errors have already been retrieved 
 		}
 	}
 

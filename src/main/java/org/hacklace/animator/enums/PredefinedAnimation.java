@@ -291,8 +291,12 @@ public enum PredefinedAnimation {
 					0x1C, 0x2A, 0x2A, 0x2A, 0x1C, // frame 7
 					0x1C, 0x26, 0x2A, 0x2A, 0x1C, // frame 8
 			}), //
-	LADY('V', "Lady", FontUtil.getIntsForRawString("unsupported")), //
-	INVALID('?', "Invalid", FontUtil.getIntsForRawString("invalid"));
+	LADY('V', "Lady", FontUtil.getIntsForRawString("unsupported", null)), //
+	INVALID('?', "Invalid", FontUtil.getIntsForRawString("invalid", null)) // 
+	; // end
+
+	public final static char MIN = 'A';
+	public final static char MAX = 'U';
 
 	private final char index;
 	private final String name;
@@ -334,6 +338,10 @@ public enum PredefinedAnimation {
 		if (intIndex < 0 || intIndex >= animations.length)
 			return INVALID;
 		return animations[index - 'A'];
+	}
+
+	public static boolean isInvalid(char c) {
+		return MIN <= c && c <= MAX;
 	}
 
 }

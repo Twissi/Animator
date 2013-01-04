@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
+import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.gui.EditPanel;
@@ -17,9 +18,9 @@ public abstract class AbstractRawInputApplyActionListener implements
 	@Override
 	abstract public void actionPerformed(ActionEvent arg0);
 
-	protected void bufferFromString(FullConfigLine fullLine) {
+	protected void bufferFromString(FullConfigLine fullLine, ErrorContainer errorContainer) {
 		try {
-			DisplayBuffer buffer = DisplayBuffer.createBufferFromLine(fullLine);
+			DisplayBuffer buffer = DisplayBuffer.createBufferFromLine(fullLine, errorContainer);
 			// it worked without error, we can now apply the result
 			if (buffer.getAnimationType() == editPanel.getDisplayBuffer()
 					.getAnimationType()) {

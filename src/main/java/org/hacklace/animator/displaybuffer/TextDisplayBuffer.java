@@ -2,7 +2,7 @@ package org.hacklace.animator.displaybuffer;
 
 import static org.hacklace.animator.ConversionUtil.convertAnimationByteTo7Booleans;
 
-import org.hacklace.animator.IllegalHacklaceConfigLineException;
+import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.enums.AnimationType;
 
@@ -15,9 +15,9 @@ public class TextDisplayBuffer extends DisplayBuffer implements Size {
 		this.text = "";
 	}
 
-	public TextDisplayBuffer(FullConfigLine fullLine) throws IllegalHacklaceConfigLineException {
-		super(fullLine.getModusByte());
-		setText(fullLine.getRestOfLine().getValue());
+	public TextDisplayBuffer(FullConfigLine fullLine, ErrorContainer errorContainer) {
+		super(fullLine.getModusByte(errorContainer));
+		setText(fullLine.getRestOfLine().getValue(), errorContainer);
 	}
 
 	public String getText() {
@@ -29,11 +29,11 @@ public class TextDisplayBuffer extends DisplayBuffer implements Size {
 	 * 
 	 * @param text
 	 */
-	public void setText(String text) {
+	public void setText(String text, ErrorContainer errorContainer) {
 		clearData();
 		this.text = text;
 
-		byte[] animationBytes = FontUtil.getBytesForRawString(text);
+		byte[] animationBytes = FontUtil.getBytesForRawString(text, errorContainer);
 
 		clearData();
 		

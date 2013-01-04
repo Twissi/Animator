@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JTextField;
 
+import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.ModusByte;
 import org.hacklace.animator.configuration.DirectMode;
 import org.hacklace.animator.configuration.FullConfigLine;
@@ -24,6 +25,10 @@ public class RawInputDirectModeApplyActionListener extends AbstractRawInputApply
 		ModusByte modusByte = editPanel.getDisplayBuffer().getModusByte();
 		DirectMode directMode = new DirectMode(rawInputRestOfLineTextField.getText());
 		FullConfigLine fullLine = new FullConfigLine(modusByte, directMode);
-		bufferFromString(fullLine);
+		ErrorContainer errorContainer = new ErrorContainer();
+		bufferFromString(fullLine, errorContainer);
+		if (errorContainer.containsFailure()) {
+			// TODO display error
+		}
 	}
 }

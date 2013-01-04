@@ -16,8 +16,8 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
+import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.HacklaceConfigManager;
-import org.hacklace.animator.IllegalHacklaceConfigFileException;
 import org.hacklace.animator.IniConf;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.gui.actions.MenuActions;
@@ -46,9 +46,10 @@ public class AnimatorGui extends JFrame {
 
 	public AnimatorGui(final String fileName) {
 		this();
+		final ErrorContainer errorContainer = new ErrorContainer();
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				loadFile(fileName);
+				loadFile(fileName, errorContainer);
 			}
 		});
 	}
@@ -106,12 +107,12 @@ public class AnimatorGui extends JFrame {
 				IniConf.getInstance().displayHeight()));
 
 		pack();
-		
+
 		addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                    new MenuActions.CloseAction().actionPerformed(null);
-            }
-    });
+			public void windowClosing(WindowEvent e) {
+				new MenuActions.CloseAction().actionPerformed(null);
+			}
+		});
 
 	}
 
@@ -169,20 +170,21 @@ public class AnimatorGui extends JFrame {
 		return instance;
 	}
 
-	public void loadFile(String fileName) {
+	public void loadFile(String fileName, ErrorContainer errorContainer) {
 		try {
 			File file = new File(fileName);
-			hacklaceConfigManager.readFile(file);
+			hacklaceConfigManager.readFile(file, errorContainer);
 			homePanel.updateList(hacklaceConfigManager.getList(), false);
 			setCurrentFile(file);
 		} catch (IOException ex) {
 			JOptionPane.showMessageDialog(null,
-					"Cannot read from file. " + ex.getMessage(),
-					"Error", JOptionPane.ERROR_MESSAGE);
-		} catch (IllegalHacklaceConfigFileException ex) {
-			JOptionPane.showMessageDialog(null, ex.getMessage(),
-					"Error", JOptionPane.ERROR_MESSAGE);
+					"Cannot read from file. " + ex.getMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
+			if (errorContainer.containsFailure()) {
+				JOptionPane.showMessageDialog(null, errorContainer.toString(),
+						"Error", JOptionPane.ERROR_MESSAGE);
+			}
+
 		}
 	}
-
 }

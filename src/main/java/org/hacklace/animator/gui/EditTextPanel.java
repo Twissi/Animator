@@ -19,6 +19,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import javax.swing.text.PlainDocument;
 
+import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.IniConf;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.FontUtil;
@@ -73,7 +74,7 @@ public class EditTextPanel extends EditPanel {
 				try {
 					textEditField.getDocument().insertString(pos, chars, null);
 					((TextDisplayBuffer) buffer).setText(textEditField
-							.getText());
+							.getText(), new ErrorContainer() /*TODO*/);
 					setFromDisplayBuffer(buffer);
 				} catch (BadLocationException e) {
 					// just do nothing, this should not happen anyways
@@ -149,7 +150,7 @@ public class EditTextPanel extends EditPanel {
 		textEditField.setDocument(doc);
 		textEditField.addKeyListener(new KeyListener() {
 			private void updateText() {
-				((TextDisplayBuffer) buffer).setText(textEditField.getText());
+				((TextDisplayBuffer) buffer).setText(textEditField.getText(), new ErrorContainer() /*TODO*/);
 				setFromDisplayBuffer(buffer);
 			}
 

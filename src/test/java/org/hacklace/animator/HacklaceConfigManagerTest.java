@@ -35,7 +35,7 @@ public class HacklaceConfigManagerTest extends TestCase {
 	 */
 	public void testReadEqualsWrite()
 			throws IllegalHacklaceConfigFileException, IOException {
-		manager.readFile(exampleConf);
+		manager.readFile(exampleConf, new ErrorContainer());
 		manager.writeFile(output);
 		FileAssert.assertBinaryEquals(exampleConf, output);
 	}

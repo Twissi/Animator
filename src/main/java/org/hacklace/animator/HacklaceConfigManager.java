@@ -36,27 +36,27 @@ public class HacklaceConfigManager {
 		list.clear();
 	}
 
-	public void readStream(InputStream stream)
-			throws IllegalHacklaceConfigFileException, IOException {
+	public void readStream(InputStream stream, ErrorContainer errorContainer)
+			throws IOException {
 		DataInputStream in = new DataInputStream(stream);
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new InputStreamReader(in, HACKLACE_CHARSET));
 			String fullConfigLineString;
 			int lineNumber = 0;
-			loop : while ((fullConfigLineString = br.readLine()) != null) {
+			loop: while ((fullConfigLineString = br.readLine()) != null) {
 				lineNumber++;
 				if (fullConfigLineString.trim().equals("")) {
 					// ignore empty lines (especially at end of file)
 					continue loop;
 				}
-				FullConfigLine fullLine = new FullConfigLine(fullConfigLineString);
-				DisplayBuffer displayBuffer;
-				try {
-					displayBuffer = DisplayBuffer.createBufferFromLine(fullLine);
-				} catch (IllegalHacklaceConfigLineException ex) {
-					throw new IllegalHacklaceConfigFileException(ex, lineNumber);
-				}
+				FullConfigLine fullLine = new FullConfigLine(
+						fullConfigLineString);
+				ErrorContainer lineErrorContainer = new ErrorContainer();
+				DisplayBuffer displayBuffer = DisplayBuffer
+						.createBufferFromLine(fullLine, lineErrorContainer);
+				errorContainer.addAll(lineErrorContainer);
+
 				if (displayBuffer != null /* $00 = EOF */) {
 					list.add(displayBuffer);
 				} else {
@@ -71,10 +71,9 @@ public class HacklaceConfigManager {
 		}
 	}
 
-	public void readFile(File file) throws IOException,
-			IllegalHacklaceConfigFileException {
+	public void readFile(File file, ErrorContainer errorContainer) throws IOException {
 		FileInputStream fstream = new FileInputStream(file);
-		readStream(fstream);
+		readStream(fstream, errorContainer);
 	}
 
 	public void writeFile(File file) throws IOException {
@@ -123,14 +122,7 @@ public class HacklaceConfigManager {
 	 */
 	public ReferenceDisplayBuffer addReferenceDisplayBuffer(char whichAnimation) {
 		ReferenceDisplayBuffer rdb = null;
-		try {
-			rdb = new ReferenceDisplayBuffer(whichAnimation);
-		} catch (IllegalHacklaceConfigLineException e) {
-			// do nothing, as this is not supposed to happen, the caller needs
-			// to make sure the animation is valid
-			// e.g. by selecting it from a dropdown list
-			e.printStackTrace();
-		}
+		rdb = new ReferenceDisplayBuffer(whichAnimation, new ErrorContainer());
 		assert (rdb != null);
 		addDisplayBuffer(rdb);
 		return rdb;

@@ -1,5 +1,7 @@
 package org.hacklace.animator.displaybuffer;
 
+import org.hacklace.animator.ErrorContainer;
+
 public class EscapeChar extends TextElement implements Size {
 
 	private char c;
@@ -21,7 +23,7 @@ public class EscapeChar extends TextElement implements Size {
 		return "" + c + c;
 	}
 
-	public boolean isValid() {
+	public boolean isValid(ErrorContainer errorContainer) {
 		return true;
 	}
 

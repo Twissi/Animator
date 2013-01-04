@@ -12,8 +12,8 @@ public class ConversionUtil {
 	 *            three characters $nn where n is hex (0-F)
 	 * @return the byte represented by this (-128 to 127)
 	 */
-	public static byte convertStringToByte(String threeCharString) {
-		return (byte) convertStringToInt(threeCharString);
+	public static byte convertStringToByte(String threeCharString, ErrorContainer errorContainer) {
+		return (byte) convertStringToInt(threeCharString, errorContainer);
 	}
 
 	/**
@@ -22,9 +22,13 @@ public class ConversionUtil {
 	 *            three characters $nn where n is hex (0-F)
 	 * @return the byte represented by this (0 to 255)
 	 */
-	public static int convertStringToInt(String threeCharString) {
+	public static int convertStringToInt(String threeCharString, ErrorContainer errorContainer) {
 		assert (threeCharString.length() == 3);
 		assert (threeCharString.charAt(0) == '$');
+		if (!isHexSequence(threeCharString, errorContainer)) {
+			// error is already in errorContainer
+			return -129;
+		}
 		return Integer.parseInt(threeCharString.substring(1), 16);
 	}
 
@@ -32,15 +36,28 @@ public class ConversionUtil {
 	 * 
 	 * @param potentialHexString
 	 *            a String of length 3
+	 * @param errorContainer 
 	 * @return true if string is $nn with n hex (0-F), false if the length of
-	 *         the String is not 3 or if it does not start with $ or if the last
-	 *         two chars are not hex
+	 *         the String does not start with $ or if the last
+	 *         two chars are not hex (0-9A-F upper case)
 	 */
-	public static boolean isHexSequence(String potentialHexString) {
-		if (potentialHexString.length() != 3)
+	public static boolean isHexSequence(String potentialHexString, ErrorContainer errorContainer) {
+		assert(potentialHexString.length() == 3);
+		if (!potentialHexString.matches("^\\$[0-9A-F]{2}$")) {
+			errorContainer.addError(potentialHexString + "does not match $nn with nn hex (0-9A-F in upper case).");
 			return false;
-		return potentialHexString.matches("^\\$[0-9A-F]{2}$");
-		// ...................................$nn (exactly 3 chars)
+		}
+		return true;
+
+	}
+	
+	/**
+	 * 
+	 * @param c
+	 * @return true for 0-9A-F, false otherwise (also false for lower case a-f)
+	 */
+	public static boolean isHexDigit(char c) {
+		return (""+c).matches("[0-9A-F]");
 	}
 
 	/**
@@ -78,14 +95,14 @@ public class ConversionUtil {
 	 * @return a byte array with one byte for each hex sequence
 	 * @throws IllegalHacklaceConfigLineException
 	 */
-	public static byte[] convertAnimationStringToByteArray(DirectMode directMode) {
+	public static byte[] convertAnimationStringToByteArray(DirectMode directMode, ErrorContainer errorContainer) {
 		String aniString = directMode.getValue();
 		byte[] aniBytes = new byte[200];
 		String[] aniByteStrings = aniString.split(IniConf.separatorsRegEx);
 
 		int index = 0;
 		for (String aniByteString : aniByteStrings) {
-			byte aniByte = ConversionUtil.convertStringToByte(aniByteString);
+			byte aniByte = ConversionUtil.convertStringToByte(aniByteString, errorContainer);
 			aniBytes[index] = aniByte;
 			index++;
 		}

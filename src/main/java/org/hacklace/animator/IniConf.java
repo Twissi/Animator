@@ -16,6 +16,10 @@ public class IniConf {
 	
 	public final static String separators = " ,;.:/_|";
 	public final static String separatorsRegEx = "["+separators+"]";
+	
+	public static boolean isSeparator(char c) {
+		return separators.indexOf(c) != -1;
+	}
 
 	private IniConf(String path) {
 		configPath = path;

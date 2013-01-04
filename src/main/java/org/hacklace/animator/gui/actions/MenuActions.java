@@ -11,6 +11,7 @@ import java.io.InputStream;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
+import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.IniConf;
 import org.hacklace.animator.exporter.BinExporter;
@@ -47,7 +48,7 @@ public class MenuActions {
 			InputStream stream = AnimatorGui.class
 					.getResourceAsStream(fileName);
 			cm.clear();
-			cm.readStream(stream);
+			cm.readStream(stream, new ErrorContainer() /*TODO*/);
 			homePanel.clear();
 			homePanel.updateList(cm.getList(), false);
 			AnimatorGui.getInstance().setCurrentFile(null);
@@ -230,9 +231,10 @@ public class MenuActions {
 			AnimatorGui app = AnimatorGui.getInstance();
 			HacklaceConfigManager cm = app.getHacklaceConfigManager();
 			HomePanel homePanel = AnimatorGui.getInstance().getHomePanel();
+			ErrorContainer errorContainer = new ErrorContainer();
 			try {
 				cm.clear();
-				cm.readFile(openFile);
+				cm.readFile(openFile, errorContainer);
 				homePanel.clear();
 				homePanel.updateList(cm.getList(), false);
 				app.setCurrentFile(openFile);
@@ -243,6 +245,8 @@ public class MenuActions {
 				app.getHomePanel().reset();
 				app.stopEditMode();
 			}
+			JOptionPane.showMessageDialog(null, "Problems in file"+errorContainer.toString(),
+					"Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

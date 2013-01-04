@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JTextField;
 
+import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.gui.EditPanel;
 
@@ -22,6 +23,10 @@ public class RawInputFullLineApplyActionListener extends
 	public void actionPerformed(ActionEvent arg0) {
 		String rawString = rawInputFullLineTextField.getText();
 		FullConfigLine fullLine = new FullConfigLine(rawString);
-		bufferFromString(fullLine);
+		ErrorContainer errorContainer = new ErrorContainer();
+		bufferFromString(fullLine, errorContainer);
+		if (errorContainer.containsFailure()) {
+			// TODO display error
+		}
 	}
 }

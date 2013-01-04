@@ -43,7 +43,7 @@ public class FlashTest extends TestCase {
 	@Test
 	public void testReadEqualsWrite()
 			throws IllegalHacklaceConfigFileException, IOException {
-		manager.readFile(exampleConf);
+		manager.readFile(exampleConf, new ErrorContainer());
 		String rawString = manager.getRawString();
 		flashExporter.writeTo(rawString, output);
 		FileAssert.assertBinaryEquals(exampleFlash, output);

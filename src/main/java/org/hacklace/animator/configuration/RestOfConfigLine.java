@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.hacklace.animator.ConversionUtil;
 import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.IniConf;
 import org.hacklace.animator.displaybuffer.AnimationPart;
@@ -266,6 +267,10 @@ public class RestOfConfigLine implements Size {
 						textElementList.add(t);
 						break; // switch case
 					case '$': // (but not $$) text or graphic
+						if (ConversionUtil.isHexDigit(next)) {
+							errorContainer.addError(next+" is following $ but is not a valid hex digit (0-9A-F in upper case).");
+							next = '2'; // 0x20 is the minimum text byte and also allowed for graphics
+						}						
 						String fourChars = "$" + next;
 						i++; // second increase
 						// ignore if end of string
@@ -275,16 +280,25 @@ public class RestOfConfigLine implements Size {
 											+ fourChars);
 							break loop;
 						}
+						char c3 = restOfLineString.charAt(i);
+						if (ConversionUtil.isHexDigit(c3)) {
+							errorContainer.addError("$"+next+c3+" is not a valid hex sequence (only 0-9A-F in upper case allowed).");
+							c3 = '0'; // replace the invalid char with an allowed one
+						}
+						
 						fourChars += restOfLineString.charAt(i);
 						i++; // third increase
 						if (i > restOfLineString.length() - 1) {
 							errorContainer
 									.addError("Line ends in incomplete byte "
-											+ fourChars);
+											+ fourChars+". (Do not forget final separator, e.g. a comma.)");
 							break loop;
 						}
-						fourChars += restOfLineString.charAt(i);
-						assert fourChars.length() == 4;
+						char c4 = restOfLineString.charAt(i);
+						if (IniConf.isSeparator(c4)) {
+							errorContainer.addWarning(c4+" (in "+fourChars+") is not a typical separator. You probably forgot to put one (e.g. comma or space).");
+						}						
+						fourChars += c4;
 
 						if (ByteElement.isDirectMode(fourChars)) {
 							directMode = !directMode;
@@ -304,10 +318,10 @@ public class RestOfConfigLine implements Size {
 						}
 
 						if (!directMode) {
-							t = new TextByte(fourChars);
+							t = new TextByte(fourChars, errorContainer);
 							textElementList.add(t);
 						} else {
-							g = new GraphicByte(fourChars);
+							g = new GraphicByte(fourChars, errorContainer);
 							graphicByteList.add(g);
 						}
 						break; // switch case
@@ -332,10 +346,6 @@ public class RestOfConfigLine implements Size {
 
 	private boolean[][] leds;
 
-	public boolean[][] getLeds() {
-		return getLeds(new ErrorContainer());
-	}
-
 	/**
 	 * 
 	 * @param errorContainer
@@ -344,8 +354,11 @@ public class RestOfConfigLine implements Size {
 	 * @return
 	 */
 	public boolean[][] getLeds(ErrorContainer errorContainer) {
-		if (leds != null)
+		errorContainer.clear();
+		if (leds != null) {
+			errorContainer.addAll(this.getAnimationElementsErrorContainer);
 			return leds;
+		}
 
 		List<AnimationPart> list = getAnimationElements(errorContainer);
 		int numColumns = 0;
@@ -366,10 +379,6 @@ public class RestOfConfigLine implements Size {
 	}
 
 	private boolean[] clickEditable;
-
-	public boolean[] getClickEditableColumns() {
-		return getClickEditableColumns(new ErrorContainer());
-	}
 
 	public boolean[] getClickEditableColumns(ErrorContainer errorContainer) {
 		if (clickEditable != null) {

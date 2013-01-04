@@ -38,7 +38,7 @@ public class ErrorContainer {
 		ErrorElement errorElement = new ErrorElement(errorType, message);
 		list.add(errorElement);
 	}
-	
+
 	public void addErrorElement(String message, ErrorType errorType) {
 		addErrorElement(errorType, message);
 	}
@@ -71,5 +71,20 @@ public class ErrorContainer {
 	public void clear() {
 		list.clear();
 	}
+
+	public boolean isNotEmpty() {
+		return !list.isEmpty();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (ErrorElement element : list) {
+			sb.append(element.toString()).append(System.getProperty("line.separator"));
+		}
+		return sb.toString();
+	}
+	
+
 
 }

@@ -1,6 +1,6 @@
 package org.hacklace.animator.displaybuffer;
 
-import org.hacklace.animator.IllegalHacklaceConfigLineException;
+import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.configuration.RestOfConfigLine;
 import org.hacklace.animator.enums.AnimationType;
@@ -10,24 +10,25 @@ public class MixedDisplayBuffer extends DisplayBuffer {
 	private RestOfConfigLine restOfLine;
 	private boolean[] clickEditable;
 
-	public MixedDisplayBuffer(FullConfigLine fullLine)
-			throws IllegalHacklaceConfigLineException {
-		super(fullLine.getModusByte());
-		setRestOfLine(fullLine.getRestOfLine());
+	public MixedDisplayBuffer(FullConfigLine fullLine,
+			ErrorContainer errorContainer) {
+		super(fullLine.getModusByte(errorContainer));
+		setRestOfLine(fullLine.getRestOfLine(), errorContainer);
 	}
 
 	public MixedDisplayBuffer() {
-		setRestOfLine(new RestOfConfigLine(""));
+		setRestOfLine(new RestOfConfigLine(""), new ErrorContainer());
 	}
 
 	public RestOfConfigLine getRestOfLine() {
 		return restOfLine;
 	}
 
-	public void setRestOfLine(RestOfConfigLine restOfLine) {
+	public void setRestOfLine(RestOfConfigLine restOfLine,
+			ErrorContainer errorContainer) {
 		this.restOfLine = restOfLine;
-		this.data = restOfLine.getLeds();
-		this.clickEditable = restOfLine.getClickEditableColumns();
+		this.data = restOfLine.getLeds(errorContainer);
+		this.clickEditable = restOfLine.getClickEditableColumns(errorContainer);
 	}
 
 	public boolean isColumnEditable(int col) {

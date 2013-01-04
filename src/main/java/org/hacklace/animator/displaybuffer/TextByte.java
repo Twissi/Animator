@@ -5,6 +5,8 @@ import static org.hacklace.animator.displaybuffer.FontUtil.LOWEST_INDEX;
 
 import java.util.List;
 
+import org.hacklace.animator.ErrorContainer;
+
 public class TextByte extends TextElement implements Size {
 
 	private int[] aniBytes;
@@ -12,14 +14,14 @@ public class TextByte extends TextElement implements Size {
 	// delegate
 	private ByteElement byteElement;
 
-	public TextByte(String fourChars) {
-		byteElement = new ByteElement(fourChars);
+	public TextByte(String fourChars, ErrorContainer errorContainer) {
+		byteElement = new ByteElement(fourChars, errorContainer);
 	}
 
 	@Override
-	public boolean isValid() {
-		return byteElement.isValid() && byteElement.getByteAsInt() >= LOWEST_INDEX
-				&& byteElement.getByteAsInt() <= HIGHEST_INDEX;
+	public boolean isValid(ErrorContainer errorContainer) {
+		return byteElement.isValid(errorContainer) && byteElement.getByteAsInt(errorContainer) >= LOWEST_INDEX
+				&& byteElement.getByteAsInt(errorContainer) <= HIGHEST_INDEX;
 	}
 	
 	public List<String> analyzeWarnings() {
@@ -28,7 +30,7 @@ public class TextByte extends TextElement implements Size {
 
 	public List<String> analyzeErrors() {
 		List<String> list = byteElement.analyzeErrors();
-		int index = byteElement.getByteAsInt();
+		int index = byteElement.getByteAsInt(new ErrorContainer()); // TODO make error handling more consistent
 		if (index < LOWEST_INDEX || index > HIGHEST_INDEX) {
 			list.add("Text byte " + byteElement.fourChars + "(" + index
 					+ ") not allowed, must be between " + LOWEST_INDEX
@@ -39,7 +41,7 @@ public class TextByte extends TextElement implements Size {
 
 	public int[] getAnimationBytes() {
 		if (aniBytes == null)
-			aniBytes = FontUtil.getMinimumBytesForIndex(byteElement.getByteAsInt());
+			aniBytes = FontUtil.getMinimumBytesForIndex(byteElement.getByteAsInt(new ErrorContainer())); // TODO maybe find different solution
 		return aniBytes;
 	}
 

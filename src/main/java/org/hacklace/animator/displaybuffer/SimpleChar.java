@@ -1,5 +1,7 @@
 package org.hacklace.animator.displaybuffer;
 
+import org.hacklace.animator.ErrorContainer;
+
 public class SimpleChar extends TextElement implements Size {
 
 	private char c;
@@ -19,7 +21,7 @@ public class SimpleChar extends TextElement implements Size {
 		return "" + c;
 	}
 
-	public boolean isValid() {
+	public boolean isValid(ErrorContainer errorContainer) {
 		return FontUtil.isValidHacklaceChar(c);
 	}
 

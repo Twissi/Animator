@@ -10,7 +10,7 @@ public class ModusByte implements Cloneable {
 
 	public ModusByte() {
 		this.bits = 0x04; // medium speed
-        // avoids $00 which would mean end of file
+		// avoids $00 which would mean end of file
 	}
 
 	public ModusByte(byte b) {
@@ -130,17 +130,14 @@ public class ModusByte implements Cloneable {
 		return copy;
 	}
 
-	public ModusByte(String modusByteString, int line)
-			throws IllegalHacklaceConfigLineException {
-		if (!ConversionUtil.isHexSequence(modusByteString)) {
-			throw new IllegalHacklaceConfigLineException("Modus string "
-					+ modusByteString + " is not hex ($nn) in line " + line + ".");
+	public ModusByte(String modusByteString, ErrorContainer errorContainer) {
+		if (!ConversionUtil.isHexSequence(modusByteString, errorContainer)) {
+			errorContainer.addError("Modus string " + modusByteString
+					+ " is not hex ($nn).");
+		} else {
+			this.bits = ConversionUtil.convertStringToByte(modusByteString,
+					errorContainer);
 		}
-		this.bits = ConversionUtil.convertStringToByte(modusByteString);
-	}
-
-	public ModusByte(String modusByteString) {
-		this.bits = ConversionUtil.convertStringToByte(modusByteString);
 	}
 
 	/**

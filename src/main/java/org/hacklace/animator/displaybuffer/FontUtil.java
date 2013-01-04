@@ -6,6 +6,8 @@ import static org.hacklace.animator.ConversionUtil.isHexSequence;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.hacklace.animator.ErrorContainer;
+
 public class FontUtil {
 
 	public final static int LOWEST_INDEX = 0x20;
@@ -393,7 +395,7 @@ public class FontUtil {
 	 *            textual - this is FontUtil after all)
 	 * @return animation bytes - minimum bytes incl. one blank line for each
 	 */
-	public static int[] getIntsForRawString(String rawString) {
+	public static int[] getIntsForRawString(String rawString, ErrorContainer errorContainer) {
 		List<Integer> returnList = new LinkedList<Integer>();
 
 		loopOverRawString: for (int i = 0; i < rawString.length(); i++) {
@@ -427,8 +429,8 @@ public class FontUtil {
 						if (i > rawString.length() - 1)
 							break loopOverRawString;
 						charSetIndexAsThreeCharString += rawString.charAt(i);
-						if (isHexSequence(charSetIndexAsThreeCharString)) {
-							int charSetIndex = convertStringToInt(charSetIndexAsThreeCharString);
+						if (isHexSequence(charSetIndexAsThreeCharString, errorContainer)) {
+							int charSetIndex = convertStringToInt(charSetIndexAsThreeCharString, errorContainer);
 							animationBytesForOneCharacter = getMinimumBytesForIndex(charSetIndex);
 							i++; // third: there are actually four chars:
 									// $nn, i.e. one separator
@@ -474,8 +476,8 @@ public class FontUtil {
 	 *            text from a configuration line e.g. Hellö x~~y 10 ^A
 	 * @return animation bytes - minimum bytes incl. one blank column for each
 	 */
-	public static byte[] getBytesForRawString(String rawString) {
-		int[] intArray = getIntsForRawString(rawString);
+	public static byte[] getBytesForRawString(String rawString, ErrorContainer errorContainer) {
+		int[] intArray = getIntsForRawString(rawString, errorContainer);
 		// convert int array to byte array
 		byte[] returnArray = new byte[intArray.length];
 		for (int i = 0; i < intArray.length; i++) {

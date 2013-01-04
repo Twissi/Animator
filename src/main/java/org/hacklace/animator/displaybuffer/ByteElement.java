@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.hacklace.animator.ConversionUtil;
+import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.IniConf;
 
 /**
@@ -16,7 +17,7 @@ import org.hacklace.animator.IniConf;
  */
 
 public class ByteElement {
-	
+
 	public static boolean isDirectMode(String fourChars) {
 		return fourChars.startsWith("$FF");
 	}
@@ -25,17 +26,18 @@ public class ByteElement {
 	protected String threeChars; // first 3 chars $nn
 	protected String twoChars; // second and third char, nn (should be hex)
 
-	protected ByteElement(String fourChars) {
+	public ByteElement(String fourChars, ErrorContainer errorContainer) {
 		assert (fourChars != null);
 		assert (fourChars.length() == 4);
 		this.fourChars = fourChars;
 		this.threeChars = fourChars.substring(0, 3);
 		this.twoChars = fourChars.substring(1, 3);
+		isValid(errorContainer);
 	}
-
-	public boolean isValid() {
+	
+	public boolean isValid(ErrorContainer errorContainer) {
 		// technically any char is allowed as fourth char / separator
-		return ConversionUtil.isHexSequence(threeChars);
+		return ConversionUtil.isHexSequence(threeChars, errorContainer);
 	}
 
 	public List<String> analyzeErrors() {
@@ -61,17 +63,16 @@ public class ByteElement {
 	 * 
 	 * @return -128 to 127
 	 */
-	public byte getByte() {
-		return ConversionUtil.convertStringToByte(threeChars);
+	public byte getByte(ErrorContainer errorContainer) {
+		return ConversionUtil.convertStringToByte(threeChars, errorContainer);
 	}
 
 	/**
 	 * 
 	 * @return 0 to 255
 	 */
-	public int getByteAsInt() {
-		return ConversionUtil.convertStringToByte(threeChars);
+	public int getByteAsInt(ErrorContainer errorContainer) {
+		return ConversionUtil.convertStringToByte(threeChars, errorContainer);
 	}
-
 
 }

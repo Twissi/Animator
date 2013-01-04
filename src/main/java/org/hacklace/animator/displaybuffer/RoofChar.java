@@ -1,5 +1,7 @@
 package org.hacklace.animator.displaybuffer;
 
+import org.hacklace.animator.ErrorContainer;
+
 public class RoofChar extends TextElement implements Size {
 
 	private char c;
@@ -19,8 +21,19 @@ public class RoofChar extends TextElement implements Size {
 		return "^" + c;
 	}
 
-	public boolean isValid() {
-		return FontUtil.isValidSpecialChar(c);
+	public boolean isValid(ErrorContainer errorContainer) {
+		if (!FontUtil.isValidSpecialChar(c)) {
+			errorContainer
+					.addError("^"
+							+ c
+							+ " is not valid. Must be between ^"
+							+ (char) (FontUtil.LOWEST_SPECIAL_INDEX - FontUtil.SPECIAL_CHAR_OFFSET)
+							+ " and "
+							+ (char) (FontUtil.HIGHEST_INDEX - FontUtil.SPECIAL_CHAR_OFFSET)
+							+ ".");
+			return false;
+		}
+		return true;
 	}
 
 	@Override

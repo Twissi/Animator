@@ -1,6 +1,7 @@
 package org.hacklace.animator.displaybuffer;
 
 import org.hacklace.animator.ConversionUtil;
+import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.IllegalHacklaceConfigLineException;
 import org.hacklace.animator.IniConf;
 import org.hacklace.animator.ModusByte;
@@ -130,9 +131,8 @@ public abstract class DisplayBuffer implements Cloneable, Size {
 	 *         line)
 	 * @throws IllegalHacklaceConfigLineException
 	 */
-	public static DisplayBuffer createBufferFromLine(FullConfigLine fullLine)
-			throws IllegalHacklaceConfigLineException {
-		ModusByte modusByte = fullLine.getModusByte();
+	public static DisplayBuffer createBufferFromLine(FullConfigLine fullLine, ErrorContainer errorContainer) {
+		ModusByte modusByte = fullLine.getModusByte(errorContainer);
 		if (modusByte.isEOF()) {
 			return null;
 		}
@@ -141,13 +141,13 @@ public abstract class DisplayBuffer implements Cloneable, Size {
 
 		switch (animationType) {
 		case TEXT:
-			return new TextDisplayBuffer(fullLine);
+			return new TextDisplayBuffer(fullLine, errorContainer);
 		case GRAPHIC:
-			return new GraphicDisplayBuffer(fullLine);
+			return new GraphicDisplayBuffer(fullLine, errorContainer);
 		case REFERENCE:
-			return new ReferenceDisplayBuffer(fullLine);
+			return new ReferenceDisplayBuffer(fullLine, errorContainer);
 		case MIXED:
-			return new MixedDisplayBuffer(fullLine);
+			return new MixedDisplayBuffer(fullLine, errorContainer);
 		}
 		return null;
 	}

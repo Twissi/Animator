@@ -1,5 +1,6 @@
 package org.hacklace.animator.configuration;
 
+import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.ModusByte;
 import org.hacklace.animator.enums.AnimationType;
 
@@ -75,11 +76,16 @@ public class FullConfigLine {
 		return getRestOfLine().containsReference();
 	}
 
-	public ModusByte getModusByte() {
+	public ModusByte getModusByte(ErrorContainer errorContainer) {
+		if (fullLineString.length() < 4) {
+			errorContainer
+					.addError(fullLineString
+							+ "needs to have at least length 4 for the modus byte ($nn,).");
+			return new ModusByte();
+		}
 		String modusByteString = fullLineString.substring(0, 3); // first 4
 																	// chars
-		ModusByte modusByte = new ModusByte(modusByteString);
-		return modusByte;
+		return new ModusByte(modusByteString, errorContainer);
 	}
 
 	public RestOfConfigLine getRestOfLine() {
@@ -104,7 +110,7 @@ public class FullConfigLine {
 	 * @return
 	 */
 	public char getSixthChar() {
-		assert (fullLineString.length() == 6);
+		assert (fullLineString.length() >= 6);
 		return fullLineString.charAt(5);
 	}
 

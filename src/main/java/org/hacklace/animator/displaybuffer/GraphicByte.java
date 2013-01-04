@@ -3,22 +3,29 @@ package org.hacklace.animator.displaybuffer;
 import java.util.List;
 
 import org.hacklace.animator.ConversionUtil;
+import org.hacklace.animator.ErrorContainer;
 
 public class GraphicByte extends ByteElement implements Size {
 	
-	public GraphicByte(String fourChars) {
-		super(fourChars);
+	public GraphicByte(String fourChars, ErrorContainer errorContainer) {
+		super(fourChars, errorContainer);
 	}
 	
 	@Override
-	public boolean isValid() {
-		return super.isValid() && getByteAsInt() != 0xFF; 
+	public boolean isValid(ErrorContainer errorContainer) {
+		if (super.isValid(errorContainer)) {
+			return false;
+		}
+		if (getByteAsInt(new ErrorContainer()) == 0xFF) { // use different error container and ignore
+			errorContainer.addError("$FF not allowed as graphic byte, as it switches direct mode.");
+		}
+		return true;
 	}
 	
 	@Override
 	public List<String> analyzeErrors() {
 		List<String> list = super.analyzeErrors();
-	    if (getByte() == 0xFF) 
+	    if (getByte(new ErrorContainer()) == 0xFF) // TODO make error handling more consistent 
 	    	list.add("Graphic byte must not be FF as this switches direct mode.");
 		return list;
 	}
@@ -26,7 +33,8 @@ public class GraphicByte extends ByteElement implements Size {
 	@Override
 	public List<String> analyzeWarnings() {
 		List<String> list = super.analyzeWarnings();
-		if (getByte() < 0) // highest bit should not be set
+		// highest bit should not be set
+		if (getByte(new ErrorContainer()) < 0) // TODO make error handling more consistent 
 			list.add("Highest bit should not be set. ("+fourChars+")");
 		return list;
 	}
@@ -38,7 +46,7 @@ public class GraphicByte extends ByteElement implements Size {
 	 */
 	public boolean getBit(int index) {
 		assert (index >= 0 && index <= 6);
-		return ConversionUtil.isBitSet(getByte(), index);
+		return ConversionUtil.isBitSet(getByte(new ErrorContainer()), index); // TODO maybe handle error?
 	}
 
 	@Override
