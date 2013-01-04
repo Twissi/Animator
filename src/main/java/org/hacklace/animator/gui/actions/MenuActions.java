@@ -40,7 +40,8 @@ public class MenuActions {
 		return confirm(confirmationText, confirmationTitle);
 	}
 
-	private static void loadResource(String fileName) {
+	private static void loadHacklaceConfigFileAsResource(String fileName,
+			ErrorContainer errorContainer) {
 		AnimatorGui app = AnimatorGui.getInstance();
 		HacklaceConfigManager cm = app.getHacklaceConfigManager();
 		HomePanel homePanel = AnimatorGui.getInstance().getHomePanel();
@@ -48,7 +49,7 @@ public class MenuActions {
 			InputStream stream = AnimatorGui.class
 					.getResourceAsStream(fileName);
 			cm.clear();
-			cm.readStream(stream, new ErrorContainer() /*TODO*/);
+			cm.readStream(stream, errorContainer);
 			homePanel.clear();
 			homePanel.updateList(cm.getList(), false);
 			AnimatorGui.getInstance().setCurrentFile(null);
@@ -61,7 +62,31 @@ public class MenuActions {
 		}
 	}
 
-	public static class LoadDefaultAction extends AbstractAction {
+	private abstract static class AbstractLoadExample extends AbstractAction {
+
+		private static final long serialVersionUID = 3429284491017128252L;
+
+		public AbstractLoadExample(String s) {
+			super(s);
+		}
+
+		@Override
+		public abstract void actionPerformed(ActionEvent arg0);
+
+		protected void load(String resource) {
+			if (!confirm())
+				return;
+			ErrorContainer errorContainer = new ErrorContainer();
+			loadHacklaceConfigFileAsResource(resource, errorContainer);
+			AnimatorGui app = AnimatorGui.getInstance();
+			app.stopEditMode();
+			app.setCurrentFile(null);
+			// TODO display errors from errorContainer
+		}
+
+	}
+
+	public static class LoadDefaultAction extends AbstractLoadExample {
 
 		private static final long serialVersionUID = -8252301301328863615L;
 
@@ -71,17 +96,12 @@ public class MenuActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (!confirm())
-				return;
-			loadResource("/Default_Configuration.hack");
-			AnimatorGui app = AnimatorGui.getInstance();
-			app.stopEditMode();
-			app.setCurrentFile(null);
+			load("/Default_Configuration.hack");
 		}
 
 	}
 
-	public static class LoadExampleAction extends AbstractAction {
+	public static class LoadExampleAction extends AbstractLoadExample {
 
 		private static final long serialVersionUID = 5758517032413260605L;
 
@@ -91,12 +111,7 @@ public class MenuActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (!confirm())
-				return;
-			loadResource("/example.hack");
-			AnimatorGui app = AnimatorGui.getInstance();
-			app.stopEditMode();
-			app.setCurrentFile(null);
+			load("/example.hack");
 		}
 
 	}
@@ -245,8 +260,9 @@ public class MenuActions {
 				app.getHomePanel().reset();
 				app.stopEditMode();
 			}
-			JOptionPane.showMessageDialog(null, "Problems in file"+errorContainer.toString(),
-					"Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Problems in file"
+					+ errorContainer.toString(), "Error",
+					JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -322,7 +338,8 @@ public class MenuActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (!confirm()) return;
+			if (!confirm())
+				return;
 			AnimatorGui app = AnimatorGui.getInstance();
 			app.getHomePanel().clear();
 			app.getHacklaceConfigManager().clear();

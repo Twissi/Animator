@@ -22,7 +22,7 @@ public class AnimationListActions {
 						AnimatorGui.getInstance(),
 						"Please select the number of the referenced animation. A is the first, B the second, etc.",
 						"Animation number",
-						JOptionPane.QUESTION_MESSAGE, null, PredefinedAnimation.values(),
+						JOptionPane.QUESTION_MESSAGE, null, PredefinedAnimation.getList(),
 						PredefinedAnimation.getPredefinedAnimationByIndex('A', new ErrorContainer()));
 		return result;
 	}

@@ -366,5 +366,12 @@ public enum PredefinedAnimation {
 	public static boolean isInvalid(char c, ErrorContainer errorContainer) {
 		return !isValid(c, errorContainer);
 	}
+	
+	public static PredefinedAnimation[] getList() {
+		PredefinedAnimation[] all = values();
+		PredefinedAnimation[] withoutVAndInvalid = new PredefinedAnimation[all.length-2];
+		System.arraycopy(all, 0, withoutVAndInvalid, 0, withoutVAndInvalid.length);
+		return withoutVAndInvalid;
+	}
 
 }
