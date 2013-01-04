@@ -18,7 +18,7 @@ import org.hacklace.animator.IniConf;
 
 public class ByteElement {
 
-	public static boolean isDirectMode(String fourChars) {
+	public static boolean isDirectModeSwitchByte(String fourChars) {
 		return fourChars.startsWith("$FF");
 	}
 

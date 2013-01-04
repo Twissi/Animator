@@ -180,40 +180,25 @@ public class RestOfConfigLine implements Size {
 	}
 
 	private List<AnimationPart> animationPartList = null;
-	private ErrorContainer getAnimationElementsErrorContainer = null;
+	private ErrorContainer getAnimationElementsErrorContainer = new ErrorContainer();
 
 	/**
 	 * 
-	 * Do not modify the returned error container.
-	 * 
-	 * @return
-	 */
-	public ErrorContainer getErrors() {
-		if (getAnimationElementsErrorContainer == null) {
-			getAnimationElements(new ErrorContainer());
-		}
-		return getAnimationElementsErrorContainer;
-	}
-
-	/**
-	 * 
-	 * @param errorContainer
-	 *            should be empty, will be cleared, must not be modified later
-	 *            (outside) as a local copy is kept
+	 * @param err
 	 * @return
 	 */
 	private List<AnimationPart> getAnimationElements(
-			ErrorContainer errorContainer) {
+			ErrorContainer outsideErrorContainer) {
 		if (animationPartList != null) {
-			errorContainer.clear();
-			errorContainer.addAll(this.getAnimationElementsErrorContainer);
+			outsideErrorContainer.addAll(getAnimationElementsErrorContainer);
 			return animationPartList;
 		}
 
-		errorContainer.clear();
-		this.getAnimationElementsErrorContainer = errorContainer;
-
 		animationPartList = new LinkedList<AnimationPart>();
+
+		ErrorContainer err = getAnimationElementsErrorContainer;
+		// this is just for shortening the variable
+		assert (err.isEmpty());
 
 		List<TextElement> textElementList = new LinkedList<TextElement>();
 		ArrayList<GraphicByte> graphicByteList = new ArrayList<GraphicByte>();
@@ -221,6 +206,7 @@ public class RestOfConfigLine implements Size {
 		boolean directMode = false;
 
 		// only outside of loop to avoid adding to the stack multiple times
+		// (see Java specification)
 		TextElement t;
 		GraphicByte g;
 
@@ -228,16 +214,14 @@ public class RestOfConfigLine implements Size {
 			char c = restOfLineString.charAt(i);
 
 			if (directMode && c != '$') {
-				errorContainer
-						.addError(c
-								+ " inside direct mode not allowed (close with \"$FF,\").");
+				err.addError(c
+						+ " inside direct mode not allowed (close with \"$FF,\").");
 				// fallback - pretend there was a $FF, before
 				directMode = false;
 				// (do not check whether graphicByteList is empty)
 				GraphicsPart graphicsPart = new GraphicsPart(graphicByteList);
 				animationPartList.add(graphicsPart);
 				graphicByteList.clear();
-
 			}
 
 			// normal characters
@@ -251,8 +235,7 @@ public class RestOfConfigLine implements Size {
 
 				// escape character at the end of the line
 				if (i > restOfLineString.length() - 1) {
-					errorContainer.addError("Line ends in escape character "
-							+ c);
+					err.addError("Line ends in escape character " + c);
 					break loop;
 				}
 				char next = restOfLineString.charAt(i);
@@ -267,43 +250,65 @@ public class RestOfConfigLine implements Size {
 						textElementList.add(t);
 						break; // switch case
 					case '$': // (but not $$) text or graphic
-						if (ConversionUtil.isHexDigit(next)) {
-							errorContainer.addError(next+" is following $ but is not a valid hex digit (0-9A-F in upper case).");
-							next = '2'; // 0x20 is the minimum text byte and also allowed for graphics
-						}						
+						boolean isHex = true;
+						if (!ConversionUtil.isHexDigit(next)) {
+							isHex = false;
+							err.addError(next
+									+ " is following $ but is not a valid hex digit (0-9A-F in upper case).");
+							if ('a' <= next && next <= 'f') {
+								next = Character.toUpperCase(next);
+								err.addInformationMessage("... made upper case ("
+										+ next + ").");
+								isHex = true;
+							} else if (!directMode) {
+								// fallback:
+								// interpret the $ as $$ (i.e. add $)
+								i--;
+								t = new EscapeChar('$');
+								err.addInformationMessage("... interpreted $ as $$ (added $).");
+								continue loop;
+							}
+							// no fallback for direct mode - will be handled
+							// later for all four chars
+						}
 						String fourChars = "$" + next;
 						i++; // second increase
 						// ignore if end of string
 						if (i > restOfLineString.length() - 1) {
-							errorContainer
-									.addError("Line ends in incomplete byte "
-											+ fourChars);
+							err.addError("Line ends in incomplete byte "
+									+ fourChars);
 							break loop;
 						}
 						char c3 = restOfLineString.charAt(i);
-						if (ConversionUtil.isHexDigit(c3)) {
-							errorContainer.addError("$"+next+c3+" is not a valid hex sequence (only 0-9A-F in upper case allowed).");
-							c3 = '0'; // replace the invalid char with an allowed one
+						if (!ConversionUtil.isHexDigit(c3)) {
+							err.addError("$"
+									+ next
+									+ c3
+									+ " is not a valid hex sequence (only 0-9A-F in upper case allowed).");
+							isHex = false;
 						}
-						
+
 						fourChars += restOfLineString.charAt(i);
 						i++; // third increase
 						if (i > restOfLineString.length() - 1) {
-							errorContainer
-									.addError("Line ends in incomplete byte "
-											+ fourChars+". (Do not forget final separator, e.g. a comma.)");
+							err.addError("Line ends in incomplete byte "
+									+ fourChars
+									+ ". (Do not forget final separator, e.g. a comma.)");
 							break loop;
 						}
 						char c4 = restOfLineString.charAt(i);
-						if (IniConf.isSeparator(c4)) {
-							errorContainer.addWarning(c4+" (in "+fourChars+") is not a typical separator. You probably forgot to put one (e.g. comma or space).");
-						}						
+						if (!IniConf.isSeparator(c4)) {
+							err.addWarning(c4
+									+ " (in "
+									+ fourChars
+									+ ") is not a typical separator. You probably forgot to put one (e.g. comma or space).");
+						}
 						fourChars += c4;
 
-						if (ByteElement.isDirectMode(fourChars)) {
+						if (ByteElement.isDirectModeSwitchByte(fourChars)) {
 							directMode = !directMode;
 							if (directMode && !textElementList.isEmpty()) {
-								// could be empty if last was reference
+								// (could be empty if last was reference)
 								TextPart textPart = new TextPart(
 										textElementList);
 								animationPartList.add(textPart);
@@ -317,13 +322,27 @@ public class RestOfConfigLine implements Size {
 							continue loop;
 						}
 
-						if (!directMode) {
-							t = new TextByte(fourChars, errorContainer);
-							textElementList.add(t);
+						if (isHex) {
+							if (!directMode) {
+								t = new TextByte(fourChars, err);
+								textElementList.add(t);
+							} else {
+								g = new GraphicByte(fourChars, err);
+								graphicByteList.add(g);
+							}
 						} else {
-							g = new GraphicByte(fourChars, errorContainer);
-							graphicByteList.add(g);
+							if (!directMode) {
+								t = new EscapeChar('$');
+								textElementList.add(t);
+								i--;
+								i--;
+								i--;
+								err.addError("... interpreted $ as $$ (added $).");
+							} else {
+								// TODO fallback for direct mode
+							}
 						}
+
 						break; // switch case
 
 					case '~':
@@ -341,6 +360,9 @@ public class RestOfConfigLine implements Size {
 			} // if normal character (not ^ $ ~) else part
 
 		} // end loop over text
+
+		outsideErrorContainer.addAll(err);
+
 		return animationPartList;
 	}
 
@@ -349,14 +371,12 @@ public class RestOfConfigLine implements Size {
 	/**
 	 * 
 	 * @param errorContainer
-	 *            should be empty, will be cleared, must not be modified later
-	 *            as a local reference is kept
 	 * @return
 	 */
 	public boolean[][] getLeds(ErrorContainer errorContainer) {
 		errorContainer.clear();
 		if (leds != null) {
-			errorContainer.addAll(this.getAnimationElementsErrorContainer);
+			errorContainer.addAll(getAnimationElementsErrorContainer);
 			return leds;
 		}
 
@@ -382,7 +402,7 @@ public class RestOfConfigLine implements Size {
 
 	public boolean[] getClickEditableColumns(ErrorContainer errorContainer) {
 		if (clickEditable != null) {
-
+			errorContainer.addAll(getAnimationElementsErrorContainer);
 			return clickEditable;
 		}
 
