@@ -336,10 +336,10 @@ public enum PredefinedAnimation {
 	public static PredefinedAnimation getPredefinedAnimationByIndex(char index,
 			ErrorContainer errorContainer) {
 		PredefinedAnimation[] animations = PredefinedAnimation.values();
-		int intIndex = index - 'A';
 		if (isInvalid(index, errorContainer))
 			return INVALID;
-		return animations[index - 'A'];
+		int intIndex = index - 'A';
+		return animations[intIndex];
 	}
 
 	/**
