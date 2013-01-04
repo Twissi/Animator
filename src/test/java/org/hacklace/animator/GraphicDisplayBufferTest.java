@@ -68,10 +68,10 @@ public class GraphicDisplayBufferTest extends TestCase {
 		buf.setColumnRow(0, 0, true);
 		String rawStringWithoutModusByte = buf.getRawString().getValue()
 				.substring(4);
-		assertEquals("$FF $01 $FF,", rawStringWithoutModusByte);
+		assertEquals("$FF,$01,$FF,", rawStringWithoutModusByte);
 	}
 
-	public void testFromRawString() throws IllegalHacklaceConfigLineException {
+	public void testFromRawString() {
 		String rawString = "$04,$FF $01 $FF,";
 		FullConfigLine fullLine = new FullConfigLine(rawString);
 		ErrorContainer errorContainer = new ErrorContainer();

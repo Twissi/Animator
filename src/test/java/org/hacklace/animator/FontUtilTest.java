@@ -12,8 +12,5 @@ public class FontUtilTest extends TestCase{
 		assertTrue(FontUtil.isValidHacklaceChar('0'));
 		assertTrue(FontUtil.isValidHacklaceChar('€'));
 		assertFalse(FontUtil.isValidHacklaceChar('à'));
-		ErrorContainer errorContainer = new ErrorContainer();
-		System.out.println(FontUtil.getIntsForRawString("$20,", errorContainer));
-		System.out.println(errorContainer);
 	}
 }

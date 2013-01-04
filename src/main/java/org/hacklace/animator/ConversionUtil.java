@@ -93,7 +93,6 @@ public class ConversionUtil {
 	 * @param directMode
 	 *            without the direct mode bytes ($FF)
 	 * @return a byte array with one byte for each hex sequence
-	 * @throws IllegalHacklaceConfigLineException
 	 */
 	public static byte[] convertAnimationStringToByteArray(DirectMode directMode, ErrorContainer errorContainer) {
 		String aniString = directMode.getValue();

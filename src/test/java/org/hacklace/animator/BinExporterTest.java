@@ -39,7 +39,7 @@ public class BinExporterTest extends TestCase {
 	
 	@Test
 	public void testReadEqualsWrite()
-			throws IllegalHacklaceConfigFileException, IOException {
+			throws IOException {
 		manager.readFile(exampleConf, new ErrorContainer());
 		InputStream stream = new ByteArrayInputStream(manager.getRawString().getBytes(
 				HacklaceConfigManager.HACKLACE_CHARSET));

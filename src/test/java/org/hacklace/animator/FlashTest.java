@@ -26,7 +26,7 @@ public class FlashTest extends TestCase {
 	
 	protected void setUp() throws IOException {
 		manager = new HacklaceConfigManager();
-		output = File.createTempFile("test.hack", null);
+		output = File.createTempFile("test", ".hack");
 		URL url = this.getClass().getResource("/configs/example.hack");
 		exampleConf = new File(url.getFile());
 		url = this.getClass().getResource("/configs/example.flash");
@@ -42,7 +42,7 @@ public class FlashTest extends TestCase {
 	
 	@Test
 	public void testReadEqualsWrite()
-			throws IllegalHacklaceConfigFileException, IOException {
+			throws IOException {
 		manager.readFile(exampleConf, new ErrorContainer());
 		String rawString = manager.getRawString();
 		flashExporter.writeTo(rawString, output);

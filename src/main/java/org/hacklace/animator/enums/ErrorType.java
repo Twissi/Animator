@@ -28,4 +28,8 @@ public enum ErrorType {
 		return this == ERROR || this == ABORT;
 	}
 
+	public boolean isErrorOrWarning() {
+		return isFailure() || this == WARNING;
+	}
+
 }

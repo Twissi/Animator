@@ -70,7 +70,7 @@ public class GraphicDisplayBuffer extends DisplayBuffer implements Size {
 
 	@Override
 	public String getRawStringForRestOfLine() {
-		return "$FF " + getRawStringForDirectMode() + "$FF,";
+		return "$FF," + getRawStringForDirectMode() + "$FF,";
 	}
 
 	public String getRawStringForDirectMode() {

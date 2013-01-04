@@ -166,8 +166,6 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 	}
 
 	public void onLedChange(int row, int column, boolean newValue) {
-		// System.out.println("LED Changed: " + row + "/" + column + " to " +
-		// newValue);
 		buffer.setValueAt(column + GRID_COLS * currentPosition, row, newValue);
 		updateRawTextFields();
 	}

@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
+import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.enums.AnimationType;
@@ -14,23 +15,16 @@ import org.hacklace.animator.gui.HomePanel;
 
 public class AnimationListActions {
 
-	public static int askForReference(char selectedLetter) {
-		PredefinedAnimation selected = null;
-		for (PredefinedAnimation animation: PredefinedAnimation.values()) {
-			if (animation.getIndex() == selectedLetter) {
-				selected = animation;
-			}
-		}
+	private static PredefinedAnimation askForReference() {
+
 		PredefinedAnimation result = (PredefinedAnimation) JOptionPane
 				.showInputDialog(
 						AnimatorGui.getInstance(),
 						"Please select the number of the referenced animation. A is the first, B the second, etc.",
 						"Animation number",
 						JOptionPane.QUESTION_MESSAGE, null, PredefinedAnimation.values(),
-						selected);
-		if (result == null)
-			return -1; // cancel
-		return result.getIndex();
+						PredefinedAnimation.getPredefinedAnimationByIndex('A', new ErrorContainer()));
+		return result;
 	}
 	
 	public static class AddAction extends AbstractAction {
@@ -65,9 +59,9 @@ public class AnimationListActions {
 				buffer = configManager.addTextDisplayBuffer();
 				break;
 			case REFERENCE:
-				int letter = askForReference('A');
-				if (letter == -1) return; // cancel
-				buffer = configManager.addReferenceDisplayBuffer((char)letter);
+				PredefinedAnimation reference = askForReference();
+				if (reference == null) return; // cancel
+				buffer = configManager.addReferenceDisplayBuffer(reference);
 				break;
 			case MIXED:
 				buffer = configManager.addMixedDisplayBuffer();

@@ -2,7 +2,6 @@ package org.hacklace.animator.displaybuffer;
 
 import org.hacklace.animator.ConversionUtil;
 import org.hacklace.animator.ErrorContainer;
-import org.hacklace.animator.IllegalHacklaceConfigLineException;
 import org.hacklace.animator.IniConf;
 import org.hacklace.animator.ModusByte;
 import org.hacklace.animator.configuration.FullConfigLine;
@@ -129,7 +128,6 @@ public abstract class DisplayBuffer implements Cloneable, Size {
 	 * @param cfgLine
 	 * @return a DisplayBuffer for the input line, or null for $00, (the last
 	 *         line)
-	 * @throws IllegalHacklaceConfigLineException
 	 */
 	public static DisplayBuffer createBufferFromLine(FullConfigLine fullLine, ErrorContainer errorContainer) {
 		ModusByte modusByte = fullLine.getModusByte(errorContainer);

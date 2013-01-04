@@ -67,6 +67,23 @@ public class ErrorContainer {
 		}
 		return false;
 	}
+	
+	public boolean containsErrorsOrWarnings() {
+		return !isFreeOfErrorsAndWarnings();
+	}
+	
+	public boolean isErrorFree() {
+		return !containsFailure();
+	}
+	
+	public boolean isFreeOfErrorsAndWarnings() {
+		for (ErrorElement element : list) {
+			if (element.isErrorOrWarning()) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 	public void clear() {
 		list.clear();
@@ -74,6 +91,10 @@ public class ErrorContainer {
 
 	public boolean isNotEmpty() {
 		return !list.isEmpty();
+	}
+	
+	public boolean isEmpty() {
+		return list.isEmpty();
 	}
 
 	@Override
@@ -84,7 +105,5 @@ public class ErrorContainer {
 		}
 		return sb.toString();
 	}
-	
-
 
 }

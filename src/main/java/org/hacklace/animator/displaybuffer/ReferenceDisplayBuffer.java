@@ -30,12 +30,10 @@ public class ReferenceDisplayBuffer extends DisplayBuffer implements Size {
 		setLetter(c, errorContainer);
 	}
 
-	public ReferenceDisplayBuffer(char whichAnimation,
-			ErrorContainer errorContainer) {
+	public ReferenceDisplayBuffer(PredefinedAnimation reference) {
 		super();
-
 		// default modus byte is already set
-		setLetter(whichAnimation, errorContainer);
+		setPredefinedAnimation(reference);
 	}
 
 	@Override
@@ -46,6 +44,12 @@ public class ReferenceDisplayBuffer extends DisplayBuffer implements Size {
 	public char getLetter() {
 		return this.letter;
 	}
+	
+	public void setPredefinedAnimation(PredefinedAnimation reference) {
+		this.letter = reference.getIndex();
+		this.animation = reference;
+		updatePixels();
+	}
 
 	/**
 	 * side effect: updata data (pixels)
@@ -54,15 +58,12 @@ public class ReferenceDisplayBuffer extends DisplayBuffer implements Size {
 	 */
 	public void setLetter(char letter, ErrorContainer errorContainer) {
 		this.letter = letter;
-		if (PredefinedAnimation.isInvalid(letter)) {
-			errorContainer.addError("Reference animation (~" + letter
-					+ ") is not valid. Needs to be upper case between ~"
-					+ PredefinedAnimation.MIN + " and "
-					+ PredefinedAnimation.MAX + ".");
-		}
-
+		animation = PredefinedAnimation.getPredefinedAnimationByIndex(letter, errorContainer);
+		updatePixels();
+	}
+	
+	private void updatePixels() {
 		clearData();
-		animation = PredefinedAnimation.getPredefinedAnimationByIndex(letter);
 		int i = 0;
 		for (int aniByte : animation.getAnimationBytes()) {
 			boolean[] bits = convertAnimationByteTo7Booleans((byte) aniByte);

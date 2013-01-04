@@ -16,7 +16,7 @@ public class HacklaceConfigManagerTest extends TestCase {
 	protected void setUp() throws IOException {
 		manager = new HacklaceConfigManager();
 
-		output = File.createTempFile("test.hack", null);
+		output = File.createTempFile("test", ".hack");
 		URL url = this.getClass().getResource("/configs/example.hack");
 		exampleConf = new File(url.getFile());
 	}
@@ -31,12 +31,13 @@ public class HacklaceConfigManagerTest extends TestCase {
 	 * disk. These files have to be binary equal.
 	 * 
 	 * @throws IOException
-	 * @throws IllegalHacklaceConfigLineException
 	 */
 	public void testReadEqualsWrite()
-			throws IllegalHacklaceConfigFileException, IOException {
-		manager.readFile(exampleConf, new ErrorContainer());
+			throws IOException {
+		ErrorContainer errorContainer = new ErrorContainer();
+		manager.readFile(exampleConf, errorContainer);
 		manager.writeFile(output);
+		assert(errorContainer.isFreeOfErrorsAndWarnings());
 		FileAssert.assertBinaryEquals(exampleConf, output);
 	}
 

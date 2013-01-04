@@ -20,6 +20,7 @@ import org.hacklace.animator.displaybuffer.GraphicDisplayBuffer;
 import org.hacklace.animator.displaybuffer.MixedDisplayBuffer;
 import org.hacklace.animator.displaybuffer.ReferenceDisplayBuffer;
 import org.hacklace.animator.displaybuffer.TextDisplayBuffer;
+import org.hacklace.animator.enums.PredefinedAnimation;
 import org.hacklace.animator.exporter.FlashExporter;
 
 public class HacklaceConfigManager {
@@ -47,7 +48,9 @@ public class HacklaceConfigManager {
 			loop: while ((fullConfigLineString = br.readLine()) != null) {
 				lineNumber++;
 				if (fullConfigLineString.trim().equals("")) {
-					// ignore empty lines (especially at end of file)
+					errorContainer
+							.addError("Empty lines are not allowed. Line number: "
+									+ lineNumber);
 					continue loop;
 				}
 				FullConfigLine fullLine = new FullConfigLine(
@@ -55,13 +58,20 @@ public class HacklaceConfigManager {
 				ErrorContainer lineErrorContainer = new ErrorContainer();
 				DisplayBuffer displayBuffer = DisplayBuffer
 						.createBufferFromLine(fullLine, lineErrorContainer);
-				errorContainer.addAll(lineErrorContainer);
+				if (lineErrorContainer.containsErrorsOrWarnings()) {
+					errorContainer.addWarning("There is a problem in line "
+							+ lineNumber);
+					errorContainer.addAll(lineErrorContainer);
+				}
 
 				if (displayBuffer != null /* $00 = EOF */) {
 					list.add(displayBuffer);
 				} else {
 					break loop;
 				}
+			} // end loop
+			if (fullConfigLineString == null) {
+				errorContainer.addError("File must end with $00,");
 			}
 
 		} finally {
@@ -71,7 +81,8 @@ public class HacklaceConfigManager {
 		}
 	}
 
-	public void readFile(File file, ErrorContainer errorContainer) throws IOException {
+	public void readFile(File file, ErrorContainer errorContainer)
+			throws IOException {
 		FileInputStream fstream = new FileInputStream(file);
 		readStream(fstream, errorContainer);
 	}
@@ -120,9 +131,10 @@ public class HacklaceConfigManager {
 	 *            reference, as the potential exception is suppressed
 	 * @return
 	 */
-	public ReferenceDisplayBuffer addReferenceDisplayBuffer(char whichAnimation) {
+	public ReferenceDisplayBuffer addReferenceDisplayBuffer(
+			PredefinedAnimation reference) {
 		ReferenceDisplayBuffer rdb = null;
-		rdb = new ReferenceDisplayBuffer(whichAnimation, new ErrorContainer());
+		rdb = new ReferenceDisplayBuffer(reference);
 		assert (rdb != null);
 		addDisplayBuffer(rdb);
 		return rdb;
@@ -197,5 +209,4 @@ public class HacklaceConfigManager {
 		}
 		return out.size();
 	}
-
 }

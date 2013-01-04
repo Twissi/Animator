@@ -1,5 +1,6 @@
 package org.hacklace.animator.enums;
 
+import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.displaybuffer.FontUtil;
 
 public enum PredefinedAnimation {
@@ -292,11 +293,11 @@ public enum PredefinedAnimation {
 					0x1C, 0x26, 0x2A, 0x2A, 0x1C, // frame 8
 			}), //
 	LADY('V', "Lady", FontUtil.getIntsForRawString("unsupported", null)), //
-	INVALID('?', "Invalid", FontUtil.getIntsForRawString("invalid", null)) // 
+	INVALID('?', "Invalid", FontUtil.getIntsForRawString("invalid", null)) //
 	; // end
 
 	public final static char MIN = 'A';
-	public final static char MAX = 'U';
+	public final static char MAX = 'V';
 
 	private final char index;
 	private final String name;
@@ -329,19 +330,41 @@ public enum PredefinedAnimation {
 	 * Returns the Predefined Animation
 	 * 
 	 * @param index
-	 *            Letter from 'A' to 'U'
+	 *            Letter from 'A' to 'V' 
 	 * @return
 	 */
-	public static PredefinedAnimation getPredefinedAnimationByIndex(char index) {
+	public static PredefinedAnimation getPredefinedAnimationByIndex(char index,
+			ErrorContainer errorContainer) {
 		PredefinedAnimation[] animations = PredefinedAnimation.values();
 		int intIndex = index - 'A';
-		if (intIndex < 0 || intIndex >= animations.length)
+		if (isInvalid(index, errorContainer))
 			return INVALID;
 		return animations[index - 'A'];
 	}
 
-	public static boolean isInvalid(char c) {
-		return MIN <= c && c <= MAX;
+	/**
+	 * 
+	 * @param c
+	 * @return true for upper case A to V
+	 */
+	public static boolean isValid(char c, ErrorContainer errorContainer) {
+		if (MIN <= c && c <= MAX) {
+			return true;
+		}
+		errorContainer.addError("Reference animation (~" + c
+				+ ") is not valid. Needs to be upper case between ~"
+				+ PredefinedAnimation.MIN + " and ~" + PredefinedAnimation.MAX
+				+ " (inclusive).");
+		return false;
+	}
+
+	/**
+	 * 
+	 * @param c
+	 * @return false for upper case A to V
+	 */
+	public static boolean isInvalid(char c, ErrorContainer errorContainer) {
+		return !isValid(c, errorContainer);
 	}
 
 }

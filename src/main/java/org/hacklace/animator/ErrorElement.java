@@ -26,9 +26,13 @@ public class ErrorElement {
 	public boolean isFailure() {
 		return type.isFailure();
 	}
+	
+	public boolean isErrorOrWarning() {
+		return type.isErrorOrWarning();
+	}
 
 	@Override
 	public String toString() {
-		return getType().getDescription()+" "+getMessage();
+		return "["+getType().getDescription()+"] "+getMessage();
 	}
 }
