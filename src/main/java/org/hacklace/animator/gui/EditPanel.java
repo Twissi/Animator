@@ -192,6 +192,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 					return;
 				currentPosition = ((JSlider) arg0.getSource()).getValue();
 				setFromDisplayBuffer(buffer);
+				ledPanel.setOffset(currentPosition);
 			}
 		});
 		slider.setMaximum(IniConf.getInstance().getNumGrids() - 1);
@@ -284,6 +285,8 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 
 	public void onStepChanged(StepWidth newStep) {
 		buffer.setStepWidth(newStep);
+		ledPanel.setSpacing(newStep == StepWidth.FIVE);
+		ledPanel.showLabels(newStep == StepWidth.FIVE);
 		updateRawTextFields();
 	}
 

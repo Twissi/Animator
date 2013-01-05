@@ -7,6 +7,7 @@ import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.hacklace.animator.IniConf;
@@ -20,8 +21,10 @@ public class LedPanel extends JPanel implements LedObserver {
 	private final int gridCols;
 
 	private Led[][] buttons;
+	private List<JLabel> frameLabels = new ArrayList<JLabel>();
 	private GridBagLayout layout;
 	private boolean isSpaced = false;
+	private int offset = 0;
 	
 	private List<LedObserver> observerList;
 
@@ -56,6 +59,7 @@ public class LedPanel extends JPanel implements LedObserver {
 		setLayout(layout);
 		GridBagConstraints c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.NORTHWEST;
+		// add leds
 		for (c.gridy = 0; c.gridy < gridRows; c.gridy++) {
 			for (c.gridx = 0; c.gridx < gridCols; c.gridx++) {
 				Led b = new Led(c.gridy, c.gridx, this);
@@ -63,6 +67,21 @@ public class LedPanel extends JPanel implements LedObserver {
 				buttons[c.gridx][c.gridy] = b;
 				add(b, c);
 			}
+		}
+		// add labels for frame number
+		c.gridwidth = 5;
+		c.anchor = GridBagConstraints.CENTER;
+		for (c.gridx = 0; c.gridx < gridCols; c.gridx+=5) {
+			JLabel frameLabel = new JLabel();
+			add(frameLabel, c);
+			frameLabels.add(frameLabel);
+		}
+		updateLabels();
+	}
+	
+	private void updateLabels() {
+		for (int i = 0; i < frameLabels.size(); i++) {
+			frameLabels.get(i).setText(Integer.toString(i + offset));
 		}
 	}
 	
@@ -129,6 +148,22 @@ public class LedPanel extends JPanel implements LedObserver {
 		updateGridSpacing();
 	}
 
+	public void setSpacing(boolean value) {
+		isSpaced = value;
+		updateGridSpacing();
+	}
+	
+	public void setOffset(int value) {
+		offset = value;
+		updateLabels();
+	}
+	
+	public void showLabels(boolean value) {
+		for (JLabel label: frameLabels) {
+			label.setVisible(value);
+		}
+	}
+	
 //	public static void main(String[] args) throws InterruptedException {
 //		JFrame f = new JFrame("Test");
 //		final LedPanel p = new LedPanel(7, 50);
