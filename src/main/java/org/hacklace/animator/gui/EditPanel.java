@@ -45,6 +45,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 
 	public static final int GRID_ROWS = IniConf.getInstance().rows();
 	public static final int GRID_COLS = IniConf.getInstance().columns();
+	public static final int NUM_GRIDS_TO_SHOW = 5;
 
 	public static EditPanel factory(DisplayBuffer displayBuffer) {
 		switch (displayBuffer.getAnimationType()) {
@@ -180,7 +181,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 	 * @return
 	 */
 	protected JSlider createPositionSlider() {
-		JSlider slider = new JSlider(SwingConstants.HORIZONTAL, 0, getMaximumGrid(), 0);
+		JSlider slider = new JSlider(SwingConstants.HORIZONTAL, 0, getMaximumGrid() - NUM_GRIDS_TO_SHOW + 1, 0);
 		slider.setPaintTicks(true);
 		slider.setSnapToTicks(true);
 		slider.setMinorTickSpacing(1);
@@ -195,7 +196,6 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 				ledPanel.setOffset(currentPosition);
 			}
 		});
-		slider.setMaximum(IniConf.getInstance().getNumGrids() - 1);
 		return slider;
 	}
 	

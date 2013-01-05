@@ -24,7 +24,7 @@ public class EditMixedPanel extends EditPanel {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = GridBagConstraints.RELATIVE;
-		ledPanel = new LedPanel(IniConf.getInstance().rows(), IniConf.getInstance().columns() * 5);
+		ledPanel = new LedPanel(IniConf.getInstance().rows(), IniConf.getInstance().columns() * NUM_GRIDS_TO_SHOW);
 		ledPanel.setEnabled(false);
 		panel.add(ledPanel, c);
 		c.insets = new Insets(5, 5, 5, 5);

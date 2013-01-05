@@ -44,7 +44,7 @@ public class EditTextPanel extends EditPanel {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = GridBagConstraints.RELATIVE;
-		ledPanel = new LedPanel(GRID_ROWS, GRID_COLS * 5);
+		ledPanel = new LedPanel(GRID_ROWS, GRID_COLS * NUM_GRIDS_TO_SHOW);
 		ledPanel.setEnabled(false);
 		panel.add(ledPanel, c);
 		c.insets = new Insets(5, 5, 5, 5);

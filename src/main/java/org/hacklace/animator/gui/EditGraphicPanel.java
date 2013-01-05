@@ -55,7 +55,7 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 		GridBagConstraints c = new GridBagConstraints();
 		// first row: LedPanel
 		c.insets = new Insets(5, 5, 5, 5);
-		ledPanel = new LedPanel(GRID_ROWS, GRID_COLS * 5);
+		ledPanel = new LedPanel(GRID_ROWS, GRID_COLS * NUM_GRIDS_TO_SHOW);
 		ledPanel.addObserver(this);
 		panel.add(ledPanel, c);
 		// next row: One slider across all columns
