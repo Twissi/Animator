@@ -337,67 +337,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 	}
 	
 	protected void startPlaying() {
-		playThread = new Thread(new Runnable() {
-			private boolean interrupted = false;
-			private void sleep(long millis) {
-				try {
-					Thread.sleep(millis);
-				} catch (InterruptedException ex) {
-					interrupted = true;
-				}
-			}
-			@Override
-			public void run() {
-				/**
-				 * Note: The values for delay and speed in the hacklace represent interrupt ticks.
-				 * The timer interrupt fires once every 256 oscillator ticks and is prescaled by 1024.
-				 * The oscillator is configured at 4 MHz.
-				 * ser_clk_correction is used here too because the actual hacklace won't run at exactly 4MHz
-				 * -> 1 tick = 4.000.000 / 1024 / 256 ms = ~15 ms
-				 */
-				double tick = 4000000 / 1024 / 256 / IniConf.getInstance().ser_clk_correction();
-				int playPosition = 0;
-				boolean playForward = true;
-				while (!interrupted && buffer != null) {
-					// note: these are all inside the loop so the user can edit the values while playing
-					int intSpeed = buffer.getSpeed().getValue();
-					int speedSleepTime = (int)((double)IniConf.getInstance().speedList().get(intSpeed) * tick);
-					int intDelay = buffer.getDelay().getValue();
-					int delaySleepTime = (int)((double)IniConf.getInstance().delayList().get(intDelay) * speedSleepTime);
-					int animationLength = (buffer.getNumBytes() - 2) / buffer.getStepWidth().getValue();
-					if (playForward) {
-						playPosition += buffer.getStepWidth().getValue();
-					} else {
-						playPosition -= buffer.getStepWidth().getValue();
-					}
-					if (playPosition > animationLength - playPanel.getCols()) playPosition = animationLength - playPanel.getCols();
-					if (playPosition < 0) playPosition = 0;
-					for (int x = 0; x < playPanel.getCols(); x++) {
-						for (int y = 0; y < playPanel.getRows(); y++) {
-							playPanel.setLed(y, x,
-									buffer.getValueAt(x + buffer.getStepWidth().getValue() * playPosition, y));
-						}
-					}
-					// turn around?
-					if (playPosition <= 0) {
-						if (buffer.getDirection() == Direction.BIDIRECTIONAL) {
-							playForward = true;
-						}
-						sleep(delaySleepTime);
-					}
-					if (playPosition >= animationLength - playPanel.getCols()) {
-						if (buffer.getDirection() == Direction.BIDIRECTIONAL) {
-							playForward = false;
-						} else {
-							playPosition = 0;
-						}
-						sleep(delaySleepTime);
-					}
-					sleep(speedSleepTime);
-				}
-			}
-			
-		});
+		playThread = new Thread(new AnimatorRunnable(buffer, playPanel));
 		playThread.start();
 	}
 	
