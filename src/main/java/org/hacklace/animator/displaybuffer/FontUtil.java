@@ -485,5 +485,9 @@ public class FontUtil {
 		}
 		return returnArray;
 	}
+	
+	public static int getWidthForRawString(String rawString, ErrorContainer errorContainer) {
+		return getIntsForRawString(rawString, errorContainer).length;
+	}
 
 }

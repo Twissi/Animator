@@ -126,13 +126,16 @@ public class EditTextPanel extends EditPanel {
 
 	private JPanel createTextPanel() {
 		textPanel = new JPanel();
-		final int numGrids = IniConf.getInstance().getNumGrids();
-		textEditField = new JTextField(numGrids);
+		final int maxCols = IniConf.getInstance().maxColumns();
+		textEditField = new JTextField(40);
 		PlainDocument doc = new PlainDocument();
 		doc.setDocumentFilter(new DocumentFilter() {
 			public void insertString(FilterBypass fb, int offs, String str,
 					AttributeSet a) throws BadLocationException {
-				if ((fb.getDocument().getLength() + str.length()) <= numGrids)
+				ErrorContainer errorContainer = new ErrorContainer();
+				int newLength = FontUtil.getWidthForRawString(fb.getDocument().getText(0,  fb.getDocument().getLength()), errorContainer)
+						+ FontUtil.getWidthForRawString(str, errorContainer); 
+				if (newLength <= maxCols)
 					super.insertString(fb, offs, str, a);
 				else
 					Toolkit.getDefaultToolkit().beep();
@@ -140,7 +143,11 @@ public class EditTextPanel extends EditPanel {
 
 			public void replace(FilterBypass fb, int offs, int length,
 					String str, AttributeSet a) throws BadLocationException {
-				if ((fb.getDocument().getLength() + str.length() - length) <= numGrids)
+				ErrorContainer errorContainer = new ErrorContainer();
+				int newLength = FontUtil.getWidthForRawString(fb.getDocument().getText(0,  fb.getDocument().getLength()), errorContainer)
+						+ FontUtil.getWidthForRawString(str, errorContainer)
+						- length; 
+				if (newLength <= maxCols)
 					super.replace(fb, offs, length, str, a);
 				else
 					Toolkit.getDefaultToolkit().beep();
