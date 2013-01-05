@@ -170,12 +170,6 @@ public class EditTextPanel extends EditPanel {
 	}
 
 	@Override
-	public void setFromDisplayBuffer(DisplayBuffer buffer) {
-		super.setFromDisplayBuffer(buffer);
-		copyBufferToPanel(currentPosition, ledPanel);
-	}
-
-	@Override
 	public void onRawTextChanged() {
 		textEditField.setText(((TextDisplayBuffer) buffer).getText());
 	}

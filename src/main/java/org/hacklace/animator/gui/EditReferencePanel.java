@@ -11,9 +11,4 @@ public class EditReferencePanel extends EditPanel {
 		ledPanel.setEnabled(false);
 	}
 
-	@Override
-	public void setFromDisplayBuffer(DisplayBuffer buffer) {
-		super.setFromDisplayBuffer(buffer);
-		copyBufferToPanel(currentPosition, ledPanel);
-	}
 }

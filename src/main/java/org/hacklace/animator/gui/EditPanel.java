@@ -255,6 +255,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 		optionsPanel.setOptions(buffer.getSpeed(), buffer.getDelay(),
 				buffer.getDirection(), buffer.getStepWidth());
 		updateRawTextFields();
+		copyBufferToPanel(currentPosition, ledPanel);
 	}
 
 	protected void updateRawTextFields() {

@@ -15,10 +15,4 @@ public class EditMixedPanel extends EditPanel {
 		return buffer.getNumColumns() / GRID_COLS + 1;
 	}
 
-	@Override
-	public void setFromDisplayBuffer(DisplayBuffer buffer) {
-		super.setFromDisplayBuffer(buffer);
-		copyBufferToPanel(currentPosition, ledPanel);
-	}
-
 }
