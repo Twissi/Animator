@@ -9,6 +9,8 @@ public class EditMixedPanel extends EditPanel {
 	public EditMixedPanel(DisplayBuffer displayBuffer) {
 		super(displayBuffer);
 		ledPanel.setEnabled(false);
+		playPanel.setVisible(false);
+		playButton.setVisible(false);
 	}
 
 	protected int getMaximumGrid() {
