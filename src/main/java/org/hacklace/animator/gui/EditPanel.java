@@ -28,7 +28,7 @@ import org.hacklace.animator.enums.StepWidth;
 import org.hacklace.animator.gui.actions.RawInputFullLineApplyActionListener;
 import org.hacklace.animator.gui.actions.RawInputRestOfLineApplyActionListener;
 
-public abstract class EditPanel extends JPanel implements OptionsObserver {
+public abstract class EditPanel extends JPanel implements OptionsObserver, LedObserver {
 	private static final long serialVersionUID = -5137928768652375360L;
 
 	protected AnimationOptionsPanel optionsPanel;
@@ -96,16 +96,23 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 		c.anchor = GridBagConstraints.NORTHWEST;
 		c.insets = new Insets(5, 5, 5, 5);
 		// Left side: Options panel, spanning all rows at 0,0
-		c.gridheight = 2;
+		c.gridheight = 4;
 		add(optionsPanel, c);
 		// Right side
 		c.gridheight = 1;
 		c.gridx = 1;
+		c.gridy = GridBagConstraints.RELATIVE;
+		ledPanel = new LedPanel(GRID_ROWS, GRID_COLS * NUM_GRIDS_TO_SHOW);
+		ledPanel.addObserver(this);
+		add(ledPanel, c);
+		JSlider positionSlider = createPositionSlider();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		add(positionSlider, c);
+		c.fill = GridBagConstraints.NONE;
 		JPanel editDetailsPanel = new JPanel();
 		addMoreComponents(editDetailsPanel);
 		add(editDetailsPanel, c);
 		c.gridx = 0;
-		c.gridy = 2;
 		c.gridwidth = 2;
 		add(rawInputPanel, c);
 		optionsPanel.addObserver(this);
@@ -117,7 +124,8 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 	 * Overwrite this in children to add components on the right side above the
 	 * raw edit panel
 	 */
-	protected abstract void addMoreComponents(JPanel panel);
+	protected void addMoreComponents(JPanel panel) {
+	}
 
 	/**
 	 * overwrite this only in the graphic panel
@@ -301,4 +309,6 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 		return buffer;
 	}
 
+	public void onLedChange(int row, int column, boolean newValue) {
+	}
 }

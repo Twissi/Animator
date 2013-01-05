@@ -3,7 +3,6 @@ package org.hacklace.animator.gui;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,7 +11,6 @@ import java.awt.event.KeyListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -35,6 +33,7 @@ public class EditTextPanel extends EditPanel {
 
 	public EditTextPanel(DisplayBuffer displayBuffer) {
 		super(displayBuffer);
+		ledPanel.setEnabled(false);
 		textEditField.setText(((TextDisplayBuffer) buffer).getText());
 	}
 
@@ -44,15 +43,6 @@ public class EditTextPanel extends EditPanel {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = GridBagConstraints.RELATIVE;
-		ledPanel = new LedPanel(GRID_ROWS, GRID_COLS * NUM_GRIDS_TO_SHOW);
-		ledPanel.setEnabled(false);
-		panel.add(ledPanel, c);
-		c.insets = new Insets(5, 5, 5, 5);
-		JSlider positionSlider = createPositionSlider();
-		c.fill = GridBagConstraints.HORIZONTAL;
-		panel.add(positionSlider, c);
-		c.fill = GridBagConstraints.NONE;
-		c.insets = new Insets(0, 0, 0, 0);
 		virtualKeyboardPanel = createVirtualKeyboardPanel();
 		panel.add(virtualKeyboardPanel, c);
 		textPanel = createTextPanel();

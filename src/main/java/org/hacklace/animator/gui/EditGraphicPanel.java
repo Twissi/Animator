@@ -1,13 +1,10 @@
 package org.hacklace.animator.gui;
 
 import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
 import javax.swing.JTextField;
 
 import org.hacklace.animator.IniConf;
@@ -50,27 +47,12 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 	}
 
 	@Override
-	protected void addMoreComponents(JPanel panel) {
-		panel.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		// first row: LedPanel
-		c.insets = new Insets(5, 5, 5, 5);
-		ledPanel = new LedPanel(GRID_ROWS, GRID_COLS * NUM_GRIDS_TO_SHOW);
-		ledPanel.addObserver(this);
-		panel.add(ledPanel, c);
-		// next row: One slider across all columns
-		c.gridy = 1;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		JSlider positionSlider = createPositionSlider();
-		panel.add(positionSlider, c);
-	}
-
-	@Override
 	public void setFromDisplayBuffer(DisplayBuffer buffer) {
 		super.setFromDisplayBuffer(buffer);
 		copyBufferToPanel(currentPosition, ledPanel);
 	}
 
+	@Override
 	public void onLedChange(int row, int column, boolean newValue) {
 		buffer.setValueAt(column + GRID_COLS * currentPosition, row, newValue);
 		updateRawTextFields();
