@@ -123,6 +123,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 	/**
 	 * Overwrite this in children to add components on the right side above the
 	 * raw edit panel
+	 * @param panel 
 	 */
 	protected void addMoreComponents(JPanel panel) {
 	}
