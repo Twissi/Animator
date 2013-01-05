@@ -38,7 +38,7 @@ public class HacklaceConfigManagerTest extends TestCase {
 		manager.readFile(exampleConf, errorContainer);
 		manager.writeFile(output);
 		assert(errorContainer.isFreeOfErrorsAndWarnings());
-		FileAssert.assertBinaryEquals(exampleConf, output);
+		FileAssert.assertEquals(exampleConf, output);
 	}
 
 	/**
