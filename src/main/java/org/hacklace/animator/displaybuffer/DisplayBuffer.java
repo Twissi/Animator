@@ -186,7 +186,7 @@ public abstract class DisplayBuffer implements Cloneable, Size {
 	@Override
 	public abstract int getNumBytes();
 	
-	protected int countUsedColumns() {
+	public int countUsedColumns() {
 		int numberOfUsedColumns = 0;
 		for (int colIndex = 0; colIndex < data.length; colIndex++) {
 			boolean[] bools = this.data[colIndex];

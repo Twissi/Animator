@@ -86,5 +86,10 @@ public class ReferenceDisplayBuffer extends DisplayBuffer implements Size {
 	public int getNumBytes() {
 		return 4;
 	}
+	
+	@Override
+	public int countUsedColumns() {
+		return animation.getAnimationBytes().length;
+	}
 
 }

@@ -45,7 +45,7 @@ public class AnimatorRunnable implements Runnable {
 			int intDelay = buffer.getDelay().getValue();
 			int delaySleepTime = (int) ((double) IniConf.getInstance()
 					.delayList().get(intDelay) * speedSleepTime);
-			int animationLength = (buffer.getNumBytes() - 2);
+			int animationLength = (buffer.countUsedColumns());
 			int intStepWidth = buffer.getStepWidth().getValue();
 			if (playPosition > animationLength - panel.getCols())
 				playPosition = animationLength - panel.getCols();
