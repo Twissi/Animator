@@ -46,7 +46,7 @@ public class FlashTest extends TestCase {
 		manager.readFile(exampleConf, new ErrorContainer());
 		String rawString = manager.getRawString();
 		flashExporter.writeTo(rawString, output);
-		FileAssert.assertBinaryEquals(exampleFlash, output);
+		FileAssert.assertEquals(exampleFlash, output);
 	}
 	
 	
