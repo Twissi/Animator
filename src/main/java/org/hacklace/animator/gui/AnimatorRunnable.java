@@ -8,12 +8,12 @@ public class AnimatorRunnable implements Runnable {
 	private boolean interrupted = false;
 	private DisplayBuffer buffer;
 	private LedPanel panel;
-	
+
 	public AnimatorRunnable(DisplayBuffer buffer, LedPanel panel) {
 		this.buffer = buffer;
 		this.panel = panel;
 	}
-	
+
 	private void sleep(long millis) {
 		try {
 			Thread.sleep(millis);
@@ -45,35 +45,30 @@ public class AnimatorRunnable implements Runnable {
 			int intDelay = buffer.getDelay().getValue();
 			int delaySleepTime = (int) ((double) IniConf.getInstance()
 					.delayList().get(intDelay) * speedSleepTime);
-			int animationLength = (buffer.getNumBytes() - 2)
-					/ buffer.getStepWidth().getValue();
-			if (playForward) {
-				playPosition += buffer.getStepWidth().getValue();
-			} else {
-				playPosition -= buffer.getStepWidth().getValue();
-			}
+			int animationLength = (buffer.getNumBytes() - 2);
+			int intStepWidth = buffer.getStepWidth().getValue();
 			if (playPosition > animationLength - panel.getCols())
 				playPosition = animationLength - panel.getCols();
 			if (playPosition < 0)
 				playPosition = 0;
 			for (int x = 0; x < panel.getCols(); x++) {
 				for (int y = 0; y < panel.getRows(); y++) {
-					panel.setLed(
-							y,
-							x,
-							buffer.getValueAt(x
-									+ buffer.getStepWidth().getValue()
-									* playPosition, y));
+					panel.setLed(y, x, buffer.getValueAt(x + playPosition, y));
 				}
 			}
+			sleep(speedSleepTime);
+			if (playForward) {
+				playPosition += intStepWidth;
+			} else {
+				playPosition -= intStepWidth;
+			}
 			// turn around?
-			if (playPosition <= 0) {
+			if (playPosition < 0) {
 				if (buffer.getDirection() == Direction.BIDIRECTIONAL) {
 					playForward = true;
 				}
 				sleep(delaySleepTime);
-			}
-			if (playPosition >= animationLength - panel.getCols()) {
+			} else if (playPosition > animationLength - panel.getCols()) {
 				if (buffer.getDirection() == Direction.BIDIRECTIONAL) {
 					playForward = false;
 				} else {
@@ -81,8 +76,6 @@ public class AnimatorRunnable implements Runnable {
 				}
 				sleep(delaySleepTime);
 			}
-			sleep(speedSleepTime);
 		}
 	}
-
 }
