@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -36,8 +38,12 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 	protected JTextField rawInputRestOfLineTextField;
 	protected JTextField rawInputFullLineTextField;
 	protected LedPanel ledPanel;
+	protected LedPanel playPanel;
+	protected JSlider positionSlider;
+	protected JButton playButton;
+	protected Thread playThread = null;
 
-	protected DisplayBuffer buffer; // our internal temporary displayBuffer
+	protected DisplayBuffer buffer = null; // our internal temporary displayBuffer
 									// for editing
 	protected DisplayBuffer origBuffer; // keep a reference to the original
 										// buffer for overwriting on save
@@ -46,6 +52,8 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 	public static final int GRID_ROWS = IniConf.getInstance().rows();
 	public static final int GRID_COLS = IniConf.getInstance().columns();
 	public static final int NUM_GRIDS_TO_SHOW = 5;
+	private static final String BUTTON_TEXT_PLAY = "Play";
+	private static final String BUTTON_TEXT_STOP = "Stop";
 
 	public static EditPanel factory(DisplayBuffer displayBuffer) {
 		switch (displayBuffer.getAnimationType()) {
@@ -87,6 +95,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 		origBuffer = displayBuffer;
 		// common components for all types of edit panels
 		optionsPanel = new AnimationOptionsPanel();
+		optionsPanel.addObserver(this);
 		rawInputPanel = createRawInputPanel();
 
 		setLayout(new GridBagLayout());
@@ -105,7 +114,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 		ledPanel = new LedPanel(GRID_ROWS, GRID_COLS * NUM_GRIDS_TO_SHOW);
 		ledPanel.addObserver(this);
 		add(ledPanel, c);
-		JSlider positionSlider = createPositionSlider();
+		positionSlider = createPositionSlider();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		add(positionSlider, c);
 		c.fill = GridBagConstraints.NONE;
@@ -115,7 +124,28 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 		c.gridx = 0;
 		c.gridwidth = 2;
 		add(rawInputPanel, c);
-		optionsPanel.addObserver(this);
+		// add play panel and button next to slider
+		c.gridx = 2;
+		c.gridy = 0;
+		playPanel = new LedPanel(GRID_ROWS, GRID_COLS);
+		playPanel.setEnabled(false);
+		playPanel.showLabels(false);
+		add(playPanel, c);
+		playButton = new JButton(BUTTON_TEXT_PLAY);
+		playButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (playButton.getText() == BUTTON_TEXT_PLAY) {
+					playButton.setText(BUTTON_TEXT_STOP);
+					startPlaying();
+				} else {
+					playButton.setText(BUTTON_TEXT_PLAY);
+					stopPlaying();
+				}
+			}
+		});
+		c.gridy = 1;
+		add(playButton, c);
 		// set options and data from the display buffer
 		setFromDisplayBuffer(buffer);
 	}
@@ -190,7 +220,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 	 * @return
 	 */
 	protected JSlider createPositionSlider() {
-		JSlider slider = new JSlider(SwingConstants.HORIZONTAL, 0, getMaximumGrid() - NUM_GRIDS_TO_SHOW + 1, 0);
+		JSlider slider = new JSlider(SwingConstants.HORIZONTAL, 0, getMaximumGrid(), 0);
 		slider.setPaintTicks(true);
 		slider.setSnapToTicks(true);
 		slider.setMinorTickSpacing(1);
@@ -209,15 +239,8 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 	}
 	
 	protected int getMaximumGrid() {
-		return IniConf.getInstance().getNumGrids() - 1;
+		return IniConf.getInstance().getNumGrids() - NUM_GRIDS_TO_SHOW;
 	}
-
-	/*
-	 * see note below... public void copyGridDataToPanel(Grid grid, LedPanel
-	 * panel) { for (int x=0; x<DisplayBuffer.COLUMNS; x++) { for (int y=0;
-	 * y<DisplayBuffer.ROWS; y++) { panel.setLed(y, x, grid.getData()[x][y]); }
-	 * } }
-	 */
 
 	protected void copyBufferToPanel(int position, LedPanel panel) {
 		for (int x = 0; x < panel.getCols(); x++) {
@@ -233,6 +256,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 		optionsPanel.setOptions(buffer.getSpeed(), buffer.getDelay(),
 				buffer.getDirection(), buffer.getStepWidth());
 		updateRawTextFields();
+		copyBufferToPanel(currentPosition, ledPanel);
 	}
 
 	protected void updateRawTextFields() {
@@ -312,4 +336,21 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 
 	public void onLedChange(int row, int column, boolean newValue) {
 	}
+	
+	protected void startPlaying() {
+		playThread = new Thread(new AnimatorRunnable(buffer, playPanel));
+		playThread.start();
+	}
+	
+	protected void stopPlaying() {
+		if (playThread != null) {
+			playThread.interrupt();
+			playThread = null;
+		}
+	}
+	
+	public void close() {
+		stopPlaying();
+	}
+	
 }

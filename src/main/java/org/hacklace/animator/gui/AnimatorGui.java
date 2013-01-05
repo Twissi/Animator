@@ -123,6 +123,7 @@ public class AnimatorGui extends JFrame {
 	public void stopEditMode() {
 		if (editPanel != null) {
 			contentPane.remove(editPanel);
+			editPanel.close();
 			editPanel = null;
 		}
 		homePanel.setVisible(true);

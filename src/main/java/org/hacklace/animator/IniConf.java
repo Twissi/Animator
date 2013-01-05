@@ -127,4 +127,8 @@ public class IniConf {
 	public int getNumGrids() {
 		return maxColumns() / columns();
 	}
+	
+	public double ser_clk_correction() {
+		return conf.getDouble("animation.ser_clk_correction");
+	}
 }

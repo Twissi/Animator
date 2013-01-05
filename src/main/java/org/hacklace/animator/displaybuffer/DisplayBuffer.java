@@ -50,7 +50,7 @@ public abstract class DisplayBuffer implements Cloneable, Size {
 	 */
 	public boolean getValueAt(int x, int y) {
 
-		if (x >= data.length || y >= GRID_ROWS)
+		if (x >= data.length || x >= MAX_COLUMNS || y >= GRID_ROWS)
 			return false;
 
 		return data[x][y];
