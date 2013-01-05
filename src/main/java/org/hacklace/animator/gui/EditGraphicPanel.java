@@ -24,7 +24,6 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 	private JPanel ledPanelPanel;
 	private GridBagLayout ledPanelPanelLayout;
 	private LedPanel prevLedPanel; // display of the previous frame
-	private LedPanel currentLedPanel; // display/edit of the current frame
 	private LedPanel nextLedPanel; // display of the next frame
 	private JLabel prevLabel;
 	private JLabel currentLabel;
@@ -73,7 +72,7 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 			c.insets = new Insets(0, 0, 0, 0);
 		}
 		ledPanelPanelLayout.setConstraints(prevLedPanel, c);
-		ledPanelPanelLayout.setConstraints(currentLedPanel, c);
+		ledPanelPanelLayout.setConstraints(ledPanel, c);
 		ledPanelPanelLayout.setConstraints(nextLedPanel, c);
 		ledPanelPanel.revalidate();
 		ledPanelPanel.repaint();
@@ -101,10 +100,10 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 		prevLedPanel.setEnabled(false);
 		c.gridx = 0;
 		ledPanelPanel.add(prevLedPanel, c);
-		currentLedPanel = new LedPanel(GRID_ROWS, GRID_COLS);
-		currentLedPanel.addObserver(this);
+		ledPanel = new LedPanel(GRID_ROWS, GRID_COLS);
+		ledPanel.addObserver(this);
 		c.gridx = 1;
-		ledPanelPanel.add(currentLedPanel, c);
+		ledPanelPanel.add(ledPanel, c);
 		nextLedPanel = new LedPanel(GRID_ROWS, GRID_COLS);
 		nextLedPanel.setEnabled(false);
 		c.gridx = 2;
@@ -154,7 +153,7 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 			prevLedPanel.clear();
 			prevLabel.setText("-");
 		}
-		copyBufferToPanel(currentPosition, currentLedPanel);
+		copyBufferToPanel(currentPosition, ledPanel);
 		currentLabel.setText(Integer.toString(currentPosition));
 		if (currentPosition < IniConf.getInstance().getNumGrids() - 1) {
 			copyBufferToPanel(currentPosition + 1, nextLedPanel);

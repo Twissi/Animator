@@ -35,6 +35,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver {
 	protected JPanel rawInputPanel;
 	protected JTextField rawInputRestOfLineTextField;
 	protected JTextField rawInputFullLineTextField;
+	protected LedPanel ledPanel;
 
 	protected DisplayBuffer buffer; // our internal temporary displayBuffer
 									// for editing

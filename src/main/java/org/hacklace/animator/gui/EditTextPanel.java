@@ -29,7 +29,6 @@ public class EditTextPanel extends EditPanel {
 
 	private static final long serialVersionUID = 8568315594127340767L;
 
-	private LedPanel textLedPanel; // display for text
 	private JTextField textEditField;
 	private JPanel textPanel;
 	private JPanel virtualKeyboardPanel;
@@ -45,9 +44,9 @@ public class EditTextPanel extends EditPanel {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = GridBagConstraints.RELATIVE;
-		textLedPanel = new LedPanel(GRID_ROWS, GRID_COLS * 5);
-		textLedPanel.setEnabled(false);
-		panel.add(textLedPanel, c);
+		ledPanel = new LedPanel(GRID_ROWS, GRID_COLS * 5);
+		ledPanel.setEnabled(false);
+		panel.add(ledPanel, c);
 		c.insets = new Insets(5, 5, 5, 5);
 		JSlider positionSlider = createPositionSlider();
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -176,7 +175,7 @@ public class EditTextPanel extends EditPanel {
 	@Override
 	public void setFromDisplayBuffer(DisplayBuffer buffer) {
 		super.setFromDisplayBuffer(buffer);
-		copyBufferToPanel(currentPosition, textLedPanel);
+		copyBufferToPanel(currentPosition, ledPanel);
 	}
 
 	@Override

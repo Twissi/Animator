@@ -14,8 +14,6 @@ public class EditMixedPanel extends EditPanel {
 
 	private static final long serialVersionUID = 4181833851656176456L;
 
-	private LedPanel previewPanel;
-	
 	public EditMixedPanel(DisplayBuffer displayBuffer) {
 		super(displayBuffer);
 	}
@@ -26,9 +24,9 @@ public class EditMixedPanel extends EditPanel {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = GridBagConstraints.RELATIVE;
-		previewPanel = new LedPanel(IniConf.getInstance().rows(), IniConf.getInstance().columns() * 5);
-		previewPanel.setEnabled(false);
-		panel.add(previewPanel, c);
+		ledPanel = new LedPanel(IniConf.getInstance().rows(), IniConf.getInstance().columns() * 5);
+		ledPanel.setEnabled(false);
+		panel.add(ledPanel, c);
 		c.insets = new Insets(5, 5, 5, 5);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		JSlider positionSlider = createPositionSlider();
@@ -42,7 +40,7 @@ public class EditMixedPanel extends EditPanel {
 	@Override
 	public void setFromDisplayBuffer(DisplayBuffer buffer) {
 		super.setFromDisplayBuffer(buffer);
-		copyBufferToPanel(currentPosition, previewPanel);
+		copyBufferToPanel(currentPosition, ledPanel);
 	}
 
 }
