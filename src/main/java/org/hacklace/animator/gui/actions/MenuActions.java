@@ -302,6 +302,7 @@ public class MenuActions {
 		public void actionPerformed(ActionEvent e) {
 			if (!confirm("Do you really want to quit?", "Quit?"))
 				return;
+			AnimatorGui.getInstance().stopEditMode();
 			AnimatorGui.getInstance().dispose();
 		}
 	}
