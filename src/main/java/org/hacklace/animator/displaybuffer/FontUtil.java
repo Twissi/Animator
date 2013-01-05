@@ -182,7 +182,7 @@ public class FontUtil {
 	public static int[] getFiveBytesForIndex(int index) {
 		int positiveIndex = index;
 		if (positiveIndex < 0) positiveIndex += 256; 
-		if (positiveIndex >= HIGHEST_INDEX) 
+		if (positiveIndex > HIGHEST_INDEX) 
 			positiveIndex = (int) '?'; // display a question mark
 		return HACKLACE_CHARSET[positiveIndex - LOWEST_INDEX];
 	}
