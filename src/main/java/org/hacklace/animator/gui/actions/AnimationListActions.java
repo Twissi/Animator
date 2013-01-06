@@ -21,12 +21,13 @@ public class AnimationListActions {
 				.showInputDialog(
 						AnimatorGui.getInstance(),
 						"Please select the number of the referenced animation. A is the first, B the second, etc.",
-						"Animation number",
-						JOptionPane.QUESTION_MESSAGE, null, PredefinedAnimation.getList(),
-						PredefinedAnimation.getPredefinedAnimationByIndex('A', new ErrorContainer()));
+						"Animation number", JOptionPane.QUESTION_MESSAGE, null,
+						PredefinedAnimation.getList(), PredefinedAnimation
+								.getPredefinedAnimationByIndex('A',
+										new ErrorContainer()));
 		return result;
 	}
-	
+
 	public static class AddAction extends AbstractAction {
 		private static final long serialVersionUID = 1859804910358647446L;
 		private HomePanel homePanel;
@@ -60,7 +61,8 @@ public class AnimationListActions {
 				break;
 			case REFERENCE:
 				PredefinedAnimation reference = askForReference();
-				if (reference == null) return; // cancel
+				if (reference == null)
+					return; // cancel
 				buffer = configManager.addReferenceDisplayBuffer(reference);
 				break;
 			case MIXED:
@@ -86,6 +88,8 @@ public class AnimationListActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			if (!homePanel.isValidSelection())
+				return;
 			int answer = JOptionPane.showConfirmDialog(
 					AnimatorGui.getInstance(),
 					"Do you really want to delete this animation?",
@@ -114,6 +118,8 @@ public class AnimationListActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			if (!homePanel.isValidSelection())
+				return;
 			int index = homePanel.moveUp();
 			if (index != -1) {
 				configManager.moveUp(index);
@@ -136,6 +142,8 @@ public class AnimationListActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			if (!homePanel.isValidSelection())
+				return;
 			int index = homePanel.moveDown();
 			if (index != -1) {
 				configManager.moveDown(index);

@@ -150,6 +150,11 @@ public class HomePanel extends JPanel {
 		animationList.ensureIndexIsVisible(index);
 		return index;
 	}
+	
+	public boolean isValidSelection() {
+		int index = animationList.getSelectedIndex();
+		return (index != -1);
+	}
 
 	public void add(DisplayBuffer s) {
 		add(s, true);
