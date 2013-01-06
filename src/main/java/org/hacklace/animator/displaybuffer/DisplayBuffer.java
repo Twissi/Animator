@@ -1,6 +1,5 @@
 package org.hacklace.animator.displaybuffer;
 
-import org.hacklace.animator.ConversionUtil;
 import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.IniConf;
 import org.hacklace.animator.ModusByte;
@@ -177,26 +176,30 @@ public abstract class DisplayBuffer implements Cloneable, Size {
 	public boolean isSaveable() {
 		return (modusByte.getByte() != 0);
 	}
-	
+
+	/**
+	 * docs copied from Size interface:
+	 * for the UI, especially for mixed buffers
+	 */
 	@Override
 	public int getNumColumns() {
 		return data.length;
 	}
 
+	/**
+	 * docs copied from Size interface:
+	 * reference animations only need 2 bytes, not number of columns; also: add 0 delimiter
+	 */
 	@Override
 	public abstract int getNumBytes();
 	
-	public int countUsedColumns() {
-		int numberOfUsedColumns = 0;
-		for (int colIndex = 0; colIndex < data.length; colIndex++) {
-			boolean[] bools = this.data[colIndex];
-			assert (bools.length == 7);
-			byte value = ConversionUtil.convertBooleanArrayToByte(bools);
-			if (value != 0) {
-				numberOfUsedColumns = colIndex + 1;
-			}
-		}
-		return numberOfUsedColumns;
-	}
+	/**
+	 * counts the number of columns used for the animation, includes empty columns.
+	 * 
+	 * use getNumBytes() instead if you want to include the overhead bytes too.
+	 * 
+	 * @return
+	 */
+	public abstract int countUsedColumns();
 
 }

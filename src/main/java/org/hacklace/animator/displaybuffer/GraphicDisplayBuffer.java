@@ -83,4 +83,9 @@ public class GraphicDisplayBuffer extends DisplayBuffer implements Size {
 		+ countUsedColumns() //
 		+ 1; // line end
 	}
+
+	@Override
+	public int countUsedColumns() {
+		return getColumnsAsBytes().length;
+	}
 }

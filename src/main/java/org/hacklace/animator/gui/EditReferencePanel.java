@@ -1,6 +1,5 @@
 package org.hacklace.animator.gui;
 
-import org.hacklace.animator.IniConf;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.ReferenceDisplayBuffer;
 

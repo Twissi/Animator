@@ -66,4 +66,10 @@ public class TextDisplayBuffer extends DisplayBuffer implements Size {
 		+ 1; // line end
 	}
 
+	@Override
+	public int countUsedColumns() {
+		ErrorContainer errorContainer = new ErrorContainer();
+		int usedCols = FontUtil.getIntsForRawString(getText(), errorContainer).length;
+		return usedCols;
+	}
 }

@@ -59,4 +59,10 @@ public class MixedDisplayBuffer extends DisplayBuffer {
 		return 0;
 	}
 
+	@Override
+	public int countUsedColumns() {
+		// the number of used columns in a Mixed animation is determined how?
+		// TODO xx
+		return 0;
+	}
 }
