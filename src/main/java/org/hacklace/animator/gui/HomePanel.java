@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.IniConf;
@@ -35,6 +36,7 @@ public class HomePanel extends JPanel {
 		animationListData = new DefaultListModel();
 		// Java 7: animationListData = new DefaultListModel<DisplayBuffer>();
 		animationList = new JList(animationListData);
+		animationList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		// Java 7: animationList = new JList<DisplayBuffer>(animationListData);
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
