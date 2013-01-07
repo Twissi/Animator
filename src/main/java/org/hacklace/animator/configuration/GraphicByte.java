@@ -1,9 +1,10 @@
-package org.hacklace.animator.displaybuffer;
+package org.hacklace.animator.configuration;
 
 import java.util.List;
 
 import org.hacklace.animator.ConversionUtil;
 import org.hacklace.animator.ErrorContainer;
+import org.hacklace.animator.displaybuffer.Size;
 
 public class GraphicByte extends ByteElement implements Size {
 	

@@ -13,22 +13,22 @@ public class MixedDisplayBuffer extends DisplayBuffer {
 	public MixedDisplayBuffer(FullConfigLine fullLine,
 			ErrorContainer errorContainer) {
 		super(fullLine.getModusByte(errorContainer));
-		setRestOfLine(fullLine.getRestOfLine(), errorContainer);
+		setRestOfLine(fullLine.getRestOfLine(errorContainer));
 	}
 
 	public MixedDisplayBuffer() {
-		setRestOfLine(new RestOfConfigLine(""), new ErrorContainer());
+		ErrorContainer errorContainer = new ErrorContainer();
+		setRestOfLine(new RestOfConfigLine("", errorContainer));
 	}
 
 	public RestOfConfigLine getRestOfLine() {
 		return restOfLine;
 	}
 
-	public void setRestOfLine(RestOfConfigLine restOfLine,
-			ErrorContainer errorContainer) {
+	public void setRestOfLine(RestOfConfigLine restOfLine) {
 		this.restOfLine = restOfLine;
-		this.data = restOfLine.getLeds(errorContainer);
-		this.clickEditable = restOfLine.getClickEditableColumns(errorContainer);
+		this.data = restOfLine.getLeds();
+		this.clickEditable = restOfLine.getClickEditableColumns();
 	}
 
 	public boolean isColumnEditable(int col) {
@@ -44,25 +44,20 @@ public class MixedDisplayBuffer extends DisplayBuffer {
 
 	@Override
 	public String getRawStringForRestOfLine() {
-		return this.restOfLine.getValue();
+		return this.restOfLine.getModifiedRawString();
 	}
 
 	@Override
 	public String toString() {
 		return getAnimationType().getDescription() + " "
-				+ restOfLine.getValue();
+				+ restOfLine.getModifiedRawString();
 	}
 
 	@Override
 	public int getNumBytes() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 1 // modus byte
+		+ restOfLine.getNumBytes() //
+		+ 1; // for end of line delimiter
 	}
 
-	@Override
-	public int countUsedColumns() {
-		// the number of used columns in a Mixed animation is determined how?
-		// TODO xx
-		return 0;
-	}
 }

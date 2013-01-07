@@ -22,12 +22,12 @@ public class RawInputRestOfLineApplyActionListener extends AbstractRawInputApply
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		ModusByte modusByte = editPanel.getDisplayBuffer().getModusByte();
-		RestOfConfigLine restOfLine = new RestOfConfigLine(rawInputRestOfLineTextField.getText());
-		FullConfigLine fullLine = new FullConfigLine(modusByte, restOfLine);
 		ErrorContainer errorContainer = new ErrorContainer();
+		ModusByte modusByte = editPanel.getDisplayBuffer().getModusByte();
+		RestOfConfigLine restOfLine = new RestOfConfigLine(rawInputRestOfLineTextField.getText(), errorContainer);
+		FullConfigLine fullLine = new FullConfigLine(modusByte, restOfLine);
 		bufferFromString(fullLine, errorContainer);
-		if (errorContainer.containsFailure()) {
+		if (errorContainer.containsErrorsOrWarnings()) {
 			// TODO display error
 		}
 	}

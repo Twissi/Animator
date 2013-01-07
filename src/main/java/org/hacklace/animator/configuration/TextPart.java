@@ -1,10 +1,12 @@
-package org.hacklace.animator.displaybuffer;
+package org.hacklace.animator.configuration;
 
 import static org.hacklace.animator.ConversionUtil.convertAnimationByteTo7Booleans;
 
 import java.util.List;
 
 import org.hacklace.animator.ErrorContainer;
+import org.hacklace.animator.displaybuffer.FontUtil;
+import org.hacklace.animator.displaybuffer.Size;
 import org.hacklace.animator.enums.AnimationType;
 
 public class TextPart extends AnimationPart implements Size {

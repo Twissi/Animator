@@ -102,7 +102,7 @@ public class HacklaceConfigManager {
 	public String getRawString() {
 		StringBuilder stringBuilder = new StringBuilder();
 		for (DisplayBuffer displayBuffer : this.list) {
-			stringBuilder.append(displayBuffer.getRawString()).append("\n");
+			stringBuilder.append(displayBuffer.getFullConfigLine()).append("\n");
 		}
 		stringBuilder.append("$00,");
 		return stringBuilder.toString();

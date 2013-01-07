@@ -19,6 +19,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.IniConf;
 import org.hacklace.animator.configuration.FullConfigLine;
@@ -246,7 +247,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 		for (int x = 0; x < panel.getCols(); x++) {
 			for (int y = 0; y < panel.getRows(); y++) {
 				panel.setLed(y, x,
-						buffer.getValueAt(x + GRID_COLS * position, y));
+						buffer.getColumnRow(x + GRID_COLS * position, y));
 			}
 		}
 	}
@@ -260,11 +261,17 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 	}
 
 	protected void updateRawTextFields() {
-		FullConfigLine fullLine = buffer.getRawString();
-		rawInputFullLineTextField.setText(fullLine.getValue());
+		ErrorContainer errorContainer = new ErrorContainer();
+		FullConfigLine fullLine = buffer.getFullConfigLine();
+		rawInputFullLineTextField.setText(fullLine.getOriginalString());
 		rawInputRestOfLineTextField
-				.setText(fullLine.getRestOfLine().getValue());
+				.setText(fullLine.getRestOfLine(errorContainer).getModifiedRawString());
 		updateRawDataDirectModeTextField(fullLine);
+		showErrors(errorContainer);
+	}
+
+	protected void showErrors(ErrorContainer errorContainer) {
+		System.out.println(errorContainer);		
 	}
 
 	/**

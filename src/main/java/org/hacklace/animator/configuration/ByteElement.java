@@ -1,4 +1,4 @@
-package org.hacklace.animator.displaybuffer;
+package org.hacklace.animator.configuration;
 
 import java.util.LinkedList;
 import java.util.List;

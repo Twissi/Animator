@@ -1,28 +1,30 @@
-package org.hacklace.animator.displaybuffer;
+package org.hacklace.animator.configuration;
 
 import org.hacklace.animator.ErrorContainer;
+import org.hacklace.animator.displaybuffer.FontUtil;
+import org.hacklace.animator.displaybuffer.Size;
 
-public class SimpleChar extends TextElement implements Size {
+public class RoofChar extends TextElement implements Size {
 
 	private char c;
 	private int[] aniBytes;
 
-	public SimpleChar(char c) {
+	public RoofChar(char c) {
 		this.c = c;
 	}
 
 	public int[] getAnimationBytes() {
 		if (aniBytes == null)
-			aniBytes = FontUtil.getMinimumBytesForChar(c);
+			aniBytes = FontUtil.getMinimumBytesForSpecial(c);
 		return aniBytes;
 	}
 
 	public String getRawString() {
-		return "" + c;
+		return "^" + c;
 	}
 
 	public boolean isValid(ErrorContainer errorContainer) {
-		return FontUtil.isValidHacklaceChar(c);
+		return FontUtil.isValidSpecialChar(c, errorContainer);
 	}
 
 	@Override

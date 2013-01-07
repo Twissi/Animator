@@ -1,6 +1,8 @@
-package org.hacklace.animator.displaybuffer;
+package org.hacklace.animator.configuration;
 
 import org.hacklace.animator.ErrorContainer;
+import org.hacklace.animator.displaybuffer.FontUtil;
+import org.hacklace.animator.displaybuffer.Size;
 
 public class EscapeChar extends TextElement implements Size {
 

@@ -9,7 +9,7 @@ public class DirectMode {
 	 * @param restOfConfigurationLine
 	 */
 	public DirectMode(RestOfConfigLine restOfLine) {
-		String line = restOfLine.getValue();
+		String line = restOfLine.getOriginalRawString();
 		this.directModeString = line.substring(4, line.length() - 4);
 	}
 

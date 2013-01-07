@@ -181,8 +181,9 @@ public class FontUtil {
 	 */
 	public static int[] getFiveBytesForIndex(int index) {
 		int positiveIndex = index;
-		if (positiveIndex < 0) positiveIndex += 256; 
-		if (positiveIndex > HIGHEST_INDEX) 
+		if (positiveIndex < 0)
+			positiveIndex += 256;
+		if (positiveIndex > HIGHEST_INDEX)
 			positiveIndex = (int) '?'; // display a question mark
 		return HACKLACE_CHARSET[positiveIndex - LOWEST_INDEX];
 	}
@@ -258,10 +259,23 @@ public class FontUtil {
 		int index = c + SPECIAL_CHAR_OFFSET;
 		return getFiveBytesForIndex(index);
 	}
-	
-	public static boolean isValidSpecialChar(char c) {
+
+	public static boolean isValidSpecialChar(char c,
+			ErrorContainer errorContainer) {
 		int index = c + SPECIAL_CHAR_OFFSET;
-		return index >= LOWEST_SPECIAL_INDEX && index <= HIGHEST_INDEX;
+		if (index >= LOWEST_SPECIAL_INDEX && index <= HIGHEST_INDEX) {
+			return true;
+		} else {
+			errorContainer
+					.addError("^"
+							+ c
+							+ " is not valid. Must be between ^"
+							+ (char) (FontUtil.LOWEST_SPECIAL_INDEX - FontUtil.SPECIAL_CHAR_OFFSET)
+							+ " and ^"
+							+ (char) (FontUtil.HIGHEST_INDEX - FontUtil.SPECIAL_CHAR_OFFSET)
+							+ " (inclusive).");
+			return false;
+		}
 	}
 
 	/**
@@ -296,7 +310,8 @@ public class FontUtil {
 	 */
 	public static int[] getMinimumBytesForIndex(int index) {
 		int positiveIndex = index;
-		if (positiveIndex < 0) positiveIndex += 256; 
+		if (positiveIndex < 0)
+			positiveIndex += 256;
 		return removeTrailingEmptyColumnsAndAddOneEmptyColumn(getFiveBytesForIndex(positiveIndex));
 	}
 
@@ -336,23 +351,33 @@ public class FontUtil {
 	/**
 	 * 
 	 * @param c
+	 * @param errorContainer
 	 * @return true for ASCII (0x20 to 0x79), umlauts, ß and € (euro sign)
 	 */
-	public static boolean isValidHacklaceChar(char c) {
+	public static boolean isValidHacklaceChar(char c,
+			ErrorContainer errorContainer) {
 		// https://raumzeitlabor.de/w/images/d/da/Hacklace_Font_5x7_extended.bmp
 
 		// ASCII (includes the special characters $ ^ and ~
-		if (0x20 <= c && c <= 0x79) {
+		if (0x20 <= c && c <= 0x80) {
+			return true;
+		}
+
+		if (c == '€') {
+			errorContainer
+					.addWarning("€ may not be interpreted correctly based on your Hacklace firmware version. Use ^A or $80 instead.");
 			return true;
 		}
 
 		// other letters that can be entered on a German keyboard
-		if ("ÄäÖöÜüß€".indexOf(c) != -1) {
+		if ("ÄäÖöÜüß".indexOf(c) != -1) {
 			return true;
 		}
 
 		// further special Hacklace characters are entered by ^B etc., so they
 		// are already covered by ASCII above
+
+		errorContainer.addError(c + " is not a permitted Hacklace character.");
 
 		return false;
 	}
@@ -395,7 +420,8 @@ public class FontUtil {
 	 *            textual - this is FontUtil after all)
 	 * @return animation bytes - minimum bytes incl. one blank line for each
 	 */
-	public static int[] getIntsForRawString(String rawString, ErrorContainer errorContainer) {
+	public static int[] getIntsForRawString(String rawString,
+			ErrorContainer errorContainer) {
 		List<Integer> returnList = new LinkedList<Integer>();
 
 		loopOverRawString: for (int i = 0; i < rawString.length(); i++) {
@@ -429,8 +455,11 @@ public class FontUtil {
 						if (i > rawString.length() - 1)
 							break loopOverRawString;
 						charSetIndexAsThreeCharString += rawString.charAt(i);
-						if (isHexSequence(charSetIndexAsThreeCharString, errorContainer)) {
-							int charSetIndex = convertStringToInt(charSetIndexAsThreeCharString, errorContainer);
+						if (isHexSequence(charSetIndexAsThreeCharString,
+								errorContainer)) {
+							int charSetIndex = convertStringToInt(
+									charSetIndexAsThreeCharString,
+									errorContainer);
 							animationBytesForOneCharacter = getMinimumBytesForIndex(charSetIndex);
 							i++; // third: there are actually four chars:
 									// $nn, i.e. one separator
@@ -476,7 +505,8 @@ public class FontUtil {
 	 *            text from a configuration line e.g. Hellö x~~y 10 ^A
 	 * @return animation bytes - minimum bytes incl. one blank column for each
 	 */
-	public static byte[] getBytesForRawString(String rawString, ErrorContainer errorContainer) {
+	public static byte[] getBytesForRawString(String rawString,
+			ErrorContainer errorContainer) {
 		int[] intArray = getIntsForRawString(rawString, errorContainer);
 		// convert int array to byte array
 		byte[] returnArray = new byte[intArray.length];
@@ -485,8 +515,9 @@ public class FontUtil {
 		}
 		return returnArray;
 	}
-	
-	public static int getWidthForRawString(String rawString, ErrorContainer errorContainer) {
+
+	public static int getWidthForRawString(String rawString,
+			ErrorContainer errorContainer) {
 		return getIntsForRawString(rawString, errorContainer).length;
 	}
 

@@ -7,9 +7,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.IniConf;
 import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
+import org.hacklace.animator.displaybuffer.GraphicDisplayBuffer;
 import org.hacklace.animator.gui.actions.RawInputDirectModeApplyActionListener;
 
 public class EditGraphicPanel extends EditPanel implements LedObserver {
@@ -42,13 +44,14 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 
 	@Override
 	protected void updateRawDataDirectModeTextField(FullConfigLine fullLine) {
-		rawInputDirectModeTextField.setText(fullLine.getRestOfLine()
+		rawInputDirectModeTextField.setText(fullLine.getRestOfLine(new ErrorContainer())
 				.getDirectMode().getValue());
+		// no need to actually get the errors, as they have already been retrieved for the other raw data field
 	}
 
 	@Override
 	public void onLedChange(int row, int column, boolean newValue) {
-		buffer.setValueAt(column + GRID_COLS * currentPosition, row, newValue);
+		((GraphicDisplayBuffer) buffer).setColumnRow(column + GRID_COLS * currentPosition, row, newValue);
 		updateRawTextFields();
 	}
 

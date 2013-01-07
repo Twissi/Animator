@@ -8,7 +8,7 @@ public class ElementTest extends TestCase {
 
 	public void test() {
 		try {
-			new RestOfConfigLine(null); // throws assertion error
+			new RestOfConfigLine(null, null); // throws assertion error
 			// you shouldn't get here if you have assert enabled
 			assertTrue(false);
 			// How to enable assert statements in Eclipse:

@@ -11,7 +11,7 @@ public class Led extends JButton implements LedInterface {
 
 	public final int row;
 	public final int column;
-	protected boolean on;
+	private boolean on;
 	private LedObserver observer;
 
 	public void set() {

@@ -12,12 +12,12 @@ public class TextDisplayBuffer extends DisplayBuffer implements Size {
 
 	public TextDisplayBuffer() {
 		super();
-		this.text = "";
+		setText("", new ErrorContainer()); // initializes data
 	}
 
 	public TextDisplayBuffer(FullConfigLine fullLine, ErrorContainer errorContainer) {
 		super(fullLine.getModusByte(errorContainer));
-		setText(fullLine.getRestOfLine().getValue(), errorContainer);
+		setText(fullLine.getRestOfLine(errorContainer).getModifiedRawString(), errorContainer);
 	}
 
 	public String getText() {
@@ -30,17 +30,15 @@ public class TextDisplayBuffer extends DisplayBuffer implements Size {
 	 * @param text
 	 */
 	public void setText(String text, ErrorContainer errorContainer) {
-		clearData();
+
 		this.text = text;
 
 		byte[] animationBytes = FontUtil.getBytesForRawString(text, errorContainer);
 
-		clearData();
+		data = new boolean[animationBytes.length][];
 		
-		int i = 0;
-		for (byte aniByte : animationBytes) {
-			boolean[] bits = convertAnimationByteTo7Booleans(aniByte);
-			data[i++] = bits;
+		for (int i= 0; i<animationBytes.length; i++) {
+			data[i] = convertAnimationByteTo7Booleans(animationBytes[i]);
 		}
 	}
 
@@ -62,14 +60,8 @@ public class TextDisplayBuffer extends DisplayBuffer implements Size {
 	@Override
 	public int getNumBytes() {
 		return 1 // modus byte
-		+ countUsedColumns() //
+		+ getNumColumns() //
 		+ 1; // line end
 	}
 
-	@Override
-	public int countUsedColumns() {
-		ErrorContainer errorContainer = new ErrorContainer();
-		int usedCols = FontUtil.getIntsForRawString(getText(), errorContainer).length;
-		return usedCols;
-	}
 }

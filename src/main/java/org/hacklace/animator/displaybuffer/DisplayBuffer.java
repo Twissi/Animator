@@ -12,7 +12,7 @@ import org.hacklace.animator.enums.StepWidth;
 
 public abstract class DisplayBuffer implements Cloneable, Size {
 
-	protected boolean[][] data = new boolean[MAX_COLUMNS][GRID_ROWS];
+	protected boolean[][] data;
 
 	public static final int MAX_COLUMNS = IniConf.getInstance().maxColumns();
 
@@ -26,37 +26,6 @@ public abstract class DisplayBuffer implements Cloneable, Size {
 
 	protected DisplayBuffer(ModusByte modusByte) {
 		this.modusByte = modusByte;
-	}
-
-	protected void clearData() {
-		for (int x = 0; x < MAX_COLUMNS; x++) {
-			for (int y = 0; y < GRID_ROWS; y++) {
-				data[x][y] = false;
-			}
-		}
-	}
-
-	/**
-	 * Top left corner is (0,0). Note: For convenience this returns boolean
-	 * false for non-existent coordinates. This is currently needed
-	 * because text buffers can exceed the 200 columns TODO
-	 * 
-	 * @param x
-	 *            right (column)
-	 * @param y
-	 *            down (row)
-	 * @return
-	 */
-	public boolean getValueAt(int x, int y) {
-
-		if (x >= data.length || x >= MAX_COLUMNS || y >= GRID_ROWS)
-			return false;
-
-		return data[x][y];
-	}
-
-	public void setValueAt(int x, int y, boolean value) {
-		data[x][y] = value;
 	}
 
 	public StepWidth getStepWidth() {
@@ -119,6 +88,10 @@ public abstract class DisplayBuffer implements Cloneable, Size {
 	}
 
 	public boolean getColumnRow(int column, int row) {
+		if (column > data.length-1) {
+			// TODO find out when this happens and prevent it
+			return false;
+		}
 		return data[column][row];
 	}
 
@@ -134,7 +107,7 @@ public abstract class DisplayBuffer implements Cloneable, Size {
 			return null;
 		}
 
-		AnimationType animationType = fullLine.analyzeType();
+		AnimationType animationType = fullLine.getRestOfLine(errorContainer).analyzeType();
 
 		switch (animationType) {
 		case TEXT:
@@ -155,7 +128,7 @@ public abstract class DisplayBuffer implements Cloneable, Size {
 	 * 
 	 * @return the raw string used in config files
 	 */
-	public final FullConfigLine getRawString() {
+	public final FullConfigLine getFullConfigLine() {
 		return new FullConfigLine(modusByte.getRawString()
 				+ getRawStringForRestOfLine());
 	}
@@ -174,12 +147,15 @@ public abstract class DisplayBuffer implements Cloneable, Size {
 	 * @return
 	 */
 	public boolean isSaveable() {
-		return (modusByte.getByte() != 0);
+		ErrorContainer errorContainer = new ErrorContainer();
+		getFullConfigLine().getRestOfLine(errorContainer);
+		return (modusByte.getByte() != 0 && errorContainer.isErrorFree());
 	}
 
 	/**
-	 * docs copied from Size interface:
 	 * for the UI, especially for mixed buffers
+	 * 
+	 * counts the number of columns used for the animation, includes empty columns.
 	 */
 	@Override
 	public int getNumColumns() {
@@ -187,19 +163,9 @@ public abstract class DisplayBuffer implements Cloneable, Size {
 	}
 
 	/**
-	 * docs copied from Size interface:
-	 * reference animations only need 2 bytes, not number of columns; also: add 0 delimiter
+	 * reference animations only need 2 bytes, not number of columns; also: add 1 byte for modus byte and 1 byte for 0 delimiter
 	 */
 	@Override
 	public abstract int getNumBytes();
 	
-	/**
-	 * counts the number of columns used for the animation, includes empty columns.
-	 * 
-	 * use getNumBytes() instead if you want to include the overhead bytes too.
-	 * 
-	 * @return
-	 */
-	public abstract int countUsedColumns();
-
 }

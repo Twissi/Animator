@@ -1,4 +1,4 @@
-package org.hacklace.animator.displaybuffer;
+package org.hacklace.animator.configuration;
 
 import static org.hacklace.animator.ConversionUtil.convertAnimationByteTo7Booleans;
 import static org.hacklace.animator.ConversionUtil.convertBytesToString;
@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 import org.hacklace.animator.ConversionUtil;
 import org.hacklace.animator.ErrorContainer;
-import org.hacklace.animator.configuration.RestOfConfigLine;
 import org.hacklace.animator.enums.AnimationType;
 
 public class GraphicsPart extends AnimationPart {
@@ -39,22 +38,17 @@ public class GraphicsPart extends AnimationPart {
 	}
 
 	public byte[] getColumnsAsBytes() {
-		byte[] allByteColumns = new byte[data.length];
+		byte[] columnsAsBytes = new byte[data.length];
 		// must avoid trailing $00
-		int numberOfUsedColumns = 0;
 		for (int colIndex = 0; colIndex < data.length; colIndex++) {
 			boolean[] bools = this.data[colIndex];
 			assert (bools.length == 7);
 			byte value = (byte) ConversionUtil.convertBooleanArrayToByte(bools);
-			allByteColumns[colIndex] = value;
+			columnsAsBytes[colIndex] = value;
 			if (value != 0) {
-				numberOfUsedColumns = colIndex + 1;
 			}
 		}
-		byte[] usedByteColumns = new byte[numberOfUsedColumns];
-		System.arraycopy(allByteColumns, 0, usedByteColumns, 0,
-				numberOfUsedColumns);
-		return usedByteColumns;
+		return columnsAsBytes;
 	}
 
 	@Override

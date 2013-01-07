@@ -16,7 +16,8 @@ public class ReferenceDisplayBuffer extends DisplayBuffer implements Size {
 			ErrorContainer errorContainer) {
 		super(fullLine.getModusByte(errorContainer));
 		char c = '?';
-		String twoChars = fullLine.getRestOfLine().getValue();
+		String twoChars = fullLine.getRestOfLine(errorContainer)
+				.getOriginalRawString();
 		if (twoChars.length() >= 2) {
 			c = twoChars.charAt(1);
 		}
@@ -44,7 +45,7 @@ public class ReferenceDisplayBuffer extends DisplayBuffer implements Size {
 	public char getLetter() {
 		return this.letter;
 	}
-	
+
 	public void setPredefinedAnimation(PredefinedAnimation reference) {
 		this.letter = reference.getIndex();
 		this.animation = reference;
@@ -58,16 +59,16 @@ public class ReferenceDisplayBuffer extends DisplayBuffer implements Size {
 	 */
 	public void setLetter(char letter, ErrorContainer errorContainer) {
 		this.letter = letter;
-		animation = PredefinedAnimation.getPredefinedAnimationByIndex(letter, errorContainer);
+		animation = PredefinedAnimation.getPredefinedAnimationByIndex(letter,
+				errorContainer);
 		updatePixels();
 	}
-	
+
 	private void updatePixels() {
-		clearData();
-		int i = 0;
-		for (int aniByte : animation.getAnimationBytes()) {
-			boolean[] bits = convertAnimationByteTo7Booleans((byte) aniByte);
-			data[i++] = bits;
+		int[] aniBytes = animation.getAnimationBytes();
+		data = new boolean[aniBytes.length][];
+		for (int i = 0; i < aniBytes.length; i++) {
+			data[i] = convertAnimationByteTo7Booleans((byte) aniBytes[i]);
 		}
 	}
 
@@ -85,11 +86,6 @@ public class ReferenceDisplayBuffer extends DisplayBuffer implements Size {
 	@Override
 	public int getNumBytes() {
 		return 4;
-	}
-	
-	@Override
-	public int countUsedColumns() {
-		return animation.getAnimationBytes().length;
 	}
 
 }

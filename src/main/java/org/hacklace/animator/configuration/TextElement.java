@@ -1,6 +1,7 @@
-package org.hacklace.animator.displaybuffer;
+package org.hacklace.animator.configuration;
 
 import org.hacklace.animator.ErrorContainer;
+import org.hacklace.animator.displaybuffer.Size;
 
 public abstract class TextElement implements Size {
 	

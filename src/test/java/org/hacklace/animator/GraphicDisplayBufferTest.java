@@ -20,7 +20,7 @@ public class GraphicDisplayBufferTest extends TestCase {
 		GraphicDisplayBuffer gdb = new GraphicDisplayBuffer();
 		byte[] aniBytes = new byte[200];
 		aniBytes[0] = (byte) 0xFF;
-		gdb.setDataFromBytes(aniBytes);
+		// gdb.setDataFromBytes(aniBytes);
 		// Grid grid = gdb.getCurrent();
 		// assertTrue(grid.getColumnRow(0, 0));
 		// assertTrue(grid.getColumnRow(0, 1));
@@ -65,8 +65,8 @@ public class GraphicDisplayBufferTest extends TestCase {
 
 	public void testToRawString() {
 		GraphicDisplayBuffer buf = new GraphicDisplayBuffer();
-		buf.setColumnRow(0, 0, true);
-		String rawStringWithoutModusByte = buf.getRawString().getValue()
+		buf.toggleColumnRow(0, 0);
+		String rawStringWithoutModusByte = buf.getFullConfigLine().getOriginalString()
 				.substring(4);
 		assertEquals("$FF,$01,$FF,", rawStringWithoutModusByte);
 	}
