@@ -52,7 +52,7 @@ public class EditTextPanel extends EditPanel {
 	private JPanel createVirtualKeyboardPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(0, 1));
-		panel.add(new JLabel("Virtual Keyboard:"));
+		panel.add(new JLabel("Hover over \"empty\" buttons to see the width of the space."));
 		ActionListener virtualKeyboardListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -61,10 +61,12 @@ public class EditTextPanel extends EditPanel {
 				String chars = vk.getString();
 				int pos = textEditField.getCaretPosition();
 				try {
+					ErrorContainer errorContainer = new ErrorContainer();
 					textEditField.getDocument().insertString(pos, chars, null);
 					((TextDisplayBuffer) buffer).setText(textEditField
-							.getText(), new ErrorContainer() /*TODO*/);
+							.getText(), errorContainer);
 					setFromDisplayBuffer(buffer);
+					showErrors(errorContainer);
 				} catch (BadLocationException e) {
 					// just do nothing, this should not happen anyways
 				}
@@ -77,23 +79,26 @@ public class EditTextPanel extends EditPanel {
 		panel.add(keyboardRow);
 
 		VirtualKeyboardButton button = new VirtualKeyboardButton(0x7F);
-		button.setToolTipText("one empty column");
+		button.setToolTipText("1 empty column");
 		button.addActionListener(virtualKeyboardListener);
 		keyboardRow.add(button);
 		columsRemaining--;
 
 		button = new VirtualKeyboardButton('^');
+		button.setToolTipText("^ needs to be escaped to ^^");
 		button.addActionListener(virtualKeyboardListener);
 		keyboardRow.add(button);
 		columsRemaining--;
 
 		button = new VirtualKeyboardButton('$');
+		button.setToolTipText("$ needs to be escaped to $$");
 		button.addActionListener(virtualKeyboardListener);
 		keyboardRow.add(button);
 		columsRemaining--;
 
 		button = new VirtualKeyboardButton('~');
 		button.addActionListener(virtualKeyboardListener);
+		button.setToolTipText("~ needs to be escaped to ~~");
 		keyboardRow.add(button);
 		columsRemaining--;
 
@@ -107,7 +112,7 @@ public class EditTextPanel extends EditPanel {
 
 			button = new VirtualKeyboardButton(i);
 			if (i - FontUtil.SPECIAL_CHAR_OFFSET == '^')
-				button.setToolTipText("six empty columns");
+				button.setToolTipText("6 empty columns");
 			button.addActionListener(virtualKeyboardListener);
 			keyboardRow.add(button);
 		}

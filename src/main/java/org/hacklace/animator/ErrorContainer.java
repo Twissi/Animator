@@ -105,5 +105,11 @@ public class ErrorContainer {
 		}
 		return sb.toString();
 	}
+	
+	public void print() {
+		for (ErrorElement e : list) {
+			System.out.println(e.toString());
+		}
+	}
 
 }

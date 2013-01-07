@@ -271,7 +271,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 	}
 
 	protected void showErrors(ErrorContainer errorContainer) {
-		System.out.println(errorContainer);		
+		errorContainer.print();
 	}
 
 	/**
