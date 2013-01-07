@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
@@ -49,6 +50,8 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 	protected DisplayBuffer origBuffer; // keep a reference to the original
 										// buffer for overwriting on save
 	protected int currentPosition = 0;
+
+	private JTextArea errorArea;
 
 	public static final int GRID_ROWS = IniConf.getInstance().rows();
 	public static final int GRID_COLS = IniConf.getInstance().columns();
@@ -125,6 +128,9 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 		c.gridx = 0;
 		c.gridwidth = 2;
 		add(rawInputPanel, c);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridheight = 2;
+		add(errorArea = new JTextArea(), c);
 		// add play panel and button next to slider
 		c.gridx = 2;
 		c.gridy = 0;
@@ -271,7 +277,8 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 	}
 
 	protected void showErrors(ErrorContainer errorContainer) {
-		errorContainer.print();
+		errorContainer.print(); // TODO remove this line
+		errorArea.setText(errorContainer.toString());
 	}
 
 	/**

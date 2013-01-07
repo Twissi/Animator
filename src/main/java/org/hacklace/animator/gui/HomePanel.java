@@ -69,7 +69,7 @@ public class HomePanel extends JPanel {
 	}
 	
 	public void updateInfoLabel()  {
-		int bytesUsed = hacklaceConfigManager.getBytesUsed();
+		int bytesUsed = hacklaceConfigManager.getNumBytes();
 		int maxBytes = IniConf.getInstance().maxBytes();
 		if (bytesUsed > maxBytes) infoLabel.setForeground(Color.red);
 		else infoLabel.setForeground(Color.black);

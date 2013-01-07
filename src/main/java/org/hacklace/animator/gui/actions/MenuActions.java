@@ -173,7 +173,7 @@ public class MenuActions {
 		public void actionPerformed(ActionEvent e) {
 			AnimatorGui app = AnimatorGui.getInstance();
 			HacklaceConfigManager cm = app.getHacklaceConfigManager();
-			int bytesUsed = cm.getBytesUsed();
+			int bytesUsed = cm.getNumBytes();
 			int maxBytes = IniConf.getInstance().maxBytes();
 			if (bytesUsed > maxBytes) {
 				JOptionPane.showMessageDialog(null,

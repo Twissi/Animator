@@ -363,6 +363,9 @@ public class RestOfConfigLine implements Size {
 					// escape character at the end of the line
 					if (i > originalRawString.length() - 1) {
 						err.addError("Line ends in escape character " + c);
+						err.addError("Duplicating "+c);
+						t = new EscapeChar(c);
+						textElementList.add(t);
 						break loop;
 					}
 					char next = originalRawString.charAt(i);
@@ -490,7 +493,8 @@ public class RestOfConfigLine implements Size {
 						case '~':
 							finishTextPart(animationPartList, textElementList);
 							ReferenceElement referenceElement = new ReferenceElement(
-									next);
+									next, err);
+							// this will display invalid or unsupported if non-existing reference
 							animationPartList.add(referenceElement);
 							break; // switch case
 						} // end switch ^ $ ~

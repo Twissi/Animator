@@ -15,13 +15,9 @@ public class ReferenceElement extends AnimationPart implements Size {
 	 * 
 	 * @param whichAnimation should be a valid animation (selection restricted in UI)
 	 */
-	public ReferenceElement(char whichAnimation) {
+	public ReferenceElement(char whichAnimation, ErrorContainer errorContainer) {
 		super();
-		ErrorContainer e = new ErrorContainer();
-		assert(PredefinedAnimation.isValid(whichAnimation, e));
-		// default modus byte is already set
-		setLetter(whichAnimation, e);
-		assert(e.isEmpty());
+		setLetter(whichAnimation, errorContainer);
 	}
 
 	@Override
