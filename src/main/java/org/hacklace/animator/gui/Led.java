@@ -14,24 +14,23 @@ public class Led extends JButton implements LedInterface {
 	private boolean on;
 	private LedObserver observer;
 
-	public void set() {
+	private void set() {
 		on = true;
 		setBackground(Color.BLACK);
-		observer.onLedChange(row, column, true);
 	}
 
-	public void unset() {
+	private void unset() {
 		on = false;
 		setBackground(Color.WHITE);
-		observer.onLedChange(row, column, false);
 	}
 
-	public void toggle() {
+	public void toggleByClick() {
 		if (on) {
 			unset();
 		} else {
 			set();
 		}
+		observer.onLedChange(row, column, on);
 	}
 	
 	public boolean isOn() {
@@ -63,6 +62,15 @@ public class Led extends JButton implements LedInterface {
 			d.height = d.width;
 		}
 		return d;
+	}
+
+	@Override
+	public void setFromBuffer(boolean on) {
+		if (on) {
+			set();
+		} else {
+			unset();
+		}
 	}
 
 }

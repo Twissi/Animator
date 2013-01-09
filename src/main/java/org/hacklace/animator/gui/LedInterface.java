@@ -2,11 +2,16 @@ package org.hacklace.animator.gui;
 
 
 public interface LedInterface {
-	public void set();
+	/**
+	 * must not notify the observer (which would set the buffer again)
+	 * @param value
+	 */
+	public void setFromBuffer(boolean value);
 
-	public void unset();
-
-	public void toggle();
+	/**
+	 * must notify the observer (which sets the buffer)
+	 */
+	public void toggleByClick();
 	
 	public boolean isOn();
 	

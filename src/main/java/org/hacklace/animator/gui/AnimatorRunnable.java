@@ -53,7 +53,7 @@ public class AnimatorRunnable implements Runnable {
 				playPosition = 0;
 			for (int x = 0; x < panel.getCols(); x++) {
 				for (int y = 0; y < panel.getRows(); y++) {
-					panel.setLed(y, x, buffer.getColumnRow(x + playPosition, y));
+					panel.setLedFromBuffer(x, y, buffer.getColumnRow(x + playPosition, y));
 				}
 			}
 			sleep(speedSleepTime);

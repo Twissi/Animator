@@ -253,7 +253,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 	protected void copyBufferToPanel(int position, LedPanel panel) {
 		for (int x = 0; x < panel.getCols(); x++) {
 			for (int y = 0; y < panel.getRows(); y++) {
-				panel.setLed(y, x,
+				panel.setLedFromBuffer(x, y,
 						buffer.getColumnRow(x + GRID_COLS * position, y));
 			}
 		}

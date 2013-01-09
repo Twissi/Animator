@@ -43,15 +43,13 @@ public class LedPanel extends JPanel implements LedObserver {
 		this(IniConf.getInstance().rows(), IniConf.getInstance().columns());
 	}
 
-	public void setLed(int row, int column, boolean val) {
-		if (val) {
-			buttons[column][row].set();
-		} else {
-			buttons[column][row].unset();
-		}
-		for (LedObserver o: observerList) {
-			o.onLedChange(row, column, val);
-		}
+	public void setLedFromBuffer(int column, int row, boolean val) {
+		
+		buttons[column][row].setFromBuffer(val);
+
+		// for (LedObserver o: observerList) {
+		// o.onLedChange(row, column, val);
+		// }
 	}
 
 	private void initComponents() {
@@ -85,13 +83,13 @@ public class LedPanel extends JPanel implements LedObserver {
 		}
 	}
 	
-	public void clear() {
-		for (int x = 0; x < gridCols; x++) {
-			for (int y = 0; y < gridRows; y++) {
-				setLed(y, x, false);
-			}
-		}
-	}
+//	public void clear() {
+//		for (int x = 0; x < gridCols; x++) {
+//			for (int y = 0; y < gridRows; y++) {
+//				setLed(y, x, false);
+//			}
+//		}
+//	}
 	
 	@Override
 	public void setEnabled(boolean enabled) {

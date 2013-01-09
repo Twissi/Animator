@@ -15,11 +15,7 @@ public class ToggleLedActionListener implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (led.isOn()) {
-			led.unset();
-		} else {
-			led.set();
-		}
+		led.toggleByClick();
 	}
 
 }
