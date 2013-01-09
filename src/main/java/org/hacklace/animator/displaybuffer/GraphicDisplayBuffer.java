@@ -51,8 +51,13 @@ public class GraphicDisplayBuffer extends DisplayBuffer implements Size {
 	}
 
 	public void setColumnRow(int column, int row, boolean value) {
-		increaseWidthIfNeeded(column);
-		data[column][row] = value;
+		if (value) {
+			increaseWidthIfNeeded(column);
+		}
+		if (data.length > column) { // do not set columns beyond the end to
+									// false
+			data[column][row] = value;
+		}
 	}
 
 	public void toggleColumnRow(int column, int row) {

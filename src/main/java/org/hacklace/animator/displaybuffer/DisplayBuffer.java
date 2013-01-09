@@ -14,8 +14,6 @@ public abstract class DisplayBuffer implements Cloneable, Size {
 
 	protected boolean[][] data;
 
-	public static final int MAX_COLUMNS = IniConf.getInstance().maxColumns();
-
 	protected ModusByte modusByte = new ModusByte();
 
 	protected final static int GRID_ROWS = IniConf.getInstance().rows();
@@ -75,7 +73,7 @@ public abstract class DisplayBuffer implements Cloneable, Size {
 		try {
 			DisplayBuffer copy = (DisplayBuffer) super.clone();
 			copy.modusByte = this.modusByte.clone();
-			copy.data = new boolean[MAX_COLUMNS][GRID_ROWS];
+			copy.data = new boolean[this.data.length][GRID_ROWS];
 			for (int colIndex = 0; colIndex < this.data.length; colIndex++) {
 				boolean[] column = this.data[colIndex];
 				copy.data[colIndex] = column.clone();

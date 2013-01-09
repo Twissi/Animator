@@ -131,6 +131,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridheight = 2;
 		add(errorArea = new JTextArea(), c);
+		errorArea.setEditable(false);
 		// add play panel and button next to slider
 		c.gridx = 2;
 		c.gridy = 0;
