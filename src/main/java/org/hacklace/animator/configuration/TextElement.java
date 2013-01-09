@@ -15,8 +15,8 @@ public abstract class TextElement implements Size {
 	public abstract int getNumColumns();
 
 	@Override
-	public int getNumBytes() {
-		return getNumColumns();
+	public final int getNumBytes() {
+		return 1;
 	}
 
 }

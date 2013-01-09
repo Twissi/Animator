@@ -4,6 +4,7 @@ import static org.hacklace.animator.ConversionUtil.convertAnimationByteTo7Boolea
 
 import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.configuration.FullConfigLine;
+import org.hacklace.animator.configuration.RestOfConfigLine;
 import org.hacklace.animator.enums.AnimationType;
 
 public class TextDisplayBuffer extends DisplayBuffer implements Size {
@@ -49,7 +50,7 @@ public class TextDisplayBuffer extends DisplayBuffer implements Size {
 
 	@Override
 	public String toString() {
-		return "["+getNumBytes()+"]"+getAnimationType().getDescription() + " " + text;
+		return getAnimationType().getDescription() + " " + text;
 	}
 
 	@Override
@@ -60,7 +61,7 @@ public class TextDisplayBuffer extends DisplayBuffer implements Size {
 	@Override
 	public int getNumBytes() {
 		return 1 // modus byte
-		+ getNumColumns() //
+		+ new RestOfConfigLine(getText(), new ErrorContainer()).getNumBytes()
 		+ 1; // line end
 	}
 

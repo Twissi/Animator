@@ -1,6 +1,19 @@
 package org.hacklace.animator.displaybuffer;
 
 public interface Size {
-  public int getNumColumns(); // for the UI, especially for mixed buffers
-  public int getNumBytes(); // reference animations only need 2 bytes, not number of columns; also: add 0 delimiter
+	/**
+	 * for the UI, the number of LED columns. Maximum 200 per Animation.
+	 * 
+	 * @return
+	 */
+	public int getNumColumns();
+
+	/**
+	 * number of bytes, e.g. 2 for a reference, 1 per letter, 1 per byte in
+	 * direct mode. Add 1 for modus byte, 1 for 0 delimiter at end of line.
+	 * Maximum 256 across all animations.
+	 * 
+	 * @return
+	 */
+	public int getNumBytes();
 }

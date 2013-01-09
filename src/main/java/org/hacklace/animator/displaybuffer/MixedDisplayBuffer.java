@@ -49,7 +49,7 @@ public class MixedDisplayBuffer extends DisplayBuffer {
 
 	@Override
 	public String toString() {
-		return "["+getNumBytes()+"]"+getAnimationType().getDescription() + " "
+		return getAnimationType().getDescription() + " "
 				+ restOfLine.getModifiedRawString();
 	}
 
