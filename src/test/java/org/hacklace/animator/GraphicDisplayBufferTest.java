@@ -17,9 +17,9 @@ public class GraphicDisplayBufferTest extends TestCase {
 	}
 
 	public void testGraphicBufferFromBytes() {
-		GraphicDisplayBuffer gdb = new GraphicDisplayBuffer();
-		byte[] aniBytes = new byte[200];
-		aniBytes[0] = (byte) 0xFF;
+		//GraphicDisplayBuffer gdb = new GraphicDisplayBuffer();
+		// byte[] aniBytes = new byte[200];
+		// aniBytes[0] = (byte) 0xFF;
 		// gdb.setDataFromBytes(aniBytes);
 		// Grid grid = gdb.getCurrent();
 		// assertTrue(grid.getColumnRow(0, 0));

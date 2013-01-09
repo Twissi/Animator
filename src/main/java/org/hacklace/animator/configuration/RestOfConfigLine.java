@@ -257,6 +257,7 @@ public class RestOfConfigLine implements Size {
 				char c2 = Character.toUpperCase(originalRawString.charAt(i));
 				// 3rd char
 				i++;
+				@SuppressWarnings("unused")
 				int c3Pos = i + 1; // for error messages for the user - count
 				// from 1 not 0
 				if (i > originalRawString.length() - 1) {
@@ -389,6 +390,7 @@ public class RestOfConfigLine implements Size {
 							break; // switch case
 						case '$': // (but not $$) text byte (graphic bytes are
 									// dealt with further up)
+							@SuppressWarnings("unused")
 							int dollarPos = i; // previous position for error
 												// messages for the user - count
 												// from 1 not 0
@@ -401,6 +403,7 @@ public class RestOfConfigLine implements Size {
 							char c2 = next;
 							// 3rd char
 							i++;
+							@SuppressWarnings("unused")
 							int c3Pos = i + 1; // for error messages - count
 												// from 1
 							if (i > originalRawString.length() - 1) {
