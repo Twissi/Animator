@@ -6,7 +6,6 @@ import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.MixedDisplayBuffer;
 import org.hacklace.animator.enums.AnimationType;
-import org.junit.Test;
 
 public class AnalyzeAnimationErrors extends TestCase {
 
