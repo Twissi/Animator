@@ -49,7 +49,7 @@ public class TextDisplayBuffer extends DisplayBuffer implements Size {
 
 	@Override
 	public String toString() {
-		return getAnimationType().getDescription() + " " + text;
+		return "["+getNumBytes()+"]"+getAnimationType().getDescription() + " " + text;
 	}
 
 	@Override

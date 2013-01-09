@@ -47,7 +47,7 @@ public class GraphicDisplayBuffer extends DisplayBuffer implements Size {
 
 	@Override
 	public String toString() {
-		return getAnimationType().getDescription();
+		return "["+getNumBytes()+"]"+getAnimationType().getDescription();
 	}
 
 	public void setColumnRow(int column, int row, boolean value) {

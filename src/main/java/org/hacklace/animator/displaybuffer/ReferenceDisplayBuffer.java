@@ -74,8 +74,7 @@ public class ReferenceDisplayBuffer extends DisplayBuffer implements Size {
 
 	@Override
 	public String toString() {
-
-		return getAnimationType().getDescription() + " " + animation.toString();
+		return "["+getNumBytes()+"]"+getAnimationType().getDescription() + " " + animation.toString();
 	}
 
 	@Override

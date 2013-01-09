@@ -10,8 +10,7 @@ import org.junit.Test;
 
 public class AnalyzeAnimationErrors extends TestCase {
 
-	@Test
-	public void missingKomma1() {
+	public void testMissingKomma1() {
 		String rawString = "$04,~A$80";
 		FullConfigLine fullLine = new FullConfigLine(rawString);
 		ErrorContainer errorContainer = new ErrorContainer();
@@ -24,9 +23,5 @@ public class AnalyzeAnimationErrors extends TestCase {
 		assertEquals("~A$80,", newRawString);
 	}
 	
-	public static void main(String[] args) {
-		AnalyzeAnimationErrors it = new AnalyzeAnimationErrors();
-		it.missingKomma1();
-	}
 
 }
