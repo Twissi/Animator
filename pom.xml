@@ -67,7 +67,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>org.hacklace.animator.gui.StartHacklaceAnimator</mainClass>
+							<mainClass>org.hacklace.animator.StartHacklaceAnimator</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
