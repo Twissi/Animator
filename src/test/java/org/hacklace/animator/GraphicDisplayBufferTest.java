@@ -76,8 +76,8 @@ public class GraphicDisplayBufferTest extends TestCase {
 		FullConfigLine fullLine = new FullConfigLine(rawString);
 		ErrorContainer errorContainer = new ErrorContainer();
 		DisplayBuffer buf = DisplayBuffer.createBufferFromLine(fullLine, errorContainer);
-		boolean topLeftLed = buf.getColumnRow(0, 0);
-		boolean bottomLeftLed = buf.getColumnRow(0, 6);
+		boolean topLeftLed = buf.getValueAtColumnRow(0, 0);
+		boolean bottomLeftLed = buf.getValueAtColumnRow(0, 6);
 		assertTrue(topLeftLed);
 		assertFalse(bottomLeftLed);
 	}

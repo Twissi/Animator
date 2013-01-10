@@ -7,11 +7,11 @@ import org.hacklace.animator.enums.Direction;
 public class AnimatorRunnable implements Runnable {
 	private boolean interrupted = false;
 	private DisplayBuffer buffer;
-	private LedPanel panel;
+	private LedPanel ledPanel;
 
 	public AnimatorRunnable(DisplayBuffer buffer, LedPanel panel) {
 		this.buffer = buffer;
-		this.panel = panel;
+		this.ledPanel = panel;
 	}
 
 	private void sleep(long millis) {
@@ -47,13 +47,13 @@ public class AnimatorRunnable implements Runnable {
 					.delayList().get(intDelay) * speedSleepTime);
 			int animationLength = (buffer.getNumColumns());
 			int intStepWidth = buffer.getStepWidth().getValue();
-			if (playPosition > animationLength - panel.getCols())
-				playPosition = animationLength - panel.getCols();
+			if (playPosition > animationLength - ledPanel.getNumCols())
+				playPosition = animationLength - ledPanel.getNumCols();
 			if (playPosition < 0)
 				playPosition = 0;
-			for (int x = 0; x < panel.getCols(); x++) {
-				for (int y = 0; y < panel.getRows(); y++) {
-					panel.setLedFromBuffer(x, y, buffer.getColumnRow(x + playPosition, y));
+			for (int x = 0; x < ledPanel.getNumCols(); x++) {
+				for (int y = 0; y < ledPanel.getNumRows(); y++) {
+					ledPanel.setLedFromBuffer(x, y, buffer.getValueAtColumnRow(x + playPosition, y));
 				}
 			}
 			sleep(speedSleepTime);
@@ -68,7 +68,7 @@ public class AnimatorRunnable implements Runnable {
 					playForward = true;
 				}
 				sleep(delaySleepTime);
-			} else if (playPosition > animationLength - panel.getCols()) {
+			} else if (playPosition > animationLength - ledPanel.getNumCols()) {
 				if (buffer.getDirection() == Direction.BIDIRECTIONAL) {
 					playForward = false;
 				} else {

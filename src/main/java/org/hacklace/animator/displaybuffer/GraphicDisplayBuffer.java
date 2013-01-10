@@ -50,7 +50,7 @@ public class GraphicDisplayBuffer extends DisplayBuffer implements Size {
 		return getAnimationType().getDescription();
 	}
 
-	public void setColumnRow(int column, int row, boolean value) {
+	public void setValueAtColumnRow(int column, int row, boolean value) {
 		if (value) {
 			increaseWidthIfNeeded(column);
 		}

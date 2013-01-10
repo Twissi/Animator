@@ -125,11 +125,11 @@ public class LedPanel extends JPanel implements LedObserver {
 		return new Dimension(gridCols * 15, gridRows * 15);
 	}
 	
-	public int getRows() {
+	public int getNumRows() {
 		return gridRows;
 	}
 	
-	public int getCols() {
+	public int getNumCols() {
 		return gridCols;
 	}
 	
