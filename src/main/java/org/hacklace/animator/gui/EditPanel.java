@@ -349,7 +349,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 		return buffer;
 	}
 
-	public void onLedChange(int row, int column, boolean newValue) {
+	public void onLedChange(int column, int row, boolean newValue) {
 	}
 	
 	protected void startPlaying() {

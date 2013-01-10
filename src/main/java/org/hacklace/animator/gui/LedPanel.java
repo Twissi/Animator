@@ -83,14 +83,6 @@ public class LedPanel extends JPanel implements LedObserver {
 		}
 	}
 	
-//	public void clear() {
-//		for (int x = 0; x < gridCols; x++) {
-//			for (int y = 0; y < gridRows; y++) {
-//				setLed(y, x, false);
-//			}
-//		}
-//	}
-	
 	@Override
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
@@ -122,9 +114,9 @@ public class LedPanel extends JPanel implements LedObserver {
 	/**
 	 * This bubbles the change events from leds to the ledPanel's registered observers
 	 */
-	public void onLedChange(int row, int column, boolean newValue) {
+	public void onLedChange(int column, int row, boolean newValue) {
 		for (LedObserver o: observerList) {
-			o.onLedChange(row, column, newValue);
+			o.onLedChange(column, row, newValue);
 		}
 	}
 

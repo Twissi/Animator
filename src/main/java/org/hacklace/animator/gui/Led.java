@@ -30,7 +30,7 @@ public class Led extends JButton implements LedInterface {
 		} else {
 			set();
 		}
-		observer.onLedChange(row, column, on);
+		observer.onLedChange(column, row, on);
 	}
 	
 	public boolean isOn() {
