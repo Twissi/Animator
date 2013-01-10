@@ -33,18 +33,6 @@ public class Led extends JButton implements LedInterface {
 		observer.onLedChange(column, row, on);
 	}
 	
-	public boolean isOn() {
-		return on;
-	}
-	
-	public int getRow() {
-		return row;
-	}
-	
-	public int getColumn() {
-		return column;
-	}
-
 	public Led(int row, int column, LedObserver o) {
 		setOpaque(true);
 		setBackground(Color.WHITE);

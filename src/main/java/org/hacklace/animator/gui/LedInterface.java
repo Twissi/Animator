@@ -13,10 +13,4 @@ public interface LedInterface {
 	 */
 	public void toggleByClick();
 	
-	public boolean isOn();
-	
-	public int getRow();
-	
-	public int getColumn();
-
 }
