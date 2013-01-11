@@ -56,6 +56,7 @@ public class AnimatorRunnable implements Runnable {
 					ledPanel.setLedFromBuffer(x, y, buffer.getValueAtColumnRow(x + playPosition, y));
 				}
 			}
+			ledPanel.repaint(); // prevents flickering on slow PCs
 			sleep(speedSleepTime);
 			if (playForward) {
 				playPosition += intStepWidth;
