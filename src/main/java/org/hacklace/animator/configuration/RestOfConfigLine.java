@@ -28,7 +28,8 @@ public class RestOfConfigLine implements Size {
 	 * @param restOfLineString
 	 *            may be invalid (but not null)
 	 */
-	public RestOfConfigLine(String restOfLineString, ErrorContainer errorContainer) {
+	public RestOfConfigLine(String restOfLineString,
+			ErrorContainer errorContainer) {
 		assert (restOfLineString != null);
 		this.originalRawString = restOfLineString;
 		getAnimationElements(errorContainer);
@@ -152,7 +153,7 @@ public class RestOfConfigLine implements Size {
 	public String getOriginalRawString() {
 		return originalRawString;
 	}
-	
+
 	public String getModifiedRawString() {
 		return modifiedRawString;
 	}
@@ -325,7 +326,8 @@ public class RestOfConfigLine implements Size {
 							+ c2Pos
 							+ "to make "
 							+ oldThreeChars
-							+ " into " + threeChars + ".");
+							+ " into "
+							+ threeChars + ".");
 					continue loop;
 				}
 
@@ -364,7 +366,7 @@ public class RestOfConfigLine implements Size {
 					// escape character at the end of the line
 					if (i > originalRawString.length() - 1) {
 						err.addError("Line ends in escape character " + c);
-						err.addError("Duplicating "+c);
+						err.addError("Duplicating " + c);
 						t = new EscapeChar(c);
 						textElementList.add(t);
 						break loop;
@@ -497,7 +499,8 @@ public class RestOfConfigLine implements Size {
 							finishTextPart(animationPartList, textElementList);
 							ReferenceElement referenceElement = new ReferenceElement(
 									next, err);
-							// this will display invalid or unsupported if non-existing reference
+							// this will display invalid or unsupported if
+							// non-existing reference
 							animationPartList.add(referenceElement);
 							break; // switch case
 						} // end switch ^ $ ~
@@ -518,11 +521,19 @@ public class RestOfConfigLine implements Size {
 			}
 		}
 
+		final int maxColumns = IniConf.getInstance().maxColumns();
+		int numColumns = getNumColumns();
+		if (numColumns > maxColumns) {
+			err.addError("More than " + maxColumns
+					+ " LED columns are not allowed (you have " + numColumns
+					+ " columns).");
+		}
+
 		outsideErrorContainer.addAll(err);
-		
+
 		modifiedRawString = "";
 		for (AnimationPart part : animationPartList) {
-			modifiedRawString += part.getRawString();			
+			modifiedRawString += part.getRawString();
 		}
 
 		return animationPartList;

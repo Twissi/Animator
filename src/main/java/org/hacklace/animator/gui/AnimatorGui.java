@@ -120,7 +120,7 @@ public class AnimatorGui extends JFrame {
 		return hacklaceConfigManager;
 	}
 
-	public void stopEditMode() {
+	public void endEditMode() {
 		if (editPanel != null) {
 			contentPane.remove(editPanel);
 			editPanel.close();

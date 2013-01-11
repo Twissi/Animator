@@ -45,7 +45,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 	protected JButton playButton;
 	protected Thread playThread = null;
 
-	protected DisplayBuffer buffer = null; // our internal temporary displayBuffer
+	public DisplayBuffer buffer = null; // our internal temporary displayBuffer
 									// for editing
 	protected DisplayBuffer origBuffer; // keep a reference to the original
 										// buffer for overwriting on save
@@ -98,7 +98,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 		buffer = displayBuffer.clone();
 		origBuffer = displayBuffer;
 		// common components for all types of edit panels
-		optionsPanel = new AnimationOptionsPanel();
+		optionsPanel = new AnimationOptionsPanel(this);
 		optionsPanel.addObserver(this);
 		rawInputPanel = createRawInputPanel();
 
@@ -277,8 +277,7 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 		showErrors(errorContainer);
 	}
 
-	protected void showErrors(ErrorContainer errorContainer) {
-		errorContainer.print(); // TODO remove this line
+	public void showErrors(ErrorContainer errorContainer) {
 		errorArea.setText(errorContainer.toString());
 	}
 
@@ -336,13 +335,6 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 		ledPanel.setSpacing(newStep == StepWidth.FIVE);
 		ledPanel.showLabels(newStep == StepWidth.FIVE);
 		updateRawTextFields();
-	}
-
-	public boolean onSaveAnimation() {
-		if (!buffer.isSaveable())
-			return false; // cannot save
-		saveBuffer();
-		return true; // saved
 	}
 
 	public DisplayBuffer getDisplayBuffer() {

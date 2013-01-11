@@ -9,7 +9,6 @@ import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
@@ -21,6 +20,7 @@ import org.hacklace.animator.enums.Delay;
 import org.hacklace.animator.enums.Direction;
 import org.hacklace.animator.enums.Speed;
 import org.hacklace.animator.enums.StepWidth;
+import org.hacklace.animator.gui.actions.SaveAnimationAction;
 
 public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 	private static final long serialVersionUID = -2625306373507959134L;
@@ -34,10 +34,10 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 	private ButtonGroup stepButtons;
 	private List<OptionsObserver> observerList;
 
-	public AnimationOptionsPanel() {
+	public AnimationOptionsPanel(EditPanel editPanel) {
 		observerList = new ArrayList<OptionsObserver>();
 		removeAll();
-		initComponents();
+		initComponents(editPanel);
 	}
 
 	private JPanel createDirectionPanel() {
@@ -122,7 +122,7 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 		}
 	}
 
-	private void initComponents() {
+	private void initComponents(EditPanel editPanel) {
 		// one column grid layout
 		setLayout(new GridLayout(0, 1));
 		add(new JLabel("Options"));
@@ -144,34 +144,10 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 		add(delaySlider);
 		add(createDirectionPanel());
 		add(createStepWidthPanel());
-		JButton saveButton = new JButton(new SaveAnimationAction());
+		JButton saveButton = new JButton(new SaveAnimationAction(editPanel));
 		add(saveButton);
 		JButton cancelButton = new JButton(new CancelEditAction());
 		add(cancelButton);
-	}
-
-	class SaveAnimationAction extends AbstractAction {
-		private static final long serialVersionUID = -5813301123661228603L;
-
-		public SaveAnimationAction() {
-			super("Save");
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			for (OptionsObserver o : observerList) {
-				if (!o.onSaveAnimation()) {
-					// false = save not possible
-					JOptionPane
-							.showMessageDialog(
-									null,
-									"The buffer can not be saved. Due to a technical restriction the combination of your selected options is not possible (Modus byte must not be zero).",
-									"Error saving", JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-				AnimatorGui.getInstance().stopEditMode();
-			}
-		}
 	}
 
 	class CancelEditAction extends AbstractAction {
@@ -183,7 +159,7 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			AnimatorGui.getInstance().stopEditMode();
+			AnimatorGui.getInstance().endEditMode();
 		}
 	}
 }

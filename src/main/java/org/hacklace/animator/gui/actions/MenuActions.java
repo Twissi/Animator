@@ -79,7 +79,7 @@ public class MenuActions {
 			ErrorContainer errorContainer = new ErrorContainer();
 			loadHacklaceConfigFileAsResource(resource, errorContainer);
 			AnimatorGui app = AnimatorGui.getInstance();
-			app.stopEditMode();
+			app.endEditMode();
 			app.setCurrentFile(null);
 			// TODO display errors from errorContainer
 		}
@@ -253,12 +253,12 @@ public class MenuActions {
 				homePanel.clear();
 				homePanel.updateList(cm.getList(), false);
 				app.setCurrentFile(openFile);
-				app.stopEditMode();
+				app.endEditMode();
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(null, "Cannot read from file.",
 						"Error", JOptionPane.ERROR_MESSAGE);
 				app.getHomePanel().reset();
-				app.stopEditMode();
+				app.endEditMode();
 			}
 			JOptionPane.showMessageDialog(null, "Problems in file"
 					+ errorContainer.toString(), "Error",
@@ -302,7 +302,7 @@ public class MenuActions {
 		public void actionPerformed(ActionEvent e) {
 			if (!confirm("Do you really want to quit?", "Quit?"))
 				return;
-			AnimatorGui.getInstance().stopEditMode();
+			AnimatorGui.getInstance().endEditMode();
 			AnimatorGui.getInstance().dispose();
 		}
 	}
@@ -344,7 +344,7 @@ public class MenuActions {
 			AnimatorGui app = AnimatorGui.getInstance();
 			app.getHomePanel().clear();
 			app.getHacklaceConfigManager().clear();
-			app.stopEditMode();
+			app.endEditMode();
 			app.setCurrentFile(null);
 		}
 	}

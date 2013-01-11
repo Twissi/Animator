@@ -144,10 +144,13 @@ public abstract class DisplayBuffer implements Cloneable, Size {
 	 * 
 	 * @return
 	 */
-	public boolean isSaveable() {
-		ErrorContainer errorContainer = new ErrorContainer();
+	public boolean isSaveable(ErrorContainer errorContainer) {
+		if (modusByte.getByte() == 0) {
+			errorContainer.addError("You cannot combine speed 0, delay 0, unidirectional, step width 1 as this would result in the illegal modus byte 0.");
+		}
 		getFullConfigLine().getRestOfLine(errorContainer);
-		return (modusByte.getByte() != 0 && errorContainer.isErrorFree());
+		
+		return errorContainer.isErrorFree();
 	}
 
 	/**
