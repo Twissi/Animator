@@ -50,6 +50,7 @@ public class ReferenceDisplayBuffer extends DisplayBuffer implements Size {
 		this.letter = reference.getIndex();
 		this.animation = reference;
 		updatePixels();
+		modusByte.setStepWidth(reference.getDefaultStepWidth());
 	}
 
 	/**
@@ -62,6 +63,7 @@ public class ReferenceDisplayBuffer extends DisplayBuffer implements Size {
 		animation = PredefinedAnimation.getPredefinedAnimationByIndex(letter,
 				errorContainer);
 		updatePixels();
+		modusByte.setStepWidth(animation.getDefaultStepWidth());
 	}
 
 	private void updatePixels() {

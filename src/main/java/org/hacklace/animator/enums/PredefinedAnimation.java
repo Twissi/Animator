@@ -59,7 +59,8 @@ public enum PredefinedAnimation {
 					0x04, 0x02, 0x04, 0x08, 0x50, // frame 2
 					0x30, 0x10, 0x08, 0x04, 0x04, // frame 3
 					0x02, 0x01, // frame 4
-			}), //
+			}, //
+			StepWidth.ONE), //
 	SNOW('E', "Snow", new int[] { //
 			0x01, 0x00, 0x00, 0x00, 0x00, // frame 1
 					0x02, 0x00, 0x01, 0x00, 0x00, // frame 2
@@ -99,7 +100,8 @@ public enum PredefinedAnimation {
 					0x08, 0x10, 0x10, 0x0F, 0x70, // frame 2
 					0x10, 0x10, 0x08, 0x08, 0x10, // frame 3
 					0x10, 0x10, 0x10, 0x10, 0x10, // frame 4
-			}), //
+			}, //
+			StepWidth.ONE), //
 	CHECKERS('I', "Checkers", new int[] { //
 			0x55, 0x2A, 0x55, 0x2A, 0x55, // frame 1
 					0x2A, 0x55, 0x2A, 0x55, 0x2A, // frame 2
@@ -231,7 +233,8 @@ public enum PredefinedAnimation {
 					0x3E, 0x20, 0x00, 0x00, 0x3C, // frame 10
 					0x64, 0x7C, 0x24, 0x3C, 0x24, // frame 11
 					0x3C, 0x24, 0x7C, 0x64, 0x3C, // frame 12
-			}), //
+			}, //
+			StepWidth.ONE), //
 	EXPLODE('Q', "Explode", new int[] { //
 			0x00, 0x02, 0x7D, 0x00, 0x00, // frame 1
 					0x00, 0x01, 0x7C, 0x02, 0x00, // frame 2
@@ -292,8 +295,8 @@ public enum PredefinedAnimation {
 					0x1C, 0x2A, 0x2A, 0x2A, 0x1C, // frame 7
 					0x1C, 0x26, 0x2A, 0x2A, 0x1C, // frame 8
 			}), //
-	LADY('V', "Lady", FontUtil.getIntsForRawString("unsupported", null)), //
-	INVALID('?', "Invalid", FontUtil.getIntsForRawString("invalid", null)) //
+	LADY('V', "Lady", FontUtil.getIntsForRawString("unsupported", null), StepWidth.ONE), //
+	INVALID('?', "Invalid", FontUtil.getIntsForRawString("invalid", null), StepWidth.ONE) //
 	; // end
 
 	public final static char MIN = 'A';
@@ -302,12 +305,21 @@ public enum PredefinedAnimation {
 	private final char index;
 	private final String name;
 	private final int[] animationBytes;
+	private final StepWidth defaultStepWidth;
 
 	private PredefinedAnimation(char index, String name, int[] animationBytes) {
 		this.index = index;
 		this.name = name;
 		this.animationBytes = animationBytes;
+		this.defaultStepWidth = StepWidth.FIVE;
 	}
+	
+	private PredefinedAnimation(char index, String name, int[] animationBytes, StepWidth defaultStepWidth) {
+		this.index = index;
+		this.name = name;
+		this.animationBytes = animationBytes;
+		this.defaultStepWidth = defaultStepWidth;
+	}	
 
 	public char getIndex() {
 		return index;
@@ -321,6 +333,10 @@ public enum PredefinedAnimation {
 		return animationBytes;
 	}
 
+	public StepWidth getDefaultStepWidth() {
+		return defaultStepWidth;
+	}
+	
 	@Override
 	public String toString() {
 		return "~" + index + ": " + name;
@@ -373,5 +389,6 @@ public enum PredefinedAnimation {
 		System.arraycopy(all, 0, withoutVAndInvalid, 0, withoutVAndInvalid.length);
 		return withoutVAndInvalid;
 	}
+
 
 }
