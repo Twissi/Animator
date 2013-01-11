@@ -6,12 +6,14 @@ import org.hacklace.animator.ConversionUtil;
 import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.enums.AnimationType;
+import org.hacklace.animator.enums.StepWidth;
 
 public class GraphicDisplayBuffer extends DisplayBuffer implements Size {
 
 	public GraphicDisplayBuffer() {
 		super();
 		data = new boolean[0][];
+		setStepWidth(StepWidth.FIVE);
 	}
 
 	public GraphicDisplayBuffer(FullConfigLine fullLine,
