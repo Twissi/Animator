@@ -18,12 +18,17 @@ public abstract class AbstractRawInputApplyActionListener implements
 	@Override
 	abstract public void actionPerformed(ActionEvent arg0);
 
-	protected void bufferFromString(FullConfigLine fullLine, ErrorContainer errorContainer) {
+	protected void bufferFromString(FullConfigLine fullLine,
+			ErrorContainer errorContainer) {
 		try {
-			DisplayBuffer buffer = DisplayBuffer.createBufferFromLine(fullLine, errorContainer);
-			// it worked without error, we can now apply the result
-			if (buffer.getAnimationType() == editPanel.getDisplayBuffer()
-					.getAnimationType()) {
+			DisplayBuffer buffer = DisplayBuffer.createBufferFromLine(fullLine,
+					errorContainer);
+			if (buffer == null) {
+				JOptionPane.showMessageDialog(null,
+						DisplayBuffer.ZERO_MODUS_BYTE, "Error",
+						JOptionPane.ERROR_MESSAGE);
+			} else if (buffer.getAnimationType() == editPanel
+					.getDisplayBuffer().getAnimationType()) {
 				// same type of animation, just switch buffers
 				editPanel.setFromDisplayBuffer(buffer);
 				editPanel.onRawTextChanged();

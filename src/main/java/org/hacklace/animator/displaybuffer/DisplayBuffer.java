@@ -146,12 +146,14 @@ public abstract class DisplayBuffer implements Cloneable, Size {
 	 */
 	public boolean isSaveable(ErrorContainer errorContainer) {
 		if (modusByte.getByte() == 0) {
-			errorContainer.addError("You cannot combine speed 0, delay 0, unidirectional, step width 1 as this would result in the illegal modus byte 0.");
+			errorContainer.addError(ZERO_MODUS_BYTE);
 		}
 		getFullConfigLine().getRestOfLine(errorContainer);
 		
 		return errorContainer.isErrorFree();
 	}
+	
+	public final static String ZERO_MODUS_BYTE = "You cannot combine speed 0, delay 0, unidirectional, step width 1 as this would result in the illegal modus byte 0.";
 
 	/**
 	 * for the UI, especially for mixed buffers
