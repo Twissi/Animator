@@ -32,7 +32,7 @@ import org.hacklace.animator.enums.StepWidth;
 import org.hacklace.animator.gui.actions.RawInputFullLineApplyActionListener;
 import org.hacklace.animator.gui.actions.RawInputRestOfLineApplyActionListener;
 
-public abstract class EditPanel extends JPanel implements OptionsObserver, LedObserver {
+public abstract class EditPanel extends JPanel implements LedObserver {
 	private static final long serialVersionUID = -5137928768652375360L;
 
 	protected AnimationOptionsPanel optionsPanel;
@@ -99,7 +99,6 @@ public abstract class EditPanel extends JPanel implements OptionsObserver, LedOb
 		origBuffer = displayBuffer;
 		// common components for all types of edit panels
 		optionsPanel = new AnimationOptionsPanel(this);
-		optionsPanel.addObserver(this);
 		rawInputPanel = createRawInputPanel();
 
 		setLayout(new GridBagLayout());

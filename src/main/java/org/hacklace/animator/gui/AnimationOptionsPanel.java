@@ -2,8 +2,6 @@ package org.hacklace.animator.gui;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
@@ -32,10 +30,10 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 	private JRadioButton stepOne;
 	private JRadioButton stepFive;
 	private ButtonGroup stepButtons;
-	private List<OptionsObserver> observerList;
+	private EditPanel editPanel;
 
 	public AnimationOptionsPanel(EditPanel editPanel) {
-		observerList = new ArrayList<OptionsObserver>();
+		this.editPanel = editPanel;
 		removeAll();
 		initComponents(editPanel);
 	}
@@ -86,39 +84,35 @@ public class AnimationOptionsPanel extends JPanel implements ChangeListener {
 		}
 	}
 
-	public void addObserver(OptionsObserver o) {
-		observerList.add(o);
-	}
-
 	public void stateChanged(ChangeEvent e) {
 		if (e.getSource().equals(speedSlider)) {
-			for (OptionsObserver o : observerList) {
-				int intSpeed = ((JSlider) e.getSource()).getValue();
-				o.onSpeedChanged(Speed.fromInt(intSpeed));
-			}
+
+			int intSpeed = ((JSlider) e.getSource()).getValue();
+			editPanel.onSpeedChanged(Speed.fromInt(intSpeed));
+
 		} else if (e.getSource().equals(delaySlider)) {
-			for (OptionsObserver o : observerList) {
-				int intDelay = ((JSlider) e.getSource()).getValue();
-				o.onDelayChanged(Delay.fromInt(intDelay));
-			}
+
+			int intDelay = ((JSlider) e.getSource()).getValue();
+			editPanel.onDelayChanged(Delay.fromInt(intDelay));
+
 		} else if (e.getSource().equals(directionUni)
 				|| e.getSource().equals(directionBi)) {
-			for (OptionsObserver o : observerList) {
-				if (directionUni.isSelected()) {
-					o.onDirectionChanged(Direction.FORWARD);
-				} else {
-					o.onDirectionChanged(Direction.BIDIRECTIONAL);
-				}
+
+			if (directionUni.isSelected()) {
+				editPanel.onDirectionChanged(Direction.FORWARD);
+			} else {
+				editPanel.onDirectionChanged(Direction.BIDIRECTIONAL);
 			}
+
 		} else if (e.getSource().equals(stepOne)
 				|| e.getSource().equals(stepFive)) {
-			for (OptionsObserver o : observerList) {
-				if (stepOne.isSelected()) {
-					o.onStepChanged(StepWidth.ONE);
-				} else {
-					o.onStepChanged(StepWidth.FIVE);
-				}
+
+			if (stepOne.isSelected()) {
+				editPanel.onStepChanged(StepWidth.ONE);
+			} else {
+				editPanel.onStepChanged(StepWidth.FIVE);
 			}
+
 		}
 	}
 
