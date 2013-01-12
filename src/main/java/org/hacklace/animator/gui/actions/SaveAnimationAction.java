@@ -32,7 +32,7 @@ public class SaveAnimationAction extends AbstractAction {
 		} else {
 			editPanel.showErrors(errorContainer);
 			JOptionPane.showMessageDialog(null,
-					"The buffer can not be saved.", "Error saving",
+					"The buffer cannot be saved.", "Error saving",
 					JOptionPane.ERROR_MESSAGE);
 
 		}
