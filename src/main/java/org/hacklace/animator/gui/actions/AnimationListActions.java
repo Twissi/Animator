@@ -5,9 +5,11 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
-import org.hacklace.animator.ErrorContainer;
-import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
+import org.hacklace.animator.displaybuffer.GraphicDisplayBuffer;
+import org.hacklace.animator.displaybuffer.MixedDisplayBuffer;
+import org.hacklace.animator.displaybuffer.ReferenceDisplayBuffer;
+import org.hacklace.animator.displaybuffer.TextDisplayBuffer;
 import org.hacklace.animator.enums.AnimationType;
 import org.hacklace.animator.enums.PredefinedAnimation;
 import org.hacklace.animator.gui.AnimatorGui;
@@ -15,29 +17,13 @@ import org.hacklace.animator.gui.HomePanel;
 
 public class AnimationListActions {
 
-	private static PredefinedAnimation askForReference() {
-
-		PredefinedAnimation result = (PredefinedAnimation) JOptionPane
-				.showInputDialog(
-						AnimatorGui.getInstance(),
-						"Please select the number of the referenced animation. A is the first, B the second, etc.",
-						"Animation number", JOptionPane.QUESTION_MESSAGE, null,
-						PredefinedAnimation.getList(), PredefinedAnimation
-								.getPredefinedAnimationByIndex('A',
-										new ErrorContainer()));
-		return result;
-	}
-
 	public static class AddAction extends AbstractAction {
 		private static final long serialVersionUID = 1859804910358647446L;
 		private HomePanel homePanel;
-		private HacklaceConfigManager configManager;
 
-		public AddAction(HomePanel homePanel,
-				HacklaceConfigManager hacklaceConfigManager) {
+		public AddAction(HomePanel homePanel) {
 			super("Create");
 			this.homePanel = homePanel;
-			this.configManager = hacklaceConfigManager;
 		}
 
 		@Override
@@ -54,36 +40,33 @@ public class AnimationListActions {
 			DisplayBuffer buffer = null;
 			switch (result) {
 			case GRAPHIC:
-				buffer = configManager.addGraphicDisplayBuffer();
+				buffer = new GraphicDisplayBuffer();
 				break;
 			case TEXT:
-				buffer = configManager.addTextDisplayBuffer();
+				buffer = new TextDisplayBuffer();
 				break;
 			case REFERENCE:
-				PredefinedAnimation reference = askForReference();
+				PredefinedAnimation reference = AskForReferenceHelper.askForReference();
 				if (reference == null)
 					return; // cancel
-				buffer = configManager.addReferenceDisplayBuffer(reference);
+				buffer = new ReferenceDisplayBuffer(reference);
 				break;
 			case MIXED:
-				buffer = configManager.addMixedDisplayBuffer();
+				buffer = new MixedDisplayBuffer();
 				break;
 			}
 			homePanel.add(buffer);
-			homePanel.updateList(configManager.getList(), true);
+			
 		}
 	}
 
 	public static class RemoveAction extends AbstractAction {
 		private static final long serialVersionUID = 8727232876038260461L;
 		private HomePanel homePanel;
-		private HacklaceConfigManager configManager;
 
-		public RemoveAction(HomePanel homePanel,
-				HacklaceConfigManager configManager) {
+		public RemoveAction(HomePanel homePanel) {
 			super("Delete");
 			this.homePanel = homePanel;
-			this.configManager = configManager;
 		}
 
 		@Override
@@ -95,11 +78,7 @@ public class AnimationListActions {
 					"Do you really want to delete this animation?",
 					"Confirm delete", JOptionPane.YES_NO_OPTION);
 			if (answer == JOptionPane.YES_OPTION) {
-				int index = homePanel.removeCurrent();
-				if (index > -1) {
-					configManager.getList().remove(index);
-					homePanel.updateList(configManager.getList(), true);
-				}
+				homePanel.removeCurrent();
 			}
 		}
 	}
@@ -107,75 +86,81 @@ public class AnimationListActions {
 	public static class MoveUpAction extends AbstractAction {
 		private static final long serialVersionUID = 7238977652220630625L;
 		private HomePanel homePanel;
-		private HacklaceConfigManager configManager;
 
-		public MoveUpAction(HomePanel homePanel,
-				HacklaceConfigManager configManager) {
+		public MoveUpAction(HomePanel homePanel) {
 			super("Move up");
 			this.homePanel = homePanel;
-			this.configManager = configManager;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (!homePanel.isValidSelection())
 				return;
-			int index = homePanel.moveUp();
-			if (index != -1) {
-				configManager.moveUp(index);
-			}
-			homePanel.updateList(configManager.getList(), true);
+			homePanel.moveUp();
 		}
 	}
 
 	public static class MoveDownAction extends AbstractAction {
 		private static final long serialVersionUID = -1322666043099826563L;
 		private HomePanel homePanel;
-		private HacklaceConfigManager configManager;
 
-		public MoveDownAction(HomePanel homePanel,
-				HacklaceConfigManager configManager) {
+		public MoveDownAction(HomePanel homePanel) {
 			super("Move down");
 			this.homePanel = homePanel;
-			this.configManager = configManager;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (!homePanel.isValidSelection())
 				return;
-			int index = homePanel.moveDown();
-			if (index != -1) {
-				configManager.moveDown(index);
-			}
-			homePanel.updateList(configManager.getList(), true);
+			homePanel.moveDown();
 		}
 	}
 
 	public static class StartEditAction extends AbstractAction {
 		private static final long serialVersionUID = 4960734373364680735L;
 		private HomePanel homePanel;
-		private HacklaceConfigManager configManager;
 		private AnimatorGui animatorGui;
 
-		public StartEditAction(HomePanel homePanel,
-				HacklaceConfigManager configManager, AnimatorGui animatorGui) {
+		public StartEditAction(HomePanel homePanel, AnimatorGui animatorGui) {
 			super("Edit Animation");
 			this.homePanel = homePanel;
-			this.configManager = configManager;
 			this.animatorGui = animatorGui;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			int index = homePanel.getSelectedIndex();
-			if (index == -1 || index >= configManager.getList().size()) {
-				// do nothing if no valid selection
+			DisplayBuffer displayBuffer = homePanel.getSelectedBuffer();
+			if (displayBuffer == null) {
 				return;
 			}
-			DisplayBuffer displayBuffer = configManager.getList().get(index);
 			animatorGui.startEditMode(displayBuffer);
 		}
+	}
+
+	public static class CopyAnimationAction extends AbstractAction {
+
+		private static final long serialVersionUID = -7231020206851674829L;
+		private HomePanel homePanel;
+
+		public CopyAnimationAction(HomePanel homePanel) {
+			super("Copy");
+			this.homePanel = homePanel;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			if (!homePanel.isValidSelection())
+				return;
+
+			DisplayBuffer oldDisplayBuffer = homePanel.getSelectedBuffer();
+			if (oldDisplayBuffer == null)
+				return;
+
+			DisplayBuffer newDisplayBuffer = oldDisplayBuffer.clone();
+			homePanel.add(newDisplayBuffer, false);
+		}
+
 	}
 
 }

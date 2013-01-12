@@ -26,13 +26,12 @@ public class HomePanel extends JPanel {
 	// Java 7: JList<DisplayBuffer> animationList;
 	DefaultListModel animationListData;
 	// Java 7: DefaultListModel<DisplayBuffer> animationListData;
-	
-	private JLabel sizeInfoLabel;
-	private HacklaceConfigManager hacklaceConfigManager;
 
-	public HomePanel(HacklaceConfigManager hcm,
-			AnimatorGui animatorGui) {
-		hacklaceConfigManager = hcm;
+	private JLabel sizeInfoLabel;
+	private HacklaceConfigManager configManager;
+
+	public HomePanel(HacklaceConfigManager hcm, AnimatorGui animatorGui) {
+		configManager = hcm;
 		animationListData = new DefaultListModel();
 		// Java 7: animationListData = new DefaultListModel<DisplayBuffer>();
 		animationList = new JList(animationListData);
@@ -43,7 +42,7 @@ public class HomePanel extends JPanel {
 		c.anchor = GridBagConstraints.NORTHWEST;
 		c.gridx = 0;
 		c.gridy = 0;
-		c.gridheight = 3;
+		c.gridheight = 5;
 		JScrollPane animationListScrollPane = new JScrollPane(animationList);
 		animationListScrollPane.setPreferredSize(new Dimension(400, 200));
 		add(animationListScrollPane, c);
@@ -52,28 +51,31 @@ public class HomePanel extends JPanel {
 		c.gridy = GridBagConstraints.RELATIVE;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		add(new JButton(new AnimationListActions.StartEditAction(this,
-				hacklaceConfigManager, animatorGui)), c);
-		add(new JButton(new AnimationListActions.MoveUpAction(this,
-				hacklaceConfigManager)), c);
-		add(new JButton(new AnimationListActions.MoveDownAction(this,
-				hacklaceConfigManager)), c);
-		add(new JButton(new AnimationListActions.RemoveAction(this,
-				hacklaceConfigManager)), c);
+				animatorGui)), c);
+		add(new JButton(new AnimationListActions.MoveUpAction(this)), c);
+		add(new JButton(new AnimationListActions.MoveDownAction(this)), c);
+		add(new JButton(new AnimationListActions.CopyAnimationAction(this)), c);
+		add(new JButton(new AnimationListActions.RemoveAction(this)), c);
 		c.fill = GridBagConstraints.NONE;
 		c.gridx = 0;
-		add(new JButton(new AnimationListActions.AddAction(this,
-				hacklaceConfigManager)), c);
+		add(new JButton(new AnimationListActions.AddAction(this)), c);
 		sizeInfoLabel = new JLabel("");
 		add(sizeInfoLabel, c);
 		updateSizeInfoLabel();
 	}
-	
-	public void updateSizeInfoLabel()  {
-		int bytesUsed = hacklaceConfigManager.getNumBytes();
+
+	public void updateSizeInfoLabel() {
+		int bytesUsed = configManager.getNumBytes();
 		int maxBytes = IniConf.getInstance().maxBytes();
-		if (bytesUsed > maxBytes) sizeInfoLabel.setForeground(Color.red);
-		else sizeInfoLabel.setForeground(Color.black);
+		if (bytesUsed > maxBytes)
+			sizeInfoLabel.setForeground(Color.red);
+		else
+			sizeInfoLabel.setForeground(Color.black);
 		sizeInfoLabel.setText(bytesUsed + " / " + maxBytes + " Bytes used.");
+	}
+
+	public void updateList(boolean keepIndex) {
+		updateList(configManager.getList(), keepIndex);
 	}
 
 	/**
@@ -112,16 +114,18 @@ public class HomePanel extends JPanel {
 	 * 
 	 * @return int the old index
 	 */
-	public int moveUp() {
+	public void moveUp() {
 		int index = animationList.getSelectedIndex();
 		if (index < 1)
-			return -1;
+			return;
 		DisplayBuffer tmp = (DisplayBuffer) animationListData.get(index);
 		animationListData.remove(index);
 		animationListData.add(index - 1, tmp);
 		animationList.setSelectedIndex(index - 1);
 		animationList.ensureIndexIsVisible(index - 1);
-		return index;
+
+		configManager.moveUp(index);
+		updateList(true);
 	}
 
 	/**
@@ -129,50 +133,64 @@ public class HomePanel extends JPanel {
 	 * 
 	 * @return int the old index
 	 */
-	public int moveDown() {
+	public void moveDown() {
 		int index = animationList.getSelectedIndex();
 		if (index > animationListData.size() - 2)
-			return -1;
+			return;
 		DisplayBuffer tmp = (DisplayBuffer) animationListData.get(index);
 		animationListData.remove(index);
 		animationListData.add(index + 1, tmp);
 		animationList.setSelectedIndex(index + 1);
 		animationList.ensureIndexIsVisible(index + 1);
-		return index;
+		
+		configManager.moveUp(index);
+		updateList(true);
 	}
 
-	public int removeCurrent() {
+	public void removeCurrent() {
 		int index = animationList.getSelectedIndex();
 		if (index == -1)
-			return -1;
+			return;
 		animationListData.remove(index);
 		animationList.setSelectedIndex(index);
 		animationList.ensureIndexIsVisible(index);
-		return index;
+		configManager.deleteDisplayBuffer(index);
+		updateList(true);
 	}
-	
+
 	public boolean isValidSelection() {
 		int index = animationList.getSelectedIndex();
 		return (index != -1);
 	}
 
-	public void add(DisplayBuffer s) {
-		add(s, true);
+	public void add(DisplayBuffer displayBuffer) {
+		add(displayBuffer, true);
 	}
 
-	public void add(DisplayBuffer s, boolean atEnd) {
+	public void add(DisplayBuffer displayBuffer, boolean atEnd) {
 		int index;
 		if (atEnd) {
 			index = animationListData.getSize() - 1;
 		} else {
 			index = animationList.getSelectedIndex();
 		}
-		animationListData.add(index + 1, s);
+
+		configManager.addDisplayBuffer(displayBuffer, index);
+
+		animationListData.add(index + 1, displayBuffer);
 		animationList.setSelectedIndex(index + 1);
 		animationList.ensureIndexIsVisible(index + 1);
+
+		updateList(true);
 	}
 
 	public int getSelectedIndex() {
 		return animationList.getSelectedIndex();
 	}
+
+	public DisplayBuffer getSelectedBuffer() {
+		int index = getSelectedIndex();
+		return configManager.getDisplayBuffer(index);
+	}
+
 }

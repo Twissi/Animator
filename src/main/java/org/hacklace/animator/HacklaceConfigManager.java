@@ -105,7 +105,11 @@ public class HacklaceConfigManager {
 		return stringBuilder.toString();
 	}
 
-	private void addDisplayBuffer(DisplayBuffer buffer) {
+	public void addDisplayBuffer(DisplayBuffer buffer, int index) {
+		list.add(index, buffer);
+	}
+	
+	public void addDisplayBuffer(DisplayBuffer buffer) {
 		list.add(buffer);
 	}
 
@@ -130,8 +134,7 @@ public class HacklaceConfigManager {
 	 */
 	public ReferenceDisplayBuffer addReferenceDisplayBuffer(
 			PredefinedAnimation reference) {
-		ReferenceDisplayBuffer rdb = null;
-		rdb = new ReferenceDisplayBuffer(reference);
+		ReferenceDisplayBuffer rdb = new ReferenceDisplayBuffer(reference);
 		assert (rdb != null);
 		addDisplayBuffer(rdb);
 		return rdb;
@@ -193,18 +196,6 @@ public class HacklaceConfigManager {
 	}
 
 	public int getNumBytes() {
-//		FlashExporter flashExporter = new FlashExporter();
-//		ByteArrayOutputStream out = new ByteArrayOutputStream();
-//		try {
-//			// Note: There is not much we can do about the exceptions here. They
-//			// should never occur!
-//			flashExporter.writeTo(getRawString(), out);
-//		} catch (UnsupportedEncodingException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		return out.size();
 		int sum = 0;
 		for (DisplayBuffer x : this.list) {
 			sum += x.getNumBytes();
