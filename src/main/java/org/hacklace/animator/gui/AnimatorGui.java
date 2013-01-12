@@ -127,7 +127,7 @@ public class AnimatorGui extends JFrame {
 			editPanel = null;
 		}
 		homePanel.setVisible(true);
-		homePanel.updateInfoLabel();
+		homePanel.updateSizeInfoLabel();
 		repaint();
 	}
 

@@ -27,7 +27,7 @@ public class HomePanel extends JPanel {
 	DefaultListModel animationListData;
 	// Java 7: DefaultListModel<DisplayBuffer> animationListData;
 	
-	private JLabel infoLabel;
+	private JLabel sizeInfoLabel;
 	private HacklaceConfigManager hacklaceConfigManager;
 
 	public HomePanel(HacklaceConfigManager hcm,
@@ -63,17 +63,17 @@ public class HomePanel extends JPanel {
 		c.gridx = 0;
 		add(new JButton(new AnimationListActions.AddAction(this,
 				hacklaceConfigManager)), c);
-		infoLabel = new JLabel("");
-		add(infoLabel, c);
-		updateInfoLabel();
+		sizeInfoLabel = new JLabel("");
+		add(sizeInfoLabel, c);
+		updateSizeInfoLabel();
 	}
 	
-	public void updateInfoLabel()  {
+	public void updateSizeInfoLabel()  {
 		int bytesUsed = hacklaceConfigManager.getNumBytes();
 		int maxBytes = IniConf.getInstance().maxBytes();
-		if (bytesUsed > maxBytes) infoLabel.setForeground(Color.red);
-		else infoLabel.setForeground(Color.black);
-		infoLabel.setText(bytesUsed + " / " + maxBytes + " Bytes used.");
+		if (bytesUsed > maxBytes) sizeInfoLabel.setForeground(Color.red);
+		else sizeInfoLabel.setForeground(Color.black);
+		sizeInfoLabel.setText(bytesUsed + " / " + maxBytes + " Bytes used.");
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class HomePanel extends JPanel {
 		}
 		if (keepIndex)
 			animationList.setSelectedIndex(index);
-		updateInfoLabel();
+		updateSizeInfoLabel();
 	}
 
 	/**
