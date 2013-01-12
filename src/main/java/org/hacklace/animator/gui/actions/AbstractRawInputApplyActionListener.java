@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
+import org.hacklace.animator.gui.AnimatorGui;
 import org.hacklace.animator.gui.EditPanel;
 
 public abstract class AbstractRawInputApplyActionListener implements
@@ -33,12 +34,9 @@ public abstract class AbstractRawInputApplyActionListener implements
 				editPanel.setFromDisplayBuffer(buffer);
 				editPanel.onRawTextChanged();
 			} else {
-				// different type of animation, we don't allow this.
-				JOptionPane
-						.showMessageDialog(
-								null,
-								"The supplied raw string would change the animation type. Sorry, this is not allowed.",
-								"Error", JOptionPane.ERROR_MESSAGE);
+				// different type of animation, switch editors
+				AnimatorGui.getInstance().endEditMode();
+				AnimatorGui.getInstance().startEditMode(buffer);
 			}
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(null, "Invalid raw string supplied. "

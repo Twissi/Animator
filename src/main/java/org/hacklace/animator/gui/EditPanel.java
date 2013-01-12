@@ -33,7 +33,8 @@ import org.hacklace.animator.gui.actions.RawInputFullLineApplyActionListener;
 import org.hacklace.animator.gui.actions.RawInputRestOfLineApplyActionListener;
 import org.hacklace.animator.gui.actions.SaveObserver;
 
-public abstract class EditPanel extends JPanel implements LedObserver, OptionsObserver, SaveObserver {
+public abstract class EditPanel extends JPanel implements LedObserver,
+		OptionsObserver, SaveObserver {
 	private static final long serialVersionUID = -5137928768652375360L;
 
 	protected AnimationOptionsPanel optionsPanel;
@@ -47,7 +48,7 @@ public abstract class EditPanel extends JPanel implements LedObserver, OptionsOb
 	protected Thread playThread = null;
 
 	private DisplayBuffer buffer = null; // our internal temporary displayBuffer
-									// for editing
+	// for editing
 	protected DisplayBuffer origBuffer; // keep a reference to the original
 										// buffer for overwriting on save
 	protected int currentPosition = 0;
@@ -161,7 +162,8 @@ public abstract class EditPanel extends JPanel implements LedObserver, OptionsOb
 	/**
 	 * Overwrite this in children to add components on the right side above the
 	 * raw edit panel
-	 * @param panel 
+	 * 
+	 * @param panel
 	 */
 	protected void addMoreComponents(JPanel panel) {
 	}
@@ -228,7 +230,8 @@ public abstract class EditPanel extends JPanel implements LedObserver, OptionsOb
 	 * @return
 	 */
 	protected JSlider createPositionSlider() {
-		JSlider slider = new JSlider(SwingConstants.HORIZONTAL, 0, getMaximumGrid(), 0);
+		JSlider slider = new JSlider(SwingConstants.HORIZONTAL, 0,
+				getMaximumGrid(), 0);
 		slider.setPaintTicks(true);
 		slider.setSnapToTicks(true);
 		slider.setMinorTickSpacing(1);
@@ -245,7 +248,7 @@ public abstract class EditPanel extends JPanel implements LedObserver, OptionsOb
 		});
 		return slider;
 	}
-	
+
 	protected int getMaximumGrid() {
 		return IniConf.getInstance().getNumGrids() - NUM_GRIDS_TO_SHOW;
 	}
@@ -265,14 +268,15 @@ public abstract class EditPanel extends JPanel implements LedObserver, OptionsOb
 				buffer.getDirection(), buffer.getStepWidth());
 		updateRawTextFields();
 		copyBufferToPanel(currentPosition, ledPanel);
+		ledPanel.setSpacing(buffer.getStepWidth() == StepWidth.FIVE);
 	}
 
 	protected void updateRawTextFields() {
 		ErrorContainer errorContainer = new ErrorContainer();
 		FullConfigLine fullLine = buffer.getFullConfigLine();
 		rawInputFullLineTextField.setText(fullLine.getOriginalString());
-		rawInputRestOfLineTextField
-				.setText(fullLine.getRestOfLine(errorContainer).getModifiedRawString());
+		rawInputRestOfLineTextField.setText(fullLine.getRestOfLine(
+				errorContainer).getModifiedRawString());
 		updateRawDataDirectModeTextField(fullLine);
 		showErrors(errorContainer);
 	}
@@ -305,7 +309,14 @@ public abstract class EditPanel extends JPanel implements LedObserver, OptionsOb
 		HacklaceConfigManager cm = AnimatorGui.getInstance()
 				.getHacklaceConfigManager();
 		List<DisplayBuffer> list = cm.getList();
-		list.set(list.indexOf(origBuffer), buffer);
+		int origBufferIndex = list.indexOf(origBuffer);
+		if (origBufferIndex == -1) {
+			// the buffer could not be found. This means, it has been replaced
+			// during editing (see issue #91). We'll replace it for an easy fix
+			// until we have refactored all the other stuff
+			origBufferIndex = AnimatorGui.getInstance().getHomePanel().getSelectedIndex();
+		}
+		list.set(origBufferIndex, buffer);
 		// null the buffer references - we rather have a NullpointerException
 		// than editing the wrong data!
 		buffer = null;
@@ -343,25 +354,25 @@ public abstract class EditPanel extends JPanel implements LedObserver, OptionsOb
 
 	public void onLedChange(int column, int row, boolean newValue) {
 	}
-	
+
 	protected void startPlaying() {
 		playThread = new Thread(new AnimatorRunnable(buffer, playPanel));
 		playThread.start();
 	}
-	
+
 	protected void stopPlaying() {
 		if (playThread != null) {
 			playThread.interrupt();
 			playThread = null;
 		}
 	}
-	
+
 	public void close() {
 		stopPlaying();
 	}
-	
+
 	public DisplayBuffer getBuffer() {
 		return buffer;
 	}
-	
+
 }
