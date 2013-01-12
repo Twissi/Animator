@@ -1,7 +1,13 @@
 package org.hacklace.animator;
 
+import gnu.io.CommPort;
+import gnu.io.CommPortIdentifier;
+import gnu.io.PortInUseException;
+
 import java.net.URL;
 import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -81,8 +87,33 @@ public class IniConf {
 		return conf.getInt("display.height");
 	}
 
+	@SuppressWarnings("rawtypes")
 	public String device() {
-		return conf.getString("flash.device");
+		String device = conf.getString("flash.device");
+        String strPort = "no usable com port found";
+		if (device.equals("auto")) {
+			// use first available port
+	        HashSet<CommPortIdentifier> h = new HashSet<CommPortIdentifier>();
+	        Enumeration thePorts = CommPortIdentifier.getPortIdentifiers();
+	        if (thePorts.hasMoreElements()) {
+	            CommPortIdentifier com = (CommPortIdentifier) thePorts.nextElement();
+	            switch (com.getPortType()) {
+	            case CommPortIdentifier.PORT_SERIAL:
+	                try {
+	                    CommPort thePort = com.open("CommUtil", 50);
+	                    thePort.close();
+	                    h.add(com);
+	                    strPort = com.getName();
+	                } catch (PortInUseException e) {
+	                    System.out.println("Port "  + com.getName() + " is in use.");
+	                } catch (Exception e) {
+	                    System.err.println("Failed to open port " +  com.getName());
+	                    e.printStackTrace();
+	                }
+	            }
+	        }
+		}
+		return strPort;
 	}
 
 	public int baud() {
