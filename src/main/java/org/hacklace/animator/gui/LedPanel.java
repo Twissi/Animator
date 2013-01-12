@@ -133,11 +133,6 @@ public class LedPanel extends JPanel implements LedObserver {
 		return gridCols;
 	}
 	
-	public void toggleSpacing() {
-		isSpaced = !isSpaced;
-		updateGridSpacing();
-	}
-
 	public void setSpacing(boolean value) {
 		isSpaced = value;
 		updateGridSpacing();
