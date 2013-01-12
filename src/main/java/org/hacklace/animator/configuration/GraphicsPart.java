@@ -66,7 +66,7 @@ public class GraphicsPart extends AnimationPart {
 
 	@Override
 	public String getRawString() {
-		return "$FF " + getRawStringForDirectMode() + "$FF,";
+		return "$FF," + getRawStringForDirectMode() + "$FF,";
 	}
 
 	/**
