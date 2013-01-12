@@ -123,7 +123,7 @@ public class MenuActions {
 		private static final long serialVersionUID = 3972006266609060565L;
 
 		public ExportGifAction() {
-			super("Export gif");
+			super("Export *.gif");
 		}
 
 		@Override
@@ -139,7 +139,7 @@ public class MenuActions {
 		private static final long serialVersionUID = 3972006266609060565L;
 
 		public ExportBinAction() {
-			super("Export .bin");
+			super("Export *.bin");
 		}
 
 		@Override
@@ -200,7 +200,8 @@ public class MenuActions {
 					AnimatorGui.getInstance(),
 					"Select serial port where the hacklace is connected",
 					"Select port", JOptionPane.QUESTION_MESSAGE, null,
-					ports.toArray(), defaultPort.toString());
+					ports.toArray(),
+					defaultPort == null ? "" : defaultPort.toString());
 			if (port == null)
 				return; // cancelled
 			flashExporter.setDeviceName(port);
