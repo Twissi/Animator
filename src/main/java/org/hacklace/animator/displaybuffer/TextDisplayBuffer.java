@@ -9,7 +9,7 @@ import org.hacklace.animator.enums.AnimationType;
 
 public class TextDisplayBuffer extends DisplayBuffer implements Size {
 
-	private String text;
+	private RestOfConfigLine restOfLine; 
 
 	public TextDisplayBuffer() {
 		super();
@@ -18,11 +18,11 @@ public class TextDisplayBuffer extends DisplayBuffer implements Size {
 
 	public TextDisplayBuffer(FullConfigLine fullLine, ErrorContainer errorContainer) {
 		super(fullLine.getModusByte(errorContainer));
-		setText(fullLine.getRestOfLine(errorContainer).getModifiedRawString(), errorContainer);
+		setRestOfConfigLine(fullLine.getRestOfLine(errorContainer));
 	}
 
 	public String getText() {
-		return text;
+		return restOfLine.getModifiedRawString();
 	}
 
 	/**
@@ -30,17 +30,13 @@ public class TextDisplayBuffer extends DisplayBuffer implements Size {
 	 * 
 	 * @param text
 	 */
-	public void setText(String text, ErrorContainer errorContainer) {
-
-		this.text = text;
-
-		byte[] animationBytes = FontUtil.getBytesForRawString(text, errorContainer);
-
-		data = new boolean[animationBytes.length][];
-		
-		for (int i= 0; i<animationBytes.length; i++) {
-			data[i] = convertAnimationByteTo7Booleans(animationBytes[i]);
-		}
+	public void setText(String originalRawString, ErrorContainer errorContainer) {
+        setRestOfConfigLine(new RestOfConfigLine(originalRawString, errorContainer));
+	}
+	
+	private void setRestOfConfigLine(RestOfConfigLine restOfLine) {
+		this.restOfLine = restOfLine;
+		this.data = restOfLine.getLeds();
 	}
 
 	@Override
@@ -50,18 +46,18 @@ public class TextDisplayBuffer extends DisplayBuffer implements Size {
 
 	@Override
 	public String toString() {
-		return getAnimationType().getDescription() + " " + text;
+		return getAnimationType().getDescription() + " " + restOfLine.getModifiedRawString();
 	}
 
 	@Override
 	public String getRawStringForRestOfLine() {
-		return getText();
+		return restOfLine.getModifiedRawString();
 	}
 
 	@Override
 	public int getNumBytes() {
 		return 1 // modus byte
-		+ new RestOfConfigLine(getText(), new ErrorContainer()).getNumBytes()
+		+ restOfLine.getNumBytes()
 		+ 1; // line end
 	}
 
