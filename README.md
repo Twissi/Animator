@@ -19,6 +19,9 @@ A refresh in eclipse after it is enough.
 Build
 =====
 
+Build the jar:
 	mvn assembly:single
 
+Build the documentation:
+	mvn pre-site
 
