@@ -20,7 +20,7 @@ public class LedPanel extends JPanel implements LedObserver {
 	private final int gridRows;
 	private final int gridCols;
 
-	private Led[][] buttons;
+	private Led[][] leds;
 	private List<JLabel> frameLabels = new ArrayList<JLabel>();
 	private GridBagLayout layout;
 	private boolean isSpaced = false;
@@ -32,7 +32,7 @@ public class LedPanel extends JPanel implements LedObserver {
 		this.gridRows = rows;
 		this.gridCols = columns;
 
-		buttons = new Led[gridCols][gridRows];
+		leds = new Led[gridCols][gridRows];
 		observerList = new ArrayList<LedObserver>();
 
 		initComponents();
@@ -45,7 +45,7 @@ public class LedPanel extends JPanel implements LedObserver {
 
 	public void setLedFromBuffer(int column, int row, boolean val) {
 		
-		buttons[column][row].setFromBuffer(val);
+		leds[column][row].setFromBuffer(val);
 
 		// for (LedObserver o: observerList) {
 		// o.onLedChange(row, column, val);
@@ -62,7 +62,7 @@ public class LedPanel extends JPanel implements LedObserver {
 			for (c.gridx = 0; c.gridx < gridCols; c.gridx++) {
 				Led b = new Led(c.gridy, c.gridx, this);
 				b.addActionListener(new ToggleLedActionListener(b));
-				buttons[c.gridx][c.gridy] = b;
+				leds[c.gridx][c.gridy] = b;
 				add(b, c);
 			}
 		}
@@ -88,7 +88,7 @@ public class LedPanel extends JPanel implements LedObserver {
 		super.setEnabled(enabled);
 		for (int x = 0; x < gridCols; x++) {
 			for (int y = 0; y < gridRows; y++) {
-				buttons[x][y].setEnabled(enabled);
+				leds[x][y].setEnabled(enabled);
 			}
 		}
 	}
@@ -100,7 +100,7 @@ public class LedPanel extends JPanel implements LedObserver {
 		}
 		for (int i = 0; i < gridCols; i++) {
 			if (i % 5 == 4) {
-				layout.setConstraints(buttons[i][0], c);
+				layout.setConstraints(leds[i][0], c);
 			}
 		}
 		revalidate();
