@@ -1,5 +1,6 @@
 package org.hacklace.animator.gui.actions;
 
+import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
 import gnu.io.UnsupportedCommOperationException;
 
@@ -7,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
@@ -183,7 +185,26 @@ public class MenuActions {
 				return;
 			}
 
+			// Let the user select the serial port
 			FlashExporter flashExporter = new FlashExporter();
+			ArrayList<String> ports = flashExporter.listDeviceNames();
+			CommPortIdentifier defaultPort = null;
+			try {
+				defaultPort = flashExporter.getPortIdentifier(IniConf
+						.getInstance().device());
+			} catch (Exception ex) {
+				// the default port from the ini file does not exist on this
+				// system. -> ignore
+			}
+			String port = (String) JOptionPane.showInputDialog(
+					AnimatorGui.getInstance(),
+					"Select serial port where the hacklace is connected",
+					"Select port", JOptionPane.QUESTION_MESSAGE, null,
+					ports.toArray(), defaultPort.toString());
+			if (port == null)
+				return; // cancelled
+			flashExporter.setDeviceName(port);
+
 			try {
 				flashExporter.write(cm.getRawString());
 				JOptionPane.showMessageDialog(null,
