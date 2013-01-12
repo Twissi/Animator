@@ -28,7 +28,6 @@ public class IniConfigurationTest extends TestCase {
 	}
 	
 	public void testFlashConf() {
-		assertEquals("/dev/ttyUSB0", conf.device());
 		assertEquals(2400, conf.baud());
 	}
 	
