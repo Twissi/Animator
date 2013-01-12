@@ -200,7 +200,8 @@ public class MenuActions {
 					AnimatorGui.getInstance(),
 					"Select serial port where the hacklace is connected",
 					"Select port", JOptionPane.QUESTION_MESSAGE, null,
-					ports.toArray(), defaultPort.toString());
+					ports.toArray(),
+					defaultPort == null ? "" : defaultPort.toString());
 			if (port == null)
 				return; // cancelled
 			flashExporter.setDeviceName(port);
