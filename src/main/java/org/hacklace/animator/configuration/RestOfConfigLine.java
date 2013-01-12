@@ -175,7 +175,7 @@ public class RestOfConfigLine implements Size {
 		return new DirectMode(this);
 	}
 
-	private List<AnimationPart> animationPartList = null;
+	private LinkedList<AnimationPart> animationPartList = null;
 	private ErrorContainer getAnimationElementsErrorContainer = new ErrorContainer();
 
 	private void finishGraphicsPart(List<AnimationPart> animationPartList,
@@ -518,6 +518,14 @@ public class RestOfConfigLine implements Size {
 			if (!textElementList.isEmpty()) { // empty if line ended in
 												// reference like ~A
 				finishTextPart(animationPartList, textElementList);
+			}
+		}
+
+		// do not add an empty column after the last character
+		if (!animationPartList.isEmpty()) {
+			AnimationPart last = animationPartList.getLast();
+			if (last.getAnimationType() == AnimationType.TEXT) {
+				((TextPart) last).removeExtraColumnFromEnd();
 			}
 		}
 

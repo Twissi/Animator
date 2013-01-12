@@ -4,6 +4,7 @@ import static org.hacklace.animator.ConversionUtil.convertAnimationByteTo7Boolea
 
 import java.util.List;
 
+import org.hacklace.animator.ConversionUtil;
 import org.hacklace.animator.displaybuffer.Size;
 import org.hacklace.animator.enums.AnimationType;
 
@@ -59,6 +60,20 @@ public class TextPart extends AnimationPart implements Size {
 	@Override
 	public int getNumBytes() {
 		return numBytes;
+	}
+
+	/**
+	 * must only be called for TextParts at the end of a line
+	 */
+	public void removeExtraColumnFromEnd() {
+		if (data.length == 0) {
+			// happens for completely empty buffer
+			return;
+		}
+		assert (ConversionUtil.convertBooleanArrayToByte(data[data.length - 1]) == 0);
+		boolean[][] oldData = data;
+		data = new boolean[oldData.length-1][];
+		System.arraycopy(oldData, 0, data, 0, data.length);
 	}
 
 
