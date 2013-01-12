@@ -1,7 +1,5 @@
 package org.hacklace.animator.displaybuffer;
 
-import static org.hacklace.animator.ConversionUtil.convertAnimationByteTo7Booleans;
-
 import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.configuration.RestOfConfigLine;
