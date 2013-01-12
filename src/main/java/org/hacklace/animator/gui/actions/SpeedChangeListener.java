@@ -5,21 +5,21 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.hacklace.animator.enums.Speed;
-import org.hacklace.animator.gui.EditPanel;
+import org.hacklace.animator.gui.OptionsObserver;
 
 public class SpeedChangeListener implements ChangeListener {
 
-	private final EditPanel editPanel;
+	private final OptionsObserver optionsObserver;
 	private JSlider speedSlider;
 
-	public SpeedChangeListener(EditPanel editPanel, JSlider speedSlider) {
-		this.editPanel = editPanel;
+	public SpeedChangeListener(OptionsObserver optionsObserver, JSlider speedSlider) {
+		this.optionsObserver = optionsObserver;
 		this.speedSlider = speedSlider;
 	}
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
 		int intSpeed = speedSlider.getValue();
-		editPanel.onSpeedChanged(Speed.fromInt(intSpeed));
+		optionsObserver.onSpeedChanged(Speed.fromInt(intSpeed));
 	}
 }

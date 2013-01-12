@@ -5,22 +5,22 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.hacklace.animator.enums.Delay;
-import org.hacklace.animator.gui.EditPanel;
+import org.hacklace.animator.gui.OptionsObserver;
 
 public class DelayChangeListener implements ChangeListener {
 
-	private final EditPanel editPanel;
+	private final OptionsObserver optionsObserver;
 	private JSlider delaySlider;
 	
-	public DelayChangeListener(EditPanel editPanel, JSlider delaySlider) {
-		this.editPanel = editPanel;
+	public DelayChangeListener(OptionsObserver optionsObserver, JSlider delaySlider) {
+		this.optionsObserver = optionsObserver;
 		this.delaySlider = delaySlider;
 	}
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
 			int intDelay = delaySlider.getValue();
-			editPanel.onDelayChanged(Delay.fromInt(intDelay));
+			optionsObserver.onDelayChanged(Delay.fromInt(intDelay));
 
 		
 	}

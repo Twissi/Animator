@@ -31,8 +31,9 @@ import org.hacklace.animator.enums.Speed;
 import org.hacklace.animator.enums.StepWidth;
 import org.hacklace.animator.gui.actions.RawInputFullLineApplyActionListener;
 import org.hacklace.animator.gui.actions.RawInputRestOfLineApplyActionListener;
+import org.hacklace.animator.gui.actions.SaveObserver;
 
-public abstract class EditPanel extends JPanel implements LedObserver {
+public abstract class EditPanel extends JPanel implements LedObserver, OptionsObserver, SaveObserver {
 	private static final long serialVersionUID = -5137928768652375360L;
 
 	protected AnimationOptionsPanel optionsPanel;
@@ -45,7 +46,7 @@ public abstract class EditPanel extends JPanel implements LedObserver {
 	protected JButton playButton;
 	protected Thread playThread = null;
 
-	public DisplayBuffer buffer = null; // our internal temporary displayBuffer
+	private DisplayBuffer buffer = null; // our internal temporary displayBuffer
 									// for editing
 	protected DisplayBuffer origBuffer; // keep a reference to the original
 										// buffer for overwriting on save
@@ -98,7 +99,7 @@ public abstract class EditPanel extends JPanel implements LedObserver {
 		buffer = displayBuffer.clone();
 		origBuffer = displayBuffer;
 		// common components for all types of edit panels
-		optionsPanel = new AnimationOptionsPanel(this);
+		optionsPanel = new AnimationOptionsPanel(this, this);
 		rawInputPanel = createRawInputPanel();
 
 		setLayout(new GridBagLayout());
@@ -357,6 +358,10 @@ public abstract class EditPanel extends JPanel implements LedObserver {
 	
 	public void close() {
 		stopPlaying();
+	}
+	
+	public DisplayBuffer getBuffer() {
+		return buffer;
 	}
 	
 }

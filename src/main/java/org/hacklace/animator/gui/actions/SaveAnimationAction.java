@@ -7,25 +7,24 @@ import javax.swing.JOptionPane;
 
 import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.gui.AnimatorGui;
-import org.hacklace.animator.gui.EditPanel;
 
 public class SaveAnimationAction extends AbstractAction {
 
 	private static final long serialVersionUID = -5813301123661228603L;
-	private EditPanel editPanel;
+	private SaveObserver editPanel;
 
 	public SaveAnimationAction(
-			EditPanel editPanel) {
+			SaveObserver optionsObserver) {
 		super("Save");
 
-		this.editPanel = editPanel;
+		this.editPanel = optionsObserver;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		ErrorContainer errorContainer = new ErrorContainer();
 
-		boolean isSaveAble = editPanel.buffer.isSaveable(errorContainer);
+		boolean isSaveAble = editPanel.getBuffer().isSaveable(errorContainer);
 
 		if (isSaveAble) {
 			editPanel.saveBuffer();

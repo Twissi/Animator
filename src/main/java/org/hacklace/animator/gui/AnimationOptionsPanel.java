@@ -17,6 +17,7 @@ import org.hacklace.animator.gui.actions.CancelEditAction;
 import org.hacklace.animator.gui.actions.DelayChangeListener;
 import org.hacklace.animator.gui.actions.DirectionListener;
 import org.hacklace.animator.gui.actions.SaveAnimationAction;
+import org.hacklace.animator.gui.actions.SaveObserver;
 import org.hacklace.animator.gui.actions.SpeedChangeListener;
 import org.hacklace.animator.gui.actions.StepWidthListener;
 
@@ -31,22 +32,22 @@ public class AnimationOptionsPanel extends JPanel {
 	private JRadioButton stepFive;
 	private ButtonGroup stepButtons;
 
-	public AnimationOptionsPanel(EditPanel editPanel) {
+	public AnimationOptionsPanel(OptionsObserver optionsObserver, SaveObserver saveObserver) {
 		removeAll();
-		initComponents(editPanel);
+		initComponents(optionsObserver, saveObserver);
 	}
 
-	private JPanel createDirectionPanel(EditPanel editPanel) {
+	private JPanel createDirectionPanel(OptionsObserver optionsObserver) {
 		JPanel directionPanel = new JPanel();
 		directionPanel.add(new JLabel("Direction:"));
 		directionButtons = new ButtonGroup();
 		directionUni = new JRadioButton("Unidirectional");
-		directionUni.addActionListener(new DirectionListener(editPanel,
+		directionUni.addActionListener(new DirectionListener(optionsObserver,
 				Direction.FORWARD));
 		directionButtons.add(directionUni);
 		directionPanel.add(directionUni);
 		directionBi = new JRadioButton("Bidirectional");
-		directionBi.addActionListener(new DirectionListener(editPanel,
+		directionBi.addActionListener(new DirectionListener(optionsObserver,
 				Direction.BIDIRECTIONAL));
 		directionButtons.add(directionBi);
 		directionPanel.add(directionBi);
@@ -54,17 +55,17 @@ public class AnimationOptionsPanel extends JPanel {
 		return directionPanel;
 	}
 
-	private JPanel createStepWidthPanel(EditPanel editPanel) {
+	private JPanel createStepWidthPanel(OptionsObserver optionsObserver) {
 		JPanel stepWidthPanel = new JPanel();
 		stepWidthPanel.add(new JLabel("StepWidth:"));
 		stepButtons = new ButtonGroup();
 		stepOne = new JRadioButton("1");
-		stepOne.addActionListener(new StepWidthListener(editPanel,
+		stepOne.addActionListener(new StepWidthListener(optionsObserver,
 				StepWidth.ONE));
 		stepButtons.add(stepOne);
 		stepWidthPanel.add(stepOne);
 		stepFive = new JRadioButton("5");
-		stepFive.addActionListener(new StepWidthListener(editPanel,
+		stepFive.addActionListener(new StepWidthListener(optionsObserver,
 				StepWidth.FIVE));
 		stepButtons.add(stepFive);
 		stepWidthPanel.add(stepFive);
@@ -87,7 +88,7 @@ public class AnimationOptionsPanel extends JPanel {
 		}
 	}
 
-	private void initComponents(EditPanel editPanel) {
+	private void initComponents(OptionsObserver optionsObserver, SaveObserver saveObserver) {
 		// one column grid layout
 		setLayout(new GridLayout(0, 1));
 		add(new JLabel("Options"));
@@ -96,7 +97,7 @@ public class AnimationOptionsPanel extends JPanel {
 		speedSlider.setPaintTicks(true);
 		speedSlider.setSnapToTicks(true);
 		speedSlider.setMinorTickSpacing(1);
-		speedSlider.addChangeListener(new SpeedChangeListener(editPanel,
+		speedSlider.addChangeListener(new SpeedChangeListener(optionsObserver,
 				speedSlider));
 		add(speedSlider);
 		add(new JLabel("Delay:"));
@@ -104,11 +105,11 @@ public class AnimationOptionsPanel extends JPanel {
 		delaySlider.setPaintTicks(true);
 		delaySlider.setSnapToTicks(true);
 		delaySlider.setMinorTickSpacing(1);
-		delaySlider.addChangeListener(new DelayChangeListener(editPanel, delaySlider));
+		delaySlider.addChangeListener(new DelayChangeListener(optionsObserver, delaySlider));
 		add(delaySlider);
-		add(createDirectionPanel(editPanel));
-		add(createStepWidthPanel(editPanel));
-		JButton saveButton = new JButton(new SaveAnimationAction(editPanel));
+		add(createDirectionPanel(optionsObserver));
+		add(createStepWidthPanel(optionsObserver));
+		JButton saveButton = new JButton(new SaveAnimationAction(saveObserver));
 		add(saveButton);
 		JButton cancelButton = new JButton(new CancelEditAction());
 		add(cancelButton);

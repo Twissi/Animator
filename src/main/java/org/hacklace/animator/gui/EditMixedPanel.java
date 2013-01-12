@@ -12,7 +12,7 @@ public class EditMixedPanel extends EditPanel {
 	}
 
 	protected int getMaximumGrid() {
-		return buffer.getNumColumns() / GRID_COLS + 1;
+		return getBuffer().getNumColumns() / GRID_COLS + 1;
 	}
 
 }

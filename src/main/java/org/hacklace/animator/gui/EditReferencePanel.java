@@ -14,7 +14,7 @@ public class EditReferencePanel extends EditPanel {
 
 	@Override
 	protected int getMaximumGrid() {
-		int columns = ((ReferenceDisplayBuffer) buffer).getNumColumns();
+		int columns = ((ReferenceDisplayBuffer) getBuffer()).getNumColumns();
 		int grids = ((int) (columns / GRID_COLS)) - NUM_GRIDS_TO_SHOW;
 		if (grids < 0)
 			grids = 0;

@@ -34,7 +34,7 @@ public class EditTextPanel extends EditPanel {
 	public EditTextPanel(DisplayBuffer displayBuffer) {
 		super(displayBuffer);
 		ledPanel.setEnabled(false);
-		textEditField.setText(((TextDisplayBuffer) buffer).getText());
+		textEditField.setText(((TextDisplayBuffer) getBuffer()).getText());
 	}
 
 	@Override
@@ -63,9 +63,9 @@ public class EditTextPanel extends EditPanel {
 				try {
 					ErrorContainer errorContainer = new ErrorContainer();
 					textEditField.getDocument().insertString(pos, chars, null);
-					((TextDisplayBuffer) buffer).setText(textEditField
+					((TextDisplayBuffer) getBuffer()).setText(textEditField
 							.getText(), errorContainer);
-					setFromDisplayBuffer(buffer);
+					setFromDisplayBuffer(getBuffer());
 					showErrors(errorContainer);
 				} catch (BadLocationException e) {
 					// just do nothing, this should not happen anyways
@@ -151,8 +151,10 @@ public class EditTextPanel extends EditPanel {
 		textEditField.setDocument(doc);
 		textEditField.addKeyListener(new KeyListener() {
 			private void updateText() {
-				((TextDisplayBuffer) buffer).setText(textEditField.getText(), new ErrorContainer() /*TODO*/);
-				setFromDisplayBuffer(buffer);
+				ErrorContainer errorContainer = new ErrorContainer();
+				((TextDisplayBuffer) getBuffer()).setText(textEditField.getText(), errorContainer);
+				setFromDisplayBuffer(getBuffer());
+				showErrors(errorContainer);
 			}
 
 			@Override
@@ -176,7 +178,7 @@ public class EditTextPanel extends EditPanel {
 
 	@Override
 	public void onRawTextChanged() {
-		textEditField.setText(((TextDisplayBuffer) buffer).getText());
+		textEditField.setText(((TextDisplayBuffer) getBuffer()).getText());
 	}
 
 }

@@ -4,20 +4,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import org.hacklace.animator.enums.StepWidth;
-import org.hacklace.animator.gui.EditPanel;
+import org.hacklace.animator.gui.OptionsObserver;
 
 public class StepWidthListener implements ActionListener {
 
-	private final EditPanel editPanel;
+	private final OptionsObserver optionsObserver;
 	private StepWidth stepWidth;
 
-	public StepWidthListener(EditPanel editPanel, StepWidth stepWidth) {
-		this.editPanel = editPanel;
+	public StepWidthListener(OptionsObserver optionsObserver, StepWidth stepWidth) {
+		this.optionsObserver = optionsObserver;
 		this.stepWidth = stepWidth;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		editPanel.onStepChanged(stepWidth);
+		optionsObserver.onStepChanged(stepWidth);
 	}
 }
