@@ -123,7 +123,7 @@ public class MenuActions {
 		private static final long serialVersionUID = 3972006266609060565L;
 
 		public ExportGifAction() {
-			super("Export gif");
+			super("Export *.gif");
 		}
 
 		@Override
@@ -139,7 +139,7 @@ public class MenuActions {
 		private static final long serialVersionUID = 3972006266609060565L;
 
 		public ExportBinAction() {
-			super("Export .bin");
+			super("Export *.bin");
 		}
 
 		@Override
