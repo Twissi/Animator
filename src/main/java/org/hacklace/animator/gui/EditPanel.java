@@ -261,14 +261,14 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 			}
 		}
 	}
-
+	
 	public void setFromDisplayBuffer(DisplayBuffer buffer) {
 		this.buffer = buffer;
 		optionsPanel.setOptions(buffer.getSpeed(), buffer.getDelay(),
 				buffer.getDirection(), buffer.getStepWidth());
 		updateRawTextFields();
 		copyBufferToPanel(currentPosition, ledPanel);
-		ledPanel.setSpacing(buffer.getStepWidth() == StepWidth.FIVE);
+		onStepChanged(buffer.getStepWidth());
 	}
 
 	protected void updateRawTextFields() {
