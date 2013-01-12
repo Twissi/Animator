@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.PortUnreachableException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.LinkedList;
 
@@ -25,15 +26,16 @@ import org.hacklace.animator.IniConf;
 public class FlashExporter {
 
 	private IniConf conf;
-	private SerialPort serialPort;
+	private String deviceName;
 
 	public FlashExporter() {
 		conf = IniConf.getInstance();
 		conf.reRead();
+		deviceName = conf.device();
 	}
 
 	@SuppressWarnings("unchecked")
-	private CommPortIdentifier getPortIdentifier()
+	public CommPortIdentifier getPortIdentifier(String deviceName)
 			throws PortUnreachableException {
 		Enumeration<CommPortIdentifier> portList;
 		CommPortIdentifier portId;
@@ -43,11 +45,11 @@ public class FlashExporter {
 			portId = (CommPortIdentifier) portList.nextElement();
 
 			if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL
-					&& portId.getName().equals(conf.device())) {
+					&& portId.getName().equals(deviceName)) {
 				return portId;
 			}
 		}
-		throw new PortUnreachableException(conf.device());
+		throw new PortUnreachableException(deviceName);
 	}
 
 	private SerialPort initSerialPort(CommPortIdentifier portId)
@@ -65,6 +67,7 @@ public class FlashExporter {
 
 	/**
 	 * Write contents of file inputFile to serial port
+	 * 
 	 * @param inputFile
 	 * @throws IOException
 	 * @throws UnsupportedCommOperationException
@@ -76,9 +79,10 @@ public class FlashExporter {
 		write(fis);
 		fis.close();
 	}
-	
+
 	/**
 	 * Write contents of stream inputStream to serial port
+	 * 
 	 * @param stream
 	 * @throws IOException
 	 * @throws UnsupportedCommOperationException
@@ -86,16 +90,18 @@ public class FlashExporter {
 	 */
 	public void write(InputStream inputStream) throws IOException,
 			UnsupportedCommOperationException, PortInUseException {
-		serialPort = initSerialPort(getPortIdentifier());
+		SerialPort serialPort = initSerialPort(getPortIdentifier(deviceName));
 		OutputStream serialOut = serialPort.getOutputStream();
 		writeTo(inputStream, serialOut);
 		serialOut.close();
 		serialPort.close();
 		close();
 	}
-	
-	public void write(String rawString) throws UnsupportedCommOperationException, PortInUseException, IOException {
-		serialPort = initSerialPort(getPortIdentifier());
+
+	public void write(String rawString)
+			throws UnsupportedCommOperationException, PortInUseException,
+			IOException {
+		SerialPort serialPort = initSerialPort(getPortIdentifier(deviceName));
 		OutputStream serialOut = serialPort.getOutputStream();
 		writeTo(rawString, serialOut);
 		serialOut.close();
@@ -104,7 +110,9 @@ public class FlashExporter {
 	}
 
 	/**
-	 * Write contents of stream inputStream to a file, used for debugging / unit tests
+	 * Write contents of stream inputStream to a file, used for debugging / unit
+	 * tests
+	 * 
 	 * @param in
 	 * @param outFile
 	 * @throws IOException
@@ -118,7 +126,9 @@ public class FlashExporter {
 	}
 
 	/**
-	 * The actual writer with the data generation code, reads from inputStream, writes to outputStream
+	 * The actual writer with the data generation code, reads from inputStream,
+	 * writes to outputStream
+	 * 
 	 * @param in
 	 * @param out
 	 * @throws IOException
@@ -138,19 +148,19 @@ public class FlashExporter {
 
 		out.write((byte) 27);
 	}
-	
+
 	public void writeTo(String rawString, OutputStream out) throws IOException {
-		InputStream stream = new ByteArrayInputStream(rawString.getBytes(
-				HacklaceConfigManager.HACKLACE_CHARSET));
+		InputStream stream = new ByteArrayInputStream(
+				rawString.getBytes(HacklaceConfigManager.HACKLACE_CHARSET));
 		writeTo(stream, out);
 	}
 
 	public void writeTo(String rawString, File outFile) throws IOException {
-		InputStream stream = new ByteArrayInputStream(rawString.getBytes(
-				HacklaceConfigManager.HACKLACE_CHARSET));
+		InputStream stream = new ByteArrayInputStream(
+				rawString.getBytes(HacklaceConfigManager.HACKLACE_CHARSET));
 		writeTo(stream, outFile);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	// TODO Add help that user has to be part of the corresponding group
 	public LinkedList<CommPortIdentifier> listPorts() {
@@ -162,6 +172,18 @@ public class FlashExporter {
 			ports.add(portIdentifier);
 		}
 		return ports;
+	}
+
+	@SuppressWarnings("unchecked")
+	public ArrayList<String> listDeviceNames() {
+		ArrayList<String> result = new ArrayList<String>();
+		Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier
+				.getPortIdentifiers();
+		while (portEnum.hasMoreElements()) {
+			CommPortIdentifier portIdentifier = portEnum.nextElement();
+			result.add(portIdentifier.getName());
+		}
+		return result;
 	}
 
 	public String getPortTypeName(int portType) {
@@ -179,6 +201,10 @@ public class FlashExporter {
 		default:
 			return "unknown type";
 		}
+	}
+
+	public void setDeviceName(String deviceName) {
+		this.deviceName = deviceName;
 	}
 
 }
