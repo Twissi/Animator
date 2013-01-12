@@ -25,7 +25,7 @@ public class LedPanel extends JPanel implements LedObserver {
 	private GridBagLayout layout;
 	private boolean isSpaced = false;
 	private int offset = 0;
-	
+
 	private List<LedObserver> observerList;
 
 	public LedPanel(int rows, int columns) {
@@ -44,7 +44,7 @@ public class LedPanel extends JPanel implements LedObserver {
 	}
 
 	public void setLedFromBuffer(int column, int row, boolean val) {
-		
+
 		leds[column][row].setFromBuffer(val);
 
 		// for (LedObserver o: observerList) {
@@ -69,20 +69,20 @@ public class LedPanel extends JPanel implements LedObserver {
 		// add labels for frame number
 		c.gridwidth = 5;
 		c.anchor = GridBagConstraints.CENTER;
-		for (c.gridx = 0; c.gridx < gridCols; c.gridx+=5) {
+		for (c.gridx = 0; c.gridx < gridCols; c.gridx += 5) {
 			JLabel frameLabel = new JLabel();
 			add(frameLabel, c);
 			frameLabels.add(frameLabel);
 		}
 		updateLabels();
 	}
-	
+
 	private void updateLabels() {
 		for (int i = 0; i < frameLabels.size(); i++) {
 			frameLabels.get(i).setText(Integer.toString(i + offset));
 		}
 	}
-	
+
 	@Override
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
@@ -92,7 +92,7 @@ public class LedPanel extends JPanel implements LedObserver {
 			}
 		}
 	}
-	
+
 	private void updateGridSpacing() {
 		GridBagConstraints c = new GridBagConstraints();
 		if (isSpaced) {
@@ -110,12 +110,13 @@ public class LedPanel extends JPanel implements LedObserver {
 	public void addObserver(LedObserver o) {
 		observerList.add(o);
 	}
-	
+
 	/**
-	 * This bubbles the change events from leds to the ledPanel's registered observers
+	 * This bubbles the change events from leds to the ledPanel's registered
+	 * observers
 	 */
 	public void onLedChange(int column, int row, boolean newValue) {
-		for (LedObserver o: observerList) {
+		for (LedObserver o : observerList) {
 			o.onLedChange(column, row, newValue);
 		}
 	}
@@ -124,60 +125,29 @@ public class LedPanel extends JPanel implements LedObserver {
 	public Dimension getPreferredSize() {
 		return new Dimension(gridCols * 15, gridRows * 15);
 	}
-	
+
 	public int getNumRows() {
 		return gridRows;
 	}
-	
+
 	public int getNumCols() {
 		return gridCols;
 	}
-	
+
 	public void setSpacing(boolean value) {
 		isSpaced = value;
 		updateGridSpacing();
 	}
-	
+
 	public void setOffset(int value) {
 		offset = value;
 		updateLabels();
 	}
-	
+
 	public void showLabels(boolean value) {
-		for (JLabel label: frameLabels) {
+		for (JLabel label : frameLabels) {
 			label.setVisible(value);
 		}
 	}
-	
-//	public static void main(String[] args) throws InterruptedException {
-//		JFrame f = new JFrame("Test");
-//		final LedPanel p = new LedPanel(7, 50);
-//		f.setSize(500, 700);
-//		f.getContentPane().setLayout(new GridLayout());
-//		f.getContentPane().add(p);
-//		JButton button = new JButton("Toggle spacing");
-//		button.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				p.toggleSpacing();
-//			}}
-//		);
-//		f.getContentPane().add(button);
-//		
-//		f.pack();
-//		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		f.setVisible(true);
-//		for (int i = FontUtil.LOWEST_INDEX; i < FontUtil.HIGHEST_INDEX + 1; i++) {
-//			p.grid.setDataFromBytes(FontUtil.getFiveBytesForIndex(i));
-//			for (int row = 0; row < p.gridRows; row++) {
-//				for (int column = 0; column < p.gridCols; column++) {
-//					p.setLed(row, column, p.grid.getColumnRow(column,row));
-//				}
-//
-//			}
-//			Thread.sleep(1000);
-//
-//		}
-//
-//	}
+
 }
