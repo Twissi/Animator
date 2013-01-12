@@ -75,9 +75,29 @@
 					</descriptorRefs>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>com.agilejava.docbkx</groupId>
+				<artifactId>docbkx-maven-plugin</artifactId>
+				<dependencies>
+					<dependency>
+						<groupId>org.docbook</groupId>
+						<artifactId>docbook-xml</artifactId>
+						<version>4.4</version>
+						<scope>runtime</scope>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<phase>pre-site</phase>
+						<goals>
+							<goal>generate-html</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>	    
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 </project>
