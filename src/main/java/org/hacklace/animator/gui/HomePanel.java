@@ -175,7 +175,7 @@ public class HomePanel extends JPanel {
 			index = animationList.getSelectedIndex();
 		}
 
-		configManager.addDisplayBuffer(displayBuffer, index);
+		configManager.addDisplayBuffer(displayBuffer, index + 1);
 
 		animationListData.add(index + 1, displayBuffer);
 		animationList.setSelectedIndex(index + 1);
