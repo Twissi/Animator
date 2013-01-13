@@ -86,6 +86,7 @@
 						<phase>pre-site</phase>
 						<goals>
 							<goal>generate-html</goal>
+							<goal>generate-javadoc</goal>
 						</goals>
 					</execution>
 				</executions>
