@@ -40,6 +40,8 @@ public class AnimatorGui extends JFrame {
 
 	private HacklaceConfigManager hacklaceConfigManager;
 
+	private static IniConf iniConf = new IniConf();
+
 	private String title = "The chosen Hacklace Animator Tool";
 
 	public AnimatorGui() {
@@ -125,8 +127,8 @@ public class AnimatorGui extends JFrame {
 		// Set stuff
 		setTitle(title);
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-		setPreferredSize(new Dimension(IniConf.getInstance().displayWidth(),
-				IniConf.getInstance().displayHeight()));
+		setPreferredSize(new Dimension(AnimatorGui.getIniConf().displayWidth(),
+				AnimatorGui.getIniConf().displayHeight()));
 
 		pack();
 
@@ -209,5 +211,9 @@ public class AnimatorGui extends JFrame {
 			}
 
 		}
+	}
+
+	public static IniConf getIniConf() {
+		return iniConf;
 	}
 }

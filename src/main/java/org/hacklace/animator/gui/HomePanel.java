@@ -15,7 +15,6 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
 import org.hacklace.animator.HacklaceConfigManager;
-import org.hacklace.animator.IniConf;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.gui.actions.AnimationListActions;
 
@@ -66,7 +65,7 @@ public class HomePanel extends JPanel {
 
 	public void updateSizeInfoLabel() {
 		int bytesUsed = configManager.getNumBytes();
-		int maxBytes = IniConf.getInstance().maxBytes();
+		int maxBytes = AnimatorGui.getIniConf().maxBytes();
 		if (bytesUsed > maxBytes)
 			sizeInfoLabel.setForeground(Color.red);
 		else
@@ -142,7 +141,7 @@ public class HomePanel extends JPanel {
 		animationListData.add(index + 1, tmp);
 		animationList.setSelectedIndex(index + 1);
 		animationList.ensureIndexIsVisible(index + 1);
-		
+
 		configManager.moveUp(index);
 		updateList(true);
 	}
@@ -190,7 +189,8 @@ public class HomePanel extends JPanel {
 
 	public DisplayBuffer getSelectedBuffer() {
 		int index = getSelectedIndex();
-		if (index == -1) return null;
+		if (index == -1)
+			return null;
 		return configManager.getDisplayBuffer(index);
 	}
 
