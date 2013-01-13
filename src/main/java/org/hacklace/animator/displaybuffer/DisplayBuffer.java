@@ -19,6 +19,7 @@ public abstract class DisplayBuffer implements Cloneable, Size {
 	protected ModusByte modusByte = new ModusByte();
 
 	protected final static int GRID_ROWS = IniConf.getInstance().rows();
+	protected final static int GRID_COLS = IniConf.getInstance().columns(); // only for copying frames
 
 	protected DisplayBuffer() {
 	}

@@ -379,5 +379,9 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 	public DisplayBuffer getBuffer() {
 		return buffer;
 	}
+	
+	public int getCurrentPosition() {
+		return currentPosition;
+	}
 
 }

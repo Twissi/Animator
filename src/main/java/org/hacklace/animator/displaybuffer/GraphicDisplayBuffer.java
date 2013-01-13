@@ -86,8 +86,9 @@ public class GraphicDisplayBuffer extends DisplayBuffer implements Size {
 			return;
 		}
 		int highestNonEmptyColumn = getHighestNonEmptyColumn();
-		if (width - 1 < highestNonEmptyColumn) {
-			// ignore the request as it would cause a data loss
+		if (width < highestNonEmptyColumn + 1) {
+			// do not honor the request as it would cause a data loss
+			setWidth(highestNonEmptyColumn + 1);
 			return;
 		}
 		// decrease as requested
@@ -121,6 +122,39 @@ public class GraphicDisplayBuffer extends DisplayBuffer implements Size {
 		return 1 // modus byte
 		+ data.length //
 		+ 1; // line end
+	}
+
+	private void copyColumn(int originalColumn, int newColumn) {
+		for (int row = 0; row < GRID_ROWS; row++) {
+			setValueAtColumnRow(newColumn, row,
+					getValueAtColumnRow(originalColumn, row));
+		}
+	}
+
+	public void copyAndReplaceFrame(int frameIndex) {
+		int currentColumnPos = frameIndex * GRID_COLS;
+
+		for (int col = currentColumnPos; col < currentColumnPos + GRID_COLS; col++) {
+			copyColumn(col, col + GRID_COLS);
+		}
+	}
+
+	public void copyAndInsertFrame(int frameIndex) {
+		int currentColumnPos = frameIndex * GRID_COLS;
+
+		for (int col = data.length - 1; col >= currentColumnPos + GRID_COLS; col--) {
+			copyColumn(col - GRID_COLS, col);
+		}
+	}
+
+	public void deleteFrame(int frameIndex) {
+		int currentColumnPos = frameIndex * GRID_COLS;
+
+		for (int col = currentColumnPos; col < data.length; col++) {
+			copyColumn(col + GRID_COLS, col); // works, will just get empty
+			// columns for positions beyond the end
+		}
+		setWidth(data.length - GRID_COLS);
 	}
 
 }
