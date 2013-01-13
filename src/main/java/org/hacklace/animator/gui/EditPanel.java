@@ -346,10 +346,10 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 		updateRawTextFields();
 	}
 
-	public void onStepChanged(StepWidth newStep) {
-		buffer.setStepWidth(newStep);
-		ledPanel.setSpacing(newStep == StepWidth.FIVE);
-		ledPanel.showLabels(newStep == StepWidth.FIVE);
+	public void onStepChanged(StepWidth newStepWidth) {
+		buffer.setStepWidth(newStepWidth);
+		ledPanel.setSpacing(newStepWidth == StepWidth.FIVE);
+		ledPanel.showLabels(newStepWidth == StepWidth.FIVE);
 		updateRawTextFields();
 	}
 
