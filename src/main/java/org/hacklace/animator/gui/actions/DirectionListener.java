@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import org.hacklace.animator.enums.Direction;
-import org.hacklace.animator.gui.OptionsObserver;
 
 public class DirectionListener implements ActionListener {
 

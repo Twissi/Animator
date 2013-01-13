@@ -29,6 +29,8 @@ import org.hacklace.animator.enums.Delay;
 import org.hacklace.animator.enums.Direction;
 import org.hacklace.animator.enums.Speed;
 import org.hacklace.animator.enums.StepWidth;
+import org.hacklace.animator.gui.actions.LedObserver;
+import org.hacklace.animator.gui.actions.OptionsObserver;
 import org.hacklace.animator.gui.actions.RawInputFullLineApplyActionListener;
 import org.hacklace.animator.gui.actions.RawInputRestOfLineApplyActionListener;
 import org.hacklace.animator.gui.actions.SaveObserver;
@@ -261,13 +263,13 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 			}
 		}
 	}
-	
+
 	public void setNewDisplayBuffer(DisplayBuffer newBuffer) {
 		this.buffer = newBuffer;
 		updateUiFromDisplayBuffer();
 	}
-	
-	public void updateUiFromDisplayBuffer() {		
+
+	public void updateUiFromDisplayBuffer() {
 		optionsPanel.setOptions(buffer.getSpeed(), buffer.getDelay(),
 				buffer.getDirection(), buffer.getStepWidth());
 		updateRawTextFields();
@@ -319,7 +321,8 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 			// the buffer could not be found. This means, it has been replaced
 			// during editing (see issue #91). We'll replace it for an easy fix
 			// until we have refactored all the other stuff
-			origBufferIndex = AnimatorGui.getInstance().getHomePanel().getSelectedIndex();
+			origBufferIndex = AnimatorGui.getInstance().getHomePanel()
+					.getSelectedIndex();
 		}
 		list.set(origBufferIndex, buffer);
 		// null the buffer references - we rather have a NullpointerException
@@ -379,7 +382,7 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 	public DisplayBuffer getBuffer() {
 		return buffer;
 	}
-	
+
 	public int getCurrentPosition() {
 		return currentPosition;
 	}

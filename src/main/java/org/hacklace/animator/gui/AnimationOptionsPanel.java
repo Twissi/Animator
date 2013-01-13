@@ -16,6 +16,7 @@ import org.hacklace.animator.enums.StepWidth;
 import org.hacklace.animator.gui.actions.CancelEditAction;
 import org.hacklace.animator.gui.actions.DelayChangeListener;
 import org.hacklace.animator.gui.actions.DirectionListener;
+import org.hacklace.animator.gui.actions.OptionsObserver;
 import org.hacklace.animator.gui.actions.SaveAnimationAction;
 import org.hacklace.animator.gui.actions.SaveObserver;
 import org.hacklace.animator.gui.actions.SpeedChangeListener;

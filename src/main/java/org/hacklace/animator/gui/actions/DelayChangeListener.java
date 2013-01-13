@@ -5,7 +5,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.hacklace.animator.enums.Delay;
-import org.hacklace.animator.gui.OptionsObserver;
 
 public class DelayChangeListener implements ChangeListener {
 

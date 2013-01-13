@@ -5,6 +5,8 @@ import java.awt.Dimension;
 
 import javax.swing.JButton;
 
+import org.hacklace.animator.gui.actions.LedObserver;
+
 public class Led extends JButton implements LedInterface {
 
 	private static final long serialVersionUID = -5214373326373158893L;

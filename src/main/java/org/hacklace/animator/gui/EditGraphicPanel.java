@@ -18,6 +18,7 @@ import org.hacklace.animator.gui.actions.CopyAndInsertFrameActionListener;
 import org.hacklace.animator.gui.actions.CopyAndReplaceFrameActionListener;
 import org.hacklace.animator.gui.actions.DeleteFrameActionListener;
 import org.hacklace.animator.gui.actions.RawInputDirectModeApplyActionListener;
+import org.hacklace.animator.gui.actions.*;
 
 public class EditGraphicPanel extends EditPanel implements LedObserver {
 
