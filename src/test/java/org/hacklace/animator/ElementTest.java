@@ -1,11 +1,15 @@
 package org.hacklace.animator;
 
 import org.hacklace.animator.configuration.RestOfConfigLine;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import junit.framework.TestCase;
 
 public class ElementTest extends TestCase {
 
+	@Test
+	@Ignore
 	public void test() {
 		try {
 			new RestOfConfigLine(null, null); // throws assertion error
