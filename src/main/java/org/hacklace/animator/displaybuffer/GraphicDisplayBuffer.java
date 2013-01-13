@@ -21,6 +21,7 @@ public class GraphicDisplayBuffer extends DisplayBuffer implements Size {
 		super(fullLine.getModusByte(errorContainer));
 		data = fullLine.getRestOfLine(errorContainer).getLeds();
 		// may have trailing empty columns (desired!)
+		assertFive();
 	}
 
 	// public void setDataFromBytes(byte[] aniBytes) {
@@ -33,6 +34,18 @@ public class GraphicDisplayBuffer extends DisplayBuffer implements Size {
 	@Override
 	public AnimationType getAnimationType() {
 		return AnimationType.GRAPHIC;
+	}
+
+	private void assertFive() {
+		if (getStepWidth() == StepWidth.ONE) {
+			return;
+		}
+		int rest = data.length % GRID_COLS;
+		if (rest == 0) {
+			return;
+		}
+		int antiRest = GRID_COLS - rest;
+		setWidth(data.length + antiRest);
 	}
 
 	public byte[] getColumnsAsBytes() {
@@ -60,11 +73,13 @@ public class GraphicDisplayBuffer extends DisplayBuffer implements Size {
 									// false
 			data[column][row] = value;
 		}
+		assertFive();
 	}
 
 	public void toggleColumnRow(int column, int row) {
 		increaseWidthIfNeeded(column);
 		data[column][row] = !data[column][row];
+		assertFive();
 	}
 
 	private void increaseWidthIfNeeded(int column) {
@@ -73,6 +88,7 @@ public class GraphicDisplayBuffer extends DisplayBuffer implements Size {
 			data = new boolean[column + 1][GRID_ROWS];
 			System.arraycopy(oldData, 0, data, 0, oldData.length);
 		}
+		assertFive();
 	}
 
 	public void setWidth(int width) {
@@ -95,6 +111,7 @@ public class GraphicDisplayBuffer extends DisplayBuffer implements Size {
 		boolean[][] oldData = data;
 		data = new boolean[width][];
 		System.arraycopy(oldData, 0, data, 0, width);
+		assertFive();
 	}
 
 	private int getHighestNonEmptyColumn() {
@@ -129,6 +146,7 @@ public class GraphicDisplayBuffer extends DisplayBuffer implements Size {
 			setValueAtColumnRow(newColumn, row,
 					getValueAtColumnRow(originalColumn, row));
 		}
+		assertFive();
 	}
 
 	public void copyAndReplaceFrame(int frameIndex) {
@@ -142,7 +160,8 @@ public class GraphicDisplayBuffer extends DisplayBuffer implements Size {
 	public void copyAndInsertFrame(int frameIndex) {
 		int currentColumnPos = frameIndex * GRID_COLS;
 
-		for (int col = data.length - 1 + GRID_COLS; col >= currentColumnPos + GRID_COLS; col--) {
+		for (int col = data.length - 1 + GRID_COLS; col >= currentColumnPos
+				+ GRID_COLS; col--) {
 			copyColumn(col - GRID_COLS, col);
 		}
 	}
