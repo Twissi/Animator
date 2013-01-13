@@ -22,21 +22,21 @@ public abstract class AbstractRawInputApplyActionListener implements
 	protected void bufferFromString(FullConfigLine fullLine,
 			ErrorContainer errorContainer) {
 		try {
-			DisplayBuffer buffer = DisplayBuffer.createBufferFromLine(fullLine,
+			DisplayBuffer newBuffer = DisplayBuffer.createBufferFromLine(fullLine,
 					errorContainer);
-			if (buffer == null) {
+			if (newBuffer == null) {
 				JOptionPane.showMessageDialog(null,
 						DisplayBuffer.ZERO_MODUS_BYTE, "Error",
 						JOptionPane.ERROR_MESSAGE);
-			} else if (buffer.getAnimationType() == editPanel
+			} else if (newBuffer.getAnimationType() == editPanel
 					.getDisplayBuffer().getAnimationType()) {
 				// same type of animation, just switch buffers
-				editPanel.setFromDisplayBuffer(buffer);
+				editPanel.setNewDisplayBuffer(newBuffer);
 				editPanel.onRawTextChanged();
 			} else {
 				// different type of animation, switch editors
 				AnimatorGui.getInstance().endEditMode();
-				AnimatorGui.getInstance().startEditMode(buffer);
+				AnimatorGui.getInstance().startEditMode(newBuffer);
 			}
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(null, "Invalid raw string supplied. "

@@ -1,6 +1,7 @@
 package org.hacklace.animator.gui;
 
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
+import org.hacklace.animator.displaybuffer.MixedDisplayBuffer;
 
 public class EditMixedPanel extends EditPanel {
 
@@ -13,6 +14,11 @@ public class EditMixedPanel extends EditPanel {
 
 	protected int getMaximumGrid() {
 		return getBuffer().getNumColumns() / GRID_COLS + 1;
+	}
+	
+	@Override
+	public MixedDisplayBuffer getBuffer() {
+	  return (MixedDisplayBuffer) super.getBuffer();	
 	}
 
 }

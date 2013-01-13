@@ -156,7 +156,7 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 		c.gridy = 1;
 		add(playButton, c);
 		// set options and data from the display buffer
-		setFromDisplayBuffer(buffer);
+		updateUiFromDisplayBuffer();
 	}
 
 	/**
@@ -242,7 +242,7 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 				if (buffer == null)
 					return;
 				currentPosition = ((JSlider) arg0.getSource()).getValue();
-				setFromDisplayBuffer(buffer);
+				updateUiFromDisplayBuffer();
 				ledPanel.setOffset(currentPosition);
 			}
 		});
@@ -253,7 +253,7 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 		return IniConf.getInstance().getNumGrids() - NUM_GRIDS_TO_SHOW;
 	}
 
-	protected void copyBufferToPanel(int position, LedPanel panel) {
+	protected void copyBufferToLedPanel(int position, LedPanel panel) {
 		for (int x = 0; x < panel.getNumCols(); x++) {
 			for (int y = 0; y < panel.getNumRows(); y++) {
 				panel.setLedFromBuffer(x, y,
@@ -262,12 +262,16 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 		}
 	}
 	
-	public void setFromDisplayBuffer(DisplayBuffer buffer) {
-		this.buffer = buffer;
+	public void setNewDisplayBuffer(DisplayBuffer newBuffer) {
+		this.buffer = newBuffer;
+		updateUiFromDisplayBuffer();
+	}
+	
+	public void updateUiFromDisplayBuffer() {		
 		optionsPanel.setOptions(buffer.getSpeed(), buffer.getDelay(),
 				buffer.getDirection(), buffer.getStepWidth());
 		updateRawTextFields();
-		copyBufferToPanel(currentPosition, ledPanel);
+		copyBufferToLedPanel(currentPosition, ledPanel);
 		onStepChanged(buffer.getStepWidth());
 	}
 

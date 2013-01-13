@@ -51,8 +51,12 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 
 	@Override
 	public void onLedChange(int column, int row, boolean newValue) {
-		((GraphicDisplayBuffer) getBuffer()).setValueAtColumnRow(column + GRID_COLS * currentPosition, row, newValue);
+		getBuffer().setValueAtColumnRow(column + GRID_COLS * currentPosition, row, newValue);
 		updateRawTextFields();
 	}
-
+	
+	@Override
+	public GraphicDisplayBuffer getBuffer() {
+	  return (GraphicDisplayBuffer) super.getBuffer();	
+	}
 }
