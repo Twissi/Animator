@@ -142,7 +142,7 @@ public class GraphicDisplayBuffer extends DisplayBuffer implements Size {
 	public void copyAndInsertFrame(int frameIndex) {
 		int currentColumnPos = frameIndex * GRID_COLS;
 
-		for (int col = data.length - 1; col >= currentColumnPos + GRID_COLS; col--) {
+		for (int col = data.length - 1 + GRID_COLS; col >= currentColumnPos + GRID_COLS; col--) {
 			copyColumn(col - GRID_COLS, col);
 		}
 	}
