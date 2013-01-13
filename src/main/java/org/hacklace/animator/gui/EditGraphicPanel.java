@@ -17,8 +17,9 @@ import org.hacklace.animator.enums.StepWidth;
 import org.hacklace.animator.gui.actions.CopyAndInsertFrameActionListener;
 import org.hacklace.animator.gui.actions.CopyAndReplaceFrameActionListener;
 import org.hacklace.animator.gui.actions.DeleteFrameActionListener;
+import org.hacklace.animator.gui.actions.LedObserver;
+import org.hacklace.animator.gui.actions.PositionSlideObserver;
 import org.hacklace.animator.gui.actions.RawInputDirectModeApplyActionListener;
-import org.hacklace.animator.gui.actions.*;
 
 public class EditGraphicPanel extends EditPanel implements LedObserver {
 
@@ -26,14 +27,60 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 
 	private JTextField rawInputDirectModeTextField;
 
-	private JButton copyAndReplaceFrameButton;
+	private CopyAndReplaceFrameButton copyAndReplaceFrameButton;
 
-	private JButton copyAndInsertFrameButton;
+	private CopyAndInsertFrameButton copyAndInsertFrameButton;
 
-	private JButton deleteFrameButton;
+	private DeleteFrameButton deleteFrameButton;
 
 	public EditGraphicPanel(DisplayBuffer displayBuffer) {
 		super(displayBuffer);
+	}
+
+	abstract class CopyDeleteFrameButton extends JButton implements
+			PositionSlideObserver {
+
+		private static final long serialVersionUID = 8917655042121721490L;
+
+		CopyDeleteFrameButton() {
+			setText(0);
+			positionSliderChangeListener.addPositionSlideObserver(this);
+		}
+
+		abstract void setText(int pos);
+
+		@Override
+		public void onPositionChanged(int pos) {
+			setText(pos);
+		}
+
+	}
+
+	class CopyAndReplaceFrameButton extends CopyDeleteFrameButton {
+
+		private static final long serialVersionUID = 8053267966478142682L;
+
+		void setText(int pos) {
+			setText("Copy frame " + pos + " to " + (pos + 1) + " and replace");
+		}
+	}
+	
+	class CopyAndInsertFrameButton extends CopyDeleteFrameButton {
+
+		private static final long serialVersionUID = 8053267966478142682L;
+
+		void setText(int pos) {
+			setText("Copy frame " + pos + " to " + (pos + 1) + " and move frames right");
+		}
+	}
+	
+	class DeleteFrameButton extends CopyDeleteFrameButton {
+
+		private static final long serialVersionUID = 8053267966478142682L;
+
+		void setText(int pos) {
+			setText("Delete frame " + pos + " and move frames left");
+		}
 	}
 
 	@Override
@@ -44,19 +91,17 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 		c.gridx = 0;
 		c.gridy = GridBagConstraints.RELATIVE;
 
-		copyAndReplaceFrameButton = new JButton(
-				"Copy frame n to n+1 and replace");
+		copyAndReplaceFrameButton = new CopyAndReplaceFrameButton();
 		panel.add(copyAndReplaceFrameButton, c);
 		copyAndReplaceFrameButton
 				.addActionListener(new CopyAndReplaceFrameActionListener(this));
 
-		copyAndInsertFrameButton = new JButton(
-				"Copy frame n to n+1 and move frames right");
+		copyAndInsertFrameButton = new CopyAndInsertFrameButton();
 		panel.add(copyAndInsertFrameButton, c);
 		copyAndInsertFrameButton
 				.addActionListener(new CopyAndInsertFrameActionListener(this));
 
-		deleteFrameButton = new JButton("Delete frame n and move frames left");
+		deleteFrameButton = new DeleteFrameButton();
 		panel.add(deleteFrameButton, c);
 		deleteFrameButton
 				.addActionListener(new DeleteFrameActionListener(this));

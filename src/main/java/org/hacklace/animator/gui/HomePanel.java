@@ -190,6 +190,7 @@ public class HomePanel extends JPanel {
 
 	public DisplayBuffer getSelectedBuffer() {
 		int index = getSelectedIndex();
+		if (index == -1) return null;
 		return configManager.getDisplayBuffer(index);
 	}
 
