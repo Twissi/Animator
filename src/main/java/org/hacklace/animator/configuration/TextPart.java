@@ -70,7 +70,7 @@ public class TextPart extends AnimationPart implements Size {
 			// happens for completely empty buffer
 			return;
 		}
-		assert (ConversionUtil.convertBooleanArrayToByte(data[data.length - 1]) == 0);
+		assert (ConversionUtil.isEmptyColumn(data[data.length - 1]));
 		boolean[][] oldData = data;
 		data = new boolean[oldData.length-1][];
 		System.arraycopy(oldData, 0, data, 0, data.length);

@@ -138,6 +138,10 @@ public class ConversionUtil {
 		}
 		return (byte) value;
 	}
+	
+	public static boolean isEmptyColumn(boolean[] array) {
+		return convertBooleanArrayToByte(array) == 0;
+	}
 
 	public static boolean isBitSet(byte bits, int index) {
 		final byte mask = (byte) Math.pow(2, index);

@@ -278,6 +278,7 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 		rawInputRestOfLineTextField.setText(fullLine.getRestOfLine(
 				errorContainer).getModifiedRawString());
 		updateRawDataDirectModeTextField(fullLine);
+		buffer.additionalChecks(errorContainer);
 		showErrors(errorContainer);
 	}
 

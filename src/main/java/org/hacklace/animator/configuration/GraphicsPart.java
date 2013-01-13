@@ -45,8 +45,6 @@ public class GraphicsPart extends AnimationPart {
 			assert (bools.length == 7);
 			byte value = (byte) ConversionUtil.convertBooleanArrayToByte(bools);
 			columnsAsBytes[colIndex] = value;
-			if (value != 0) {
-			}
 		}
 		return columnsAsBytes;
 	}

@@ -17,8 +17,8 @@ public class MixedDisplayBuffer extends DisplayBuffer {
 	}
 
 	public MixedDisplayBuffer() {
-		ErrorContainer errorContainer = new ErrorContainer();
-		setRestOfLine(new RestOfConfigLine("", errorContainer));
+		super();
+		setRestOfLine(new RestOfConfigLine("", new ErrorContainer()));
 	}
 
 	public RestOfConfigLine getRestOfLine() {
