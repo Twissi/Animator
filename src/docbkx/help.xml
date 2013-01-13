@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<article xmlns="http://docbook.org/ns/docbook" version="5.0" xml:lang="en">
+<!DOCTYPE article PUBLIC "-//OASIS//DTD Simplified DocBook XML V1.0//EN"
+"http://www.oasis-open.org/docbook/xml/simple/1.0/sdocbook.dtd">
+<article xmlns="http://docbook.org/ns/docbook">
 	<title>Hacklace Animator</title>
 	<para>Hacklace Animator documentation</para>
+	<para>
+		Up to date documentation can be found at
+		<ulink url="http://hacklace.org">hacklace.org</ulink>
+		and the
+		<ulink url="https://github.com/Hacklace/Animator/wiki">Hacklace Animator Wiki</ulink>
+	</para>
 </article>  
