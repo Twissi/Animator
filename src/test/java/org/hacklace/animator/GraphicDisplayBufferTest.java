@@ -68,7 +68,7 @@ public class GraphicDisplayBufferTest extends TestCase {
 		buf.toggleColumnRow(0, 0);
 		String rawStringWithoutModusByte = buf.getFullConfigLine().getOriginalString()
 				.substring(4);
-		assertEquals("$FF,$01,$FF,", rawStringWithoutModusByte);
+		assertEquals("$FF,$01,$00,$00,$00,$00,$FF,", rawStringWithoutModusByte);
 	}
 
 	public void testFromRawString() {
