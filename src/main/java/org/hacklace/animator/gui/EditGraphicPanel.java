@@ -52,12 +52,12 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 		copyAndInsertFrameButton = new JButton(
 				"Copy frame n to n+1 and move frames right");
 		panel.add(copyAndInsertFrameButton, c);
-		copyAndReplaceFrameButton
+		copyAndInsertFrameButton
 				.addActionListener(new CopyAndInsertFrameActionListener(this));
 
 		deleteFrameButton = new JButton("Delete frame n and move frames left");
 		panel.add(deleteFrameButton, c);
-		copyAndReplaceFrameButton
+		deleteFrameButton
 				.addActionListener(new DeleteFrameActionListener(this));
 
 	}
