@@ -339,15 +339,7 @@ public class MenuActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			doNothing(this.getClass());
-			// try {
-			// HelpSet hs = new HelpSet(null, hsURL);
-			// } catch (Exception ee) {
-			// // Say what the exception really is
-			// System.out.println( "HelpSet " + ee.getMessage());
-			// System.out.println("HelpSet "+ helpHS +" not found")
-			// return;
-			// }
+			AnimatorGui.getInstance().showHelp();
 		}
 	}
 

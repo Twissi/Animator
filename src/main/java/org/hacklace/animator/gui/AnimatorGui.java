@@ -7,7 +7,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
+import javax.help.HelpSet;
+import javax.help.HelpSetException;
+import javax.help.JHelp;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -42,6 +46,24 @@ public class AnimatorGui extends JFrame {
 		hacklaceConfigManager = new HacklaceConfigManager();
 		initComponents();
 		setVisible(true);
+	}
+
+	public void showHelp() {
+		URL url = HelpSet.findHelpSet(null, "help/jhelpset.hs");
+		JHelp helpViewer = null;
+		try {
+			helpViewer = new JHelp(new HelpSet(null, url));
+			// helpViewer.setCurrentID("...");
+			JFrame frame = new JFrame();
+			frame.setTitle("Hacklace Animator Help");
+			frame.setSize(800, 600);
+			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			frame.setVisible(true);
+			frame.getContentPane().add(helpViewer);
+		} catch (HelpSetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public AnimatorGui(final String fileName) {
