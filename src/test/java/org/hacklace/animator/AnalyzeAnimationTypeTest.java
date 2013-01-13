@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 
 import org.hacklace.animator.configuration.FullConfigLine;
 
-public class AnalyzeAnimationType extends TestCase {
+public class AnalyzeAnimationTypeTest extends TestCase {
 	
 	public void testAnalyze() {
 		FullConfigLine fullLine = new FullConfigLine("$0C,^A");

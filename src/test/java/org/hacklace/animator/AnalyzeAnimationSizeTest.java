@@ -7,7 +7,7 @@ import org.hacklace.animator.configuration.RestOfConfigLine;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.GraphicDisplayBuffer;
 
-public class AnalyzeAnimationSize extends TestCase {
+public class AnalyzeAnimationSizeTest extends TestCase {
 
 	public void testLengthWithFinalZeros() {
 		FullConfigLine fullLine = new FullConfigLine("$04,$FF,$01,$00,$FF,");

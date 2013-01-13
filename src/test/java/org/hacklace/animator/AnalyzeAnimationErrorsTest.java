@@ -7,7 +7,7 @@ import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.MixedDisplayBuffer;
 import org.hacklace.animator.enums.AnimationType;
 
-public class AnalyzeAnimationErrors extends TestCase {
+public class AnalyzeAnimationErrorsTest extends TestCase {
 
 	public void testMissingKomma1() {
 		String rawString = "$04,~A$80";
