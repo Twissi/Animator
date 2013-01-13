@@ -57,7 +57,7 @@ public class AnimatorGui extends JFrame {
 			JFrame frame = new JFrame();
 			frame.setTitle("Hacklace Animator Help");
 			frame.setSize(800, 600);
-			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			frame.setVisible(true);
 			frame.getContentPane().add(helpViewer);
 		} catch (HelpSetException e) {
