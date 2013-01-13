@@ -10,7 +10,7 @@ public class IniConfigurationTest extends TestCase {
 	private IniConf conf;
 	
 	protected void setUp() {
-		conf = IniConf.getInstance("/test_animatorconf.ini"); 
+		conf = new IniConf("/test_animatorconf.ini"); 
 	}
 	
 	protected void tearDown() {

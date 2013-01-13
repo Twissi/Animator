@@ -18,7 +18,6 @@ public class IniConf {
 
 	private static String configPath = "/animatorconf.ini";
 	private HierarchicalINIConfiguration conf;
-	private static IniConf instance;
 	
 	public final static String separators = " ,;.:/_|";
 	public final static String separatorsRegEx = "["+separators+"]";
@@ -27,7 +26,7 @@ public class IniConf {
 		return separators.indexOf(c) != -1;
 	}
 
-	private IniConf(String path) {
+	public IniConf(String path) {
 		configPath = path;
 		reRead();
 	}
@@ -42,33 +41,8 @@ public class IniConf {
 		}
 	}
 
-	private IniConf() {
+	public IniConf() {
 		reRead();
-	}
-
-	/**
-	 * Singleton
-	 * 
-	 * @return
-	 */
-	public static IniConf getInstance() {
-		if (instance == null) {
-			instance = new IniConf();
-		}
-		return instance;
-	}
-
-	/**
-	 * Singleton for different ini file, eg. in unit tests
-	 * 
-	 * @param fileName
-	 * @return
-	 */
-	public static IniConf getInstance(String fileName) {
-		if (instance == null) {
-			instance = new IniConf(fileName);
-		}
-		return instance;
 	}
 
 	public int rows() {

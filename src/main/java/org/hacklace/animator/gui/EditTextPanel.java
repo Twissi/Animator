@@ -18,7 +18,6 @@ import javax.swing.text.DocumentFilter;
 import javax.swing.text.PlainDocument;
 
 import org.hacklace.animator.ErrorContainer;
-import org.hacklace.animator.IniConf;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.FontUtil;
 import org.hacklace.animator.displaybuffer.TextDisplayBuffer;
@@ -52,7 +51,8 @@ public class EditTextPanel extends EditPanel {
 	private JPanel createVirtualKeyboardPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(0, 1));
-		panel.add(new JLabel("Hover over \"empty\" buttons to see the width of the space."));
+		panel.add(new JLabel(
+				"Hover over \"empty\" buttons to see the width of the space."));
 		ActionListener virtualKeyboardListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -63,8 +63,8 @@ public class EditTextPanel extends EditPanel {
 				try {
 					ErrorContainer errorContainer = new ErrorContainer();
 					textEditField.getDocument().insertString(pos, chars, null);
-					((TextDisplayBuffer) getBuffer()).setText(textEditField
-							.getText(), errorContainer);
+					((TextDisplayBuffer) getBuffer()).setText(
+							textEditField.getText(), errorContainer);
 					updateUiFromDisplayBuffer();
 					showErrors(errorContainer);
 				} catch (BadLocationException e) {
@@ -121,15 +121,17 @@ public class EditTextPanel extends EditPanel {
 
 	private JPanel createTextPanel() {
 		textPanel = new JPanel();
-		final int maxCols = IniConf.getInstance().maxColumns();
+		final int maxCols = AnimatorGui.getIniConf().maxColumns();
 		textEditField = new JTextField(40);
 		PlainDocument doc = new PlainDocument();
 		doc.setDocumentFilter(new DocumentFilter() {
 			public void insertString(FilterBypass fb, int offs, String str,
 					AttributeSet a) throws BadLocationException {
 				ErrorContainer errorContainer = new ErrorContainer();
-				int newLength = FontUtil.getWidthForRawString(fb.getDocument().getText(0,  fb.getDocument().getLength()), errorContainer)
-						+ FontUtil.getWidthForRawString(str, errorContainer); 
+				int newLength = FontUtil.getWidthForRawString(fb.getDocument()
+						.getText(0, fb.getDocument().getLength()),
+						errorContainer)
+						+ FontUtil.getWidthForRawString(str, errorContainer);
 				if (newLength <= maxCols)
 					super.insertString(fb, offs, str, a);
 				else
@@ -139,9 +141,11 @@ public class EditTextPanel extends EditPanel {
 			public void replace(FilterBypass fb, int offs, int length,
 					String str, AttributeSet a) throws BadLocationException {
 				ErrorContainer errorContainer = new ErrorContainer();
-				int newLength = FontUtil.getWidthForRawString(fb.getDocument().getText(0,  fb.getDocument().getLength()), errorContainer)
+				int newLength = FontUtil.getWidthForRawString(fb.getDocument()
+						.getText(0, fb.getDocument().getLength()),
+						errorContainer)
 						+ FontUtil.getWidthForRawString(str, errorContainer)
-						- length; 
+						- length;
 				if (newLength <= maxCols)
 					super.replace(fb, offs, length, str, a);
 				else
@@ -152,7 +156,8 @@ public class EditTextPanel extends EditPanel {
 		textEditField.addKeyListener(new KeyListener() {
 			private void updateText() {
 				ErrorContainer errorContainer = new ErrorContainer();
-				((TextDisplayBuffer) getBuffer()).setText(textEditField.getText(), errorContainer);
+				((TextDisplayBuffer) getBuffer()).setText(
+						textEditField.getText(), errorContainer);
 				updateUiFromDisplayBuffer();
 				showErrors(errorContainer);
 			}
@@ -180,10 +185,10 @@ public class EditTextPanel extends EditPanel {
 	public void onRawTextChanged() {
 		textEditField.setText(getBuffer().getText());
 	}
-	
+
 	@Override
 	public TextDisplayBuffer getBuffer() {
-	  return (TextDisplayBuffer) super.getBuffer();	
+		return (TextDisplayBuffer) super.getBuffer();
 	}
 
 }

@@ -3,7 +3,6 @@ package org.hacklace.animator.displaybuffer;
 import static org.hacklace.animator.ConversionUtil.isEmptyColumn;
 
 import org.hacklace.animator.ErrorContainer;
-import org.hacklace.animator.IniConf;
 import org.hacklace.animator.ModusByte;
 import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.enums.AnimationType;
@@ -11,6 +10,7 @@ import org.hacklace.animator.enums.Delay;
 import org.hacklace.animator.enums.Direction;
 import org.hacklace.animator.enums.Speed;
 import org.hacklace.animator.enums.StepWidth;
+import org.hacklace.animator.gui.AnimatorGui;
 
 public abstract class DisplayBuffer implements Cloneable, Size {
 
@@ -18,8 +18,11 @@ public abstract class DisplayBuffer implements Cloneable, Size {
 
 	protected ModusByte modusByte = new ModusByte();
 
-	protected final static int GRID_ROWS = IniConf.getInstance().rows();
-	protected final static int GRID_COLS = IniConf.getInstance().columns(); // only for copying frames
+	protected final static int GRID_ROWS = AnimatorGui.getIniConf().rows();
+	protected final static int GRID_COLS = AnimatorGui.getIniConf().columns(); // only
+																				// for
+																				// copying
+																				// frames
 
 	protected DisplayBuffer() {
 	}
@@ -214,7 +217,7 @@ public abstract class DisplayBuffer implements Cloneable, Size {
 
 		// warn if not divisible by 5
 		// (only if step width 5)
-		final int COLS = IniConf.getInstance().columns(); // 5
+		final int COLS = AnimatorGui.getIniConf().columns(); // 5
 		int rest = length % COLS;
 		if (getStepWidth() == StepWidth.FIVE && rest != 0) {
 			if (length < COLS) {

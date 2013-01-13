@@ -19,6 +19,7 @@ import java.util.LinkedList;
 
 import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.IniConf;
+import org.hacklace.animator.gui.AnimatorGui;
 
 /**
  * http://dev.root1.de/projects/rxtx-rebundled/wiki
@@ -29,7 +30,7 @@ public class FlashExporter {
 	private String deviceName;
 
 	public FlashExporter() {
-		conf = IniConf.getInstance();
+		conf = AnimatorGui.getIniConf();
 		conf.reRead();
 		deviceName = conf.device();
 	}

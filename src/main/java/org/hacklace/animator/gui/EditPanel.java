@@ -20,7 +20,6 @@ import javax.swing.SwingConstants;
 
 import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.HacklaceConfigManager;
-import org.hacklace.animator.IniConf;
 import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.enums.Delay;
@@ -59,8 +58,8 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 
 	protected PositionSliderChangeListener positionSliderChangeListener;
 
-	public static final int GRID_ROWS = IniConf.getInstance().rows();
-	public static final int GRID_COLS = IniConf.getInstance().columns();
+	public static final int GRID_ROWS = AnimatorGui.getIniConf().rows();
+	public static final int GRID_COLS = AnimatorGui.getIniConf().columns();
 	public static final int NUM_GRIDS_TO_SHOW = 5;
 	private static final String BUTTON_TEXT_PLAY = "Play";
 	private static final String BUTTON_TEXT_STOP = "Stop";
@@ -198,7 +197,7 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 		c.gridx = 0;
 		c.gridy = line;
 		rawInputPanel.add(label, c);
-		rawInputRestOfLineTextField = new JTextField(IniConf.getInstance()
+		rawInputRestOfLineTextField = new JTextField(AnimatorGui.getIniConf()
 				.getNumGrids());
 		c.gridx = 1;
 		rawInputPanel.add(rawInputRestOfLineTextField, c);
@@ -212,7 +211,7 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 		c.gridx = 0;
 		c.gridy = line + 1;
 		rawInputPanel.add(label, c);
-		rawInputFullLineTextField = new JTextField(IniConf.getInstance()
+		rawInputFullLineTextField = new JTextField(AnimatorGui.getIniConf()
 				.getNumGrids() + 1);
 		c.gridx = 1;
 		rawInputPanel.add(rawInputFullLineTextField, c);
@@ -239,14 +238,15 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 		slider.setPaintTicks(true);
 		slider.setSnapToTicks(true);
 		slider.setMinorTickSpacing(1);
-		positionSliderChangeListener = new PositionSliderChangeListener(this, slider, this);
+		positionSliderChangeListener = new PositionSliderChangeListener(this,
+				slider, this);
 		slider.addChangeListener(positionSliderChangeListener);
-		
+
 		return slider;
 	}
 
 	protected int getMaximumGrid() {
-		return IniConf.getInstance().getNumGrids() - NUM_GRIDS_TO_SHOW;
+		return AnimatorGui.getIniConf().getNumGrids() - NUM_GRIDS_TO_SHOW;
 	}
 
 	protected void copyBufferToLedPanel(int position, LedPanel panel) {
@@ -380,7 +380,7 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 	public int getCurrentPosition() {
 		return currentPosition;
 	}
-	
+
 	/**
 	 * called when moving the position slider
 	 */

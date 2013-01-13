@@ -10,7 +10,6 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.hacklace.animator.IniConf;
 import org.hacklace.animator.gui.actions.LedObserver;
 import org.hacklace.animator.gui.actions.ToggleLedActionListener;
 
@@ -41,7 +40,8 @@ public class LedPanel extends JPanel implements LedObserver {
 	}
 
 	public LedPanel() {
-		this(IniConf.getInstance().rows(), IniConf.getInstance().columns());
+		this(AnimatorGui.getIniConf().rows(), AnimatorGui.getIniConf()
+				.columns());
 	}
 
 	public void setLedFromBuffer(int column, int row, boolean val) {

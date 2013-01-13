@@ -1,20 +1,20 @@
 package org.hacklace.animator.configuration;
 
-import org.hacklace.animator.IniConf;
 import org.hacklace.animator.displaybuffer.Size;
 import org.hacklace.animator.enums.AnimationType;
+import org.hacklace.animator.gui.AnimatorGui;
 
 /**
  * 
  * @author monika
- *
- * immutable
+ * 
+ *         immutable
  */
 public abstract class AnimationPart implements Size {
 
 	protected boolean[][] data;
 
-	protected final static int GRID_ROWS = IniConf.getInstance().rows();
+	protected final static int GRID_ROWS = AnimatorGui.getIniConf().rows();
 
 	public abstract AnimationType getAnimationType();
 
@@ -50,7 +50,7 @@ public abstract class AnimationPart implements Size {
 
 	@Override
 	public abstract int getNumBytes();
-	
+
 	public boolean[][] getData() {
 		return data;
 	}

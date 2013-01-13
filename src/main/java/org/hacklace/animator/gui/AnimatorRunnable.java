@@ -1,6 +1,5 @@
 package org.hacklace.animator.gui;
 
-import org.hacklace.animator.IniConf;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.enums.Direction;
 
@@ -32,7 +31,7 @@ public class AnimatorRunnable implements Runnable {
 		 * won't run at exactly 4MHz -> 1 tick = 4.000.000 / 1024 / 256 ms = ~15
 		 * ms
 		 */
-		double tick = 4000000 / 1024 / 256 / IniConf.getInstance()
+		double tick = 4000000 / 1024 / 256 / AnimatorGui.getIniConf()
 				.ser_clk_correction();
 		int playPosition = 0;
 		boolean playForward = true;
@@ -40,10 +39,10 @@ public class AnimatorRunnable implements Runnable {
 			// note: these are all inside the loop so the user can edit the
 			// values while playing
 			int intSpeed = buffer.getSpeed().getValue();
-			int speedSleepTime = (int) ((double) IniConf.getInstance()
+			int speedSleepTime = (int) ((double) AnimatorGui.getIniConf()
 					.speedList().get(intSpeed) * tick);
 			int intDelay = buffer.getDelay().getValue();
-			int delaySleepTime = (int) ((double) IniConf.getInstance()
+			int delaySleepTime = (int) ((double) AnimatorGui.getIniConf()
 					.delayList().get(intDelay) * speedSleepTime);
 			int animationLength = (buffer.getNumColumns());
 			int intStepWidth = buffer.getStepWidth().getValue();
@@ -53,7 +52,8 @@ public class AnimatorRunnable implements Runnable {
 				playPosition = 0;
 			for (int x = 0; x < ledPanel.getNumCols(); x++) {
 				for (int y = 0; y < ledPanel.getNumRows(); y++) {
-					ledPanel.setLedFromBuffer(x, y, buffer.getValueAtColumnRow(x + playPosition, y));
+					ledPanel.setLedFromBuffer(x, y,
+							buffer.getValueAtColumnRow(x + playPosition, y));
 				}
 			}
 			ledPanel.repaint(); // prevents flickering on slow PCs

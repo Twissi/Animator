@@ -9,6 +9,7 @@ import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.IniConf;
 import org.hacklace.animator.displaybuffer.Size;
 import org.hacklace.animator.enums.AnimationType;
+import org.hacklace.animator.gui.AnimatorGui;
 
 /**
  * Hacklace configuration line without modus byte. Immutable
@@ -529,7 +530,7 @@ public class RestOfConfigLine implements Size {
 			}
 		}
 
-		final int maxColumns = IniConf.getInstance().maxColumns();
+		final int maxColumns = AnimatorGui.getIniConf().maxColumns();
 		int numColumns = getNumColumns();
 		if (numColumns > maxColumns) {
 			err.addError("More than " + maxColumns
@@ -563,7 +564,7 @@ public class RestOfConfigLine implements Size {
 			numColumns += part.getNumColumns();
 		}
 
-		leds = new boolean[numColumns][IniConf.getInstance().rows()];
+		leds = new boolean[numColumns][AnimatorGui.getIniConf().rows()];
 
 		int totalColumn = 0;
 		for (AnimationPart part : animationPartList) {

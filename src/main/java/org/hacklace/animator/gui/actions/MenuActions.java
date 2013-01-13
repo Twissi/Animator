@@ -15,7 +15,6 @@ import javax.swing.JOptionPane;
 
 import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.HacklaceConfigManager;
-import org.hacklace.animator.IniConf;
 import org.hacklace.animator.exporter.BinExporter;
 import org.hacklace.animator.exporter.FlashExporter;
 import org.hacklace.animator.gui.AnimatorGui;
@@ -176,7 +175,7 @@ public class MenuActions {
 			AnimatorGui app = AnimatorGui.getInstance();
 			HacklaceConfigManager cm = app.getHacklaceConfigManager();
 			int bytesUsed = cm.getNumBytes();
-			int maxBytes = IniConf.getInstance().maxBytes();
+			int maxBytes = AnimatorGui.getIniConf().maxBytes();
 			if (bytesUsed > maxBytes) {
 				JOptionPane.showMessageDialog(null,
 						"Error flashing hacklace: Animation list too big ("
@@ -190,8 +189,8 @@ public class MenuActions {
 			ArrayList<String> ports = flashExporter.listDeviceNames();
 			CommPortIdentifier defaultPort = null;
 			try {
-				defaultPort = flashExporter.getPortIdentifier(IniConf
-						.getInstance().device());
+				defaultPort = flashExporter.getPortIdentifier(AnimatorGui
+						.getIniConf().device());
 			} catch (Exception ex) {
 				// the default port from the ini file does not exist on this
 				// system. -> ignore

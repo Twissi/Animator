@@ -9,7 +9,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.hacklace.animator.ErrorContainer;
-import org.hacklace.animator.IniConf;
 import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.GraphicDisplayBuffer;
@@ -64,16 +63,17 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 			setText("Copy frame " + pos + " to " + (pos + 1) + " and replace");
 		}
 	}
-	
+
 	class CopyAndInsertFrameButton extends CopyDeleteFrameButton {
 
 		private static final long serialVersionUID = 8053267966478142682L;
 
 		void setText(int pos) {
-			setText("Copy frame " + pos + " to " + (pos + 1) + " and move frames right");
+			setText("Copy frame " + pos + " to " + (pos + 1)
+					+ " and move frames right");
 		}
 	}
-	
+
 	class DeleteFrameButton extends CopyDeleteFrameButton {
 
 		private static final long serialVersionUID = 8053267966478142682L;
@@ -125,7 +125,7 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 			GridBagConstraints c) {
 		JLabel label = new JLabel("Direct mode raw data (no $FF):");
 		rawInputPanel.add(label, c);
-		rawInputDirectModeTextField = new JTextField(IniConf.getInstance()
+		rawInputDirectModeTextField = new JTextField(AnimatorGui.getIniConf()
 				.getNumGrids() - 2);
 		c.gridx = 1;
 		rawInputPanel.add(rawInputDirectModeTextField, c);
