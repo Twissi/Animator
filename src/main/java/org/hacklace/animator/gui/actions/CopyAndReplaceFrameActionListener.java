@@ -5,8 +5,6 @@ import org.hacklace.animator.gui.EditGraphicPanel;
 
 public class CopyAndReplaceFrameActionListener extends AbstractFrameActionListener {
 
-	protected EditGraphicPanel editGraphicPanel;
-
 	public CopyAndReplaceFrameActionListener(EditGraphicPanel editGraphicPanel) {
 		super(editGraphicPanel);
 	}
