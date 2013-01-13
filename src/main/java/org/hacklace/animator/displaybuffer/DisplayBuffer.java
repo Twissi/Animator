@@ -87,7 +87,6 @@ public abstract class DisplayBuffer implements Cloneable, Size {
 
 	public boolean getValueAtColumnRow(int column, int row) {
 		if (column > data.length-1) {
-			// TODO find out when this happens and prevent it
 			return false;
 		}
 		return data[column][row];
