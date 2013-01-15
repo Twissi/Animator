@@ -136,4 +136,8 @@ public class IniConf {
 	public double ser_clk_correction() {
 		return conf.getDouble("animation.ser_clk_correction");
 	}
+	
+	public boolean helpOnline() {
+		return conf.getBoolean("help.online");
+	}
 }

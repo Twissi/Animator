@@ -57,7 +57,7 @@ public class AnimatorGui extends JFrame {
 	 */
 	public void showHelp() {
 
-		if (java.awt.Desktop.isDesktopSupported()) {
+		if (iniConf.helpOnline() && java.awt.Desktop.isDesktopSupported()) {
 			java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
 			if (desktop.isSupported(java.awt.Desktop.Action.BROWSE)) {
 				try {
