@@ -43,6 +43,7 @@ public class AnimatorGui extends JFrame {
 	private static IniConf iniConf = new IniConf();
 
 	private String title = "The chosen Hacklace Animator Tool";
+	private String HACKLACE_HELP_URL = "https://github.com/Hacklace/Animator/wiki/Help";
 
 	public AnimatorGui() {
 		hacklaceConfigManager = new HacklaceConfigManager();
@@ -50,7 +51,24 @@ public class AnimatorGui extends JFrame {
 		setVisible(true);
 	}
 
+	/**
+	 * Show the help.
+	 * This will fall back to using JavaHelp if no default browser can be started
+	 */
 	public void showHelp() {
+
+		if (java.awt.Desktop.isDesktopSupported()) {
+			java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+			if (desktop.isSupported(java.awt.Desktop.Action.BROWSE)) {
+				try {
+					java.net.URI uri = new java.net.URI(HACKLACE_HELP_URL);
+					desktop.browse(uri);
+					return;
+				} catch (Exception e) {
+				}
+			}
+		}
+
 		URL url = HelpSet.findHelpSet(null, "help/jhelpset.hs");
 		JHelp helpViewer = null;
 		try {
