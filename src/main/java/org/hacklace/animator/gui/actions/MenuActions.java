@@ -8,9 +8,12 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import org.hacklace.animator.ErrorContainer;
@@ -172,44 +175,87 @@ public class MenuActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			AnimatorGui app = AnimatorGui.getInstance();
-			HacklaceConfigManager cm = app.getHacklaceConfigManager();
+			AnimatorGui animatorGui = AnimatorGui.getInstance();
+			HacklaceConfigManager cm = animatorGui.getHacklaceConfigManager();
 			int bytesUsed = cm.getNumBytes();
 			int maxBytes = AnimatorGui.getIniConf().maxBytes();
 			if (bytesUsed > maxBytes) {
-				JOptionPane.showMessageDialog(null,
+				JOptionPane.showMessageDialog( //
+						animatorGui, // parent
 						"Error flashing hacklace: Animation list too big ("
-								+ bytesUsed + "/" + maxBytes + " Bytes)",
-						"Error", JOptionPane.ERROR_MESSAGE);
+								+ bytesUsed + "/" + maxBytes + " Bytes)", // text
+						"Error", // title
+						JOptionPane.ERROR_MESSAGE // type
+						);
 				return;
 			}
+
+			String path = "/hacklace-flashen.jpg";
+			URL url = this.getClass().getResource(path);
+			Icon icon = new ImageIcon(url);
+
+			JOptionPane
+					.showMessageDialog(
+							animatorGui, // parent
+							"", // text
+							"Connect the hacklace directly to an USB port (not a hub) and turn it on", // title
+							JOptionPane.INFORMATION_MESSAGE, // type
+							icon // picture
+					);
 
 			// Let the user select the serial port
 			FlashExporter flashExporter = new FlashExporter();
 			ArrayList<String> ports = flashExporter.listDeviceNames();
-			CommPortIdentifier defaultPort = null;
+
+			String problemText = "Make sure you have the necessary authorizations. \n"
+					+ "Linux: group dialout. BSD: group dialer. Log in again after changing groups. \n"
+					+ "Alternatively use su(do). \n"
+					+ "Connect directly to USB ports, not to USB hubs. \n";
+
+			int numPorts = ports.size();
+			if (numPorts == 0) {
+				JOptionPane.showMessageDialog( //
+						animatorGui, // parent
+						problemText, // text
+						"No serial port found", // title
+						JOptionPane.ERROR_MESSAGE // type
+						);
+				return;
+			}
+
+			String defaultPortString = "";
 			try {
-				defaultPort = flashExporter.getPortIdentifier(AnimatorGui
-						.getIniConf().device());
+				CommPortIdentifier defaultPort = flashExporter
+						.getPortIdentifier(AnimatorGui.getIniConf().device());
+				if (defaultPort != null)
+					defaultPortString = defaultPort.toString();
 			} catch (Exception ex) {
 				// the default port from the ini file does not exist on this
 				// system. -> ignore
 			}
-			String port = (String) JOptionPane.showInputDialog(
-					AnimatorGui.getInstance(),
-					"Select serial port where the hacklace is connected",
-					"Select port", JOptionPane.QUESTION_MESSAGE, null,
-					ports.toArray(),
-					defaultPort == null ? "" : defaultPort.toString());
+
+			String selectionString = "Select the serial port where the Hacklace is connected and turn it on.\n"
+					+ "If you are unsure which one to select, use dmesg directly after connecting (Linux/BSD). \n"
+					+ "If the right port is not in the list: \n" + problemText;
+
+			String port = (String) JOptionPane.showInputDialog(animatorGui, // parent
+					selectionString, // text
+					"Select port", // title
+					JOptionPane.QUESTION_MESSAGE, // type
+					null, // icon
+					ports.toArray(), // choices
+					defaultPortString // default choice
+					);
 			if (port == null)
 				return; // cancelled
 			flashExporter.setDeviceName(port);
 
 			try {
 				flashExporter.write(cm.getRawString());
-				JOptionPane.showMessageDialog(null,
-						"Hacklace successfully flashed.", "Flashed",
-						JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, // parent
+						"Hacklace has been flashed.", // message
+						"Flashed", // title
+						JOptionPane.INFORMATION_MESSAGE); // type
 			} // Java 7: (IOException | UnsupportedCommOperationException |
 				// PortInUseException ex)
 			catch (IOException ex) {
