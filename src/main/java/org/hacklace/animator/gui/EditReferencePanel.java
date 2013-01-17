@@ -1,7 +1,11 @@
 package org.hacklace.animator.gui;
 
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.ReferenceDisplayBuffer;
+import org.hacklace.animator.gui.actions.ChooseReferenceActionListener;
 
 public class EditReferencePanel extends EditPanel {
 
@@ -10,6 +14,13 @@ public class EditReferencePanel extends EditPanel {
 	public EditReferencePanel(DisplayBuffer displayBuffer) {
 		super(displayBuffer);
 		ledPanel.setEnabled(false);
+	}
+
+	@Override
+	protected void addMoreComponents(JPanel panel) {
+		JButton button = new JButton("Choose reference");
+		panel.add(button);
+		button.addActionListener(new ChooseReferenceActionListener(this));
 	}
 
 	@Override
