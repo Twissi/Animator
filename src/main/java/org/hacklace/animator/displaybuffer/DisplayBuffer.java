@@ -12,7 +12,7 @@ import org.hacklace.animator.enums.Speed;
 import org.hacklace.animator.enums.StepWidth;
 import org.hacklace.animator.gui.AnimatorGui;
 
-public abstract class DisplayBuffer implements Cloneable, Size {
+public abstract class DisplayBuffer implements Cloneable {
 
 	protected boolean[][] data;
 
@@ -164,21 +164,17 @@ public abstract class DisplayBuffer implements Cloneable, Size {
 	public final static String ZERO_MODUS_BYTE = "You cannot combine speed 0, delay 0, unidirectional, step width 1 as this would result in the illegal modus byte 0.";
 
 	/**
-	 * for the UI, especially for mixed buffers
-	 * 
-	 * counts the number of columns used for the animation, includes empty
-	 * columns.
+	 * for the UI, the number of LED columns. Maximum 200 per animation.
 	 */
-	@Override
 	public int getNumColumns() {
 		return data.length;
 	}
 
 	/**
-	 * reference animations only need 2 bytes, not number of columns; also: add
-	 * 1 byte for modus byte and 1 byte for 0 delimiter
+	 * number of bytes, e.g. 2 for a reference, 1 per letter, 1 per byte in
+	 * direct mode. Add 1 for modus byte, 1 for 0 delimiter at end of line.
+	 * Maximum 256 across all animations.
 	 */
-	@Override
 	public abstract int getNumBytes();
 
 	public void additionalChecks(ErrorContainer errorContainer) {

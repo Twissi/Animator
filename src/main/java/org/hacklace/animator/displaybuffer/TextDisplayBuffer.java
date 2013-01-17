@@ -6,7 +6,7 @@ import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.configuration.RestOfConfigLine;
 import org.hacklace.animator.enums.AnimationType;
 
-public class TextDisplayBuffer extends DisplayBuffer implements Size {
+public class TextDisplayBuffer extends DisplayBuffer {
 
 	protected RestOfConfigLine restOfLine; 
 

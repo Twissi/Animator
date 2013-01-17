@@ -5,10 +5,9 @@ import static org.hacklace.animator.ConversionUtil.convertAnimationByteTo7Boolea
 import java.util.List;
 
 import org.hacklace.animator.ConversionUtil;
-import org.hacklace.animator.displaybuffer.Size;
 import org.hacklace.animator.enums.AnimationType;
 
-public class TextPart extends AnimationPart implements Size {
+public class TextPart extends AnimationPart  {
 
 	private String rawString = "";
 	

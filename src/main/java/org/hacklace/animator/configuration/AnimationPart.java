@@ -1,6 +1,5 @@
 package org.hacklace.animator.configuration;
 
-import org.hacklace.animator.displaybuffer.Size;
 import org.hacklace.animator.enums.AnimationType;
 import org.hacklace.animator.gui.AnimatorGui;
 
@@ -10,7 +9,7 @@ import org.hacklace.animator.gui.AnimatorGui;
  * 
  *         immutable
  */
-public abstract class AnimationPart implements Size {
+public abstract class AnimationPart {
 
 	protected boolean[][] data;
 
@@ -43,12 +42,10 @@ public abstract class AnimationPart implements Size {
 	 */
 	public abstract String getRawString();
 
-	@Override
 	public int getNumColumns() {
 		return data.length;
 	}
 
-	@Override
 	public abstract int getNumBytes();
 
 	public boolean[][] getData() {

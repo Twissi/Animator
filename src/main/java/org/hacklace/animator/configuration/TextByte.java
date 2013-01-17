@@ -7,9 +7,8 @@ import java.util.List;
 
 import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.displaybuffer.FontUtil;
-import org.hacklace.animator.displaybuffer.Size;
 
-public class TextByte extends TextElement implements Size {
+public class TextByte extends TextElement {
 
 	private int[] aniBytes;
 	
@@ -41,6 +40,7 @@ public class TextByte extends TextElement implements Size {
 		return list;
 	}
 
+	@Override
 	public int[] getAnimationBytes() {
 		if (aniBytes == null)
 			aniBytes = FontUtil.getMinimumBytesForIndex(byteElement.getByteAsInt(new ErrorContainer())); // TODO maybe find different solution

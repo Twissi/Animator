@@ -2,9 +2,8 @@ package org.hacklace.animator.configuration;
 
 import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.displaybuffer.FontUtil;
-import org.hacklace.animator.displaybuffer.Size;
 
-public class EscapeChar extends TextElement implements Size {
+public class EscapeChar extends TextElement {
 
 	private char c;
 	private int[] aniBytes;

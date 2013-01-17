@@ -7,7 +7,6 @@ import java.util.List;
 import org.hacklace.animator.ConversionUtil;
 import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.IniConf;
-import org.hacklace.animator.displaybuffer.Size;
 import org.hacklace.animator.enums.AnimationType;
 import org.hacklace.animator.gui.AnimatorGui;
 
@@ -18,7 +17,7 @@ import org.hacklace.animator.gui.AnimatorGui;
  * 
  */
 
-public class RestOfConfigLine implements Size {
+public class RestOfConfigLine {
 
 	private String originalRawString;
 	private String modifiedRawString;
@@ -598,12 +597,18 @@ public class RestOfConfigLine implements Size {
 		return clickEditable;
 	}
 
-	@Override
+	/**
+	 * for the UI, the number of LED columns. Maximum 200 per animation.
+	 */
 	public int getNumColumns() {
 		return getLeds().length;
 	}
 
-	@Override
+	/**
+	 * number of bytes, e.g. 2 for a reference, 1 per letter, 1 per byte in
+	 * direct mode. Add 1 for modus byte, 1 for 0 delimiter at end of line.
+	 * Maximum 256 across all animations.
+	 */
 	public int getNumBytes() {
 		int bytes = 0;
 		for (AnimationPart part : this

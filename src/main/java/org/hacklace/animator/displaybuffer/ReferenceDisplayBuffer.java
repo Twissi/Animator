@@ -7,7 +7,7 @@ import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.enums.AnimationType;
 import org.hacklace.animator.enums.PredefinedAnimation;
 
-public class ReferenceDisplayBuffer extends DisplayBuffer implements Size {
+public class ReferenceDisplayBuffer extends DisplayBuffer {
 
 	private char letter;
 	private PredefinedAnimation animation;

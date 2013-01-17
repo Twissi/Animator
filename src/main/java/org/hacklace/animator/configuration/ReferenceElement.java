@@ -3,11 +3,10 @@ package org.hacklace.animator.configuration;
 import static org.hacklace.animator.ConversionUtil.convertAnimationByteTo7Booleans;
 
 import org.hacklace.animator.ErrorContainer;
-import org.hacklace.animator.displaybuffer.Size;
 import org.hacklace.animator.enums.AnimationType;
 import org.hacklace.animator.enums.PredefinedAnimation;
 
-public class ReferenceElement extends AnimationPart implements Size {
+public class ReferenceElement extends AnimationPart {
 	private char letter;
 	private PredefinedAnimation animation;
 

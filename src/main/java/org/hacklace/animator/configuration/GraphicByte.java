@@ -4,9 +4,8 @@ import java.util.List;
 
 import org.hacklace.animator.ConversionUtil;
 import org.hacklace.animator.ErrorContainer;
-import org.hacklace.animator.displaybuffer.Size;
 
-public class GraphicByte extends ByteElement implements Size {
+public class GraphicByte extends ByteElement {
 	
 	public GraphicByte(String fourChars, ErrorContainer errorContainer) {
 		super(fourChars, errorContainer);
@@ -50,12 +49,10 @@ public class GraphicByte extends ByteElement implements Size {
 		return ConversionUtil.isBitSet(getByte(new ErrorContainer()), index); // TODO maybe handle error?
 	}
 
-	@Override
 	public int getNumColumns() {
 		return 1;
 	}
 	
-	@Override
 	public int getNumBytes() {
 		return 1;
 	}

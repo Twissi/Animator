@@ -8,7 +8,7 @@ import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.enums.AnimationType;
 import org.hacklace.animator.enums.StepWidth;
 
-public class GraphicDisplayBuffer extends DisplayBuffer implements Size {
+public class GraphicDisplayBuffer extends DisplayBuffer {
 
 	public GraphicDisplayBuffer() {
 		super();
