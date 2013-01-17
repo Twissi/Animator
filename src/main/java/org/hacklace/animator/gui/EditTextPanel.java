@@ -6,8 +6,8 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -153,7 +153,7 @@ public class EditTextPanel extends EditPanel {
 			}
 		});
 		textEditField.setDocument(doc);
-		textEditField.addKeyListener(new KeyListener() {
+		textEditField.addKeyListener(new KeyAdapter() {
 			private void updateText() {
 				ErrorContainer errorContainer = new ErrorContainer();
 				((TextDisplayBuffer) getBuffer()).setText(
@@ -163,19 +163,10 @@ public class EditTextPanel extends EditPanel {
 			}
 
 			@Override
-			public void keyPressed(KeyEvent arg0) {
+			public void keyReleased(KeyEvent event) {
 				updateText();
 			}
 
-			@Override
-			public void keyReleased(KeyEvent arg0) {
-				updateText();
-			}
-
-			@Override
-			public void keyTyped(KeyEvent arg0) {
-				updateText();
-			}
 		});
 		textPanel.add(textEditField);
 		return textPanel;

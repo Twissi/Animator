@@ -103,7 +103,7 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 		buffer = displayBuffer.clone();
 		origBuffer = displayBuffer;
 		// common components for all types of edit panels
-		optionsPanel = new AnimationOptionsPanel(this, this);
+		optionsPanel = new AnimationOptionsPanel((OptionsObserver) this, (SaveObserver) this);
 		rawInputPanel = createRawInputPanel();
 
 		setLayout(new GridBagLayout());
