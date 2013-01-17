@@ -18,8 +18,8 @@ import javax.swing.text.DocumentFilter;
 import javax.swing.text.PlainDocument;
 
 import org.hacklace.animator.ErrorContainer;
+import org.hacklace.animator.FontUtil;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
-import org.hacklace.animator.displaybuffer.FontUtil;
 import org.hacklace.animator.displaybuffer.TextDisplayBuffer;
 
 public class EditTextPanel extends EditPanel {

@@ -1,7 +1,7 @@
 package org.hacklace.animator.enums;
 
 import org.hacklace.animator.ErrorContainer;
-import org.hacklace.animator.displaybuffer.FontUtil;
+import org.hacklace.animator.FontUtil;
 
 public enum PredefinedAnimation {
 	ARROW('A', "Arrow", new int[] { //

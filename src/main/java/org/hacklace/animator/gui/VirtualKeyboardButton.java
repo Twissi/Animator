@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JButton;
 
-import org.hacklace.animator.displaybuffer.FontUtil;
+import org.hacklace.animator.FontUtil;
 
 public class VirtualKeyboardButton extends JButton {
 	private static final long serialVersionUID = -740174075289099487L;

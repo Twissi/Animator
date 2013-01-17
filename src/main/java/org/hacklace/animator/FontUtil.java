@@ -1,4 +1,4 @@
-package org.hacklace.animator.displaybuffer;
+package org.hacklace.animator;
 
 import static org.hacklace.animator.ConversionUtil.convertStringToInt;
 import static org.hacklace.animator.ConversionUtil.isHexSequence;
@@ -6,7 +6,6 @@ import static org.hacklace.animator.ConversionUtil.isHexSequence;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.hacklace.animator.ErrorContainer;
 
 public class FontUtil {
 

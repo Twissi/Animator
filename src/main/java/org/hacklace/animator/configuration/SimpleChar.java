@@ -1,7 +1,7 @@
 package org.hacklace.animator.configuration;
 
 import org.hacklace.animator.ErrorContainer;
-import org.hacklace.animator.displaybuffer.FontUtil;
+import org.hacklace.animator.FontUtil;
 
 public class SimpleChar extends TextElement {
 

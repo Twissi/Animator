@@ -1,12 +1,12 @@
 package org.hacklace.animator.configuration;
 
-import static org.hacklace.animator.displaybuffer.FontUtil.HIGHEST_INDEX;
-import static org.hacklace.animator.displaybuffer.FontUtil.LOWEST_INDEX;
+import static org.hacklace.animator.FontUtil.HIGHEST_INDEX;
+import static org.hacklace.animator.FontUtil.LOWEST_INDEX;
 
 import java.util.List;
 
 import org.hacklace.animator.ErrorContainer;
-import org.hacklace.animator.displaybuffer.FontUtil;
+import org.hacklace.animator.FontUtil;
 
 public class TextByte extends TextElement {
 
