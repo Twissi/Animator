@@ -178,7 +178,7 @@ public class RestOfConfigLine {
 	private LinkedList<AnimationPart> animationPartList = null;
 	private ErrorContainer getAnimationElementsErrorContainer = new ErrorContainer();
 
-	private void finishGraphicsPart(List<AnimationPart> animationPartList,
+	private static void finishGraphicsPart(List<AnimationPart> animationPartList,
 			ArrayList<GraphicByte> graphicByteList) {
 		// do not check if graphicByteList is empty - might be $FF,$FF, - is
 		// allowed
@@ -187,7 +187,7 @@ public class RestOfConfigLine {
 		graphicByteList.clear();
 	}
 
-	private void finishTextPart(List<AnimationPart> animationPartList,
+	private static void finishTextPart(List<AnimationPart> animationPartList,
 			List<TextElement> textElementList) {
 		if (textElementList.isEmpty()) {
 			return;

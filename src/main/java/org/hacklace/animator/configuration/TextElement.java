@@ -12,6 +12,7 @@ public abstract class TextElement {
 	
 	public abstract int getNumColumns();
 
+	@SuppressWarnings("static-method")
 	public final int getNumBytes() {
 		return 1;
 	}

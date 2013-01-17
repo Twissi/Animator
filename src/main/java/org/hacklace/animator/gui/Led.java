@@ -26,6 +26,7 @@ public class Led extends JButton implements LedInterface {
 		setBackground(Color.WHITE);
 	}
 
+	@Override
 	public void toggleByClick() {
 		if (on) {
 			unset();

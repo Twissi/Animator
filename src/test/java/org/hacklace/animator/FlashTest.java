@@ -24,6 +24,7 @@ public class FlashTest extends TestCase {
 	private HacklaceConfigManager manager;
 	private FlashExporter flashExporter;
 	
+	@Override
 	protected void setUp() throws IOException {
 		manager = new HacklaceConfigManager();
 		output = File.createTempFile("test", ".hack");
@@ -34,6 +35,7 @@ public class FlashTest extends TestCase {
 		flashExporter = new FlashExporter();
 	}
 	
+	@Override
 	protected void tearDown() {
 		output.delete();
 		exampleConf = null;

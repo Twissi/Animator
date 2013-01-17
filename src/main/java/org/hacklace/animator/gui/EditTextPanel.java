@@ -127,6 +127,7 @@ public class EditTextPanel extends EditPanel {
 		textEditField = new JTextField(40);
 		PlainDocument doc = new PlainDocument();
 		doc.setDocumentFilter(new DocumentFilter() {
+			@Override
 			public void insertString(FilterBypass fb, int offs, String str,
 					AttributeSet a) throws BadLocationException {
 				ErrorContainer errorContainer = new ErrorContainer();
@@ -140,6 +141,7 @@ public class EditTextPanel extends EditPanel {
 					Toolkit.getDefaultToolkit().beep();
 			}
 
+			@Override
 			public void replace(FilterBypass fb, int offs, int length,
 					String str, AttributeSet a) throws BadLocationException {
 				ErrorContainer errorContainer = new ErrorContainer();

@@ -8,16 +8,18 @@ import org.hacklace.animator.displaybuffer.GraphicDisplayBuffer;
 
 public class GraphicDisplayBufferTest extends TestCase {
 
+	@Override
 	protected void setUp() {
-
+		//
 	}
 
+	@Override
 	protected void tearDown() {
-
+		//
 	}
 
 	public void testGraphicBufferFromBytes() {
-		//GraphicDisplayBuffer gdb = new GraphicDisplayBuffer();
+		// GraphicDisplayBuffer gdb = new GraphicDisplayBuffer();
 		// byte[] aniBytes = new byte[200];
 		// aniBytes[0] = (byte) 0xFF;
 		// gdb.setDataFromBytes(aniBytes);
@@ -66,8 +68,8 @@ public class GraphicDisplayBufferTest extends TestCase {
 	public void testToRawString() {
 		GraphicDisplayBuffer buf = new GraphicDisplayBuffer();
 		buf.toggleColumnRow(0, 0);
-		String rawStringWithoutModusByte = buf.getFullConfigLine().getOriginalString()
-				.substring(4);
+		String rawStringWithoutModusByte = buf.getFullConfigLine()
+				.getOriginalString().substring(4);
 		assertEquals("$FF,$01,$00,$00,$00,$00,$FF,", rawStringWithoutModusByte);
 	}
 
@@ -75,7 +77,8 @@ public class GraphicDisplayBufferTest extends TestCase {
 		String rawString = "$04,$FF $01 $FF,";
 		FullConfigLine fullLine = new FullConfigLine(rawString);
 		ErrorContainer errorContainer = new ErrorContainer();
-		DisplayBuffer buf = DisplayBuffer.createBufferFromLine(fullLine, errorContainer);
+		DisplayBuffer buf = DisplayBuffer.createBufferFromLine(fullLine,
+				errorContainer);
 		boolean topLeftLed = buf.getValueAtColumnRow(0, 0);
 		boolean bottomLeftLed = buf.getValueAtColumnRow(0, 6);
 		assertTrue(topLeftLed);

@@ -12,6 +12,7 @@ public class EditMixedPanel extends EditTextPanel {
 		ledPanel.setEnabled(false);
 	}
 
+	@Override
 	protected int getMaximumGrid() {
 		return getBuffer().getNumColumns() / GRID_COLS + 1;
 	}

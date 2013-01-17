@@ -13,5 +13,6 @@ public interface OptionsObserver extends StepWidthObserver {
 
 	public void onDirectionChanged(Direction newDirection);
 
+	@Override
 	public void onStepChanged(StepWidth newStepWidth);
 }

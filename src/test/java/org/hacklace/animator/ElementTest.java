@@ -8,6 +8,7 @@ import junit.framework.TestCase;
 
 public class ElementTest extends TestCase {
 
+	@SuppressWarnings("unused")
 	@Test
 	@Ignore
 	public void test() {

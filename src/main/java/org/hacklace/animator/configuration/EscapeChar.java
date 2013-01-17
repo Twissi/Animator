@@ -14,16 +14,19 @@ public class EscapeChar extends TextElement {
 
 	}
 
+	@Override
 	public int[] getAnimationBytes() {
 		if (aniBytes == null)
 			aniBytes = FontUtil.getMinimumBytesForChar(c);
 		return aniBytes;
 	}
 
+	@Override
 	public String getRawString() {
 		return "" + c + c;
 	}
 
+	@Override
 	public boolean isValid(ErrorContainer errorContainer) {
 		return true;
 	}

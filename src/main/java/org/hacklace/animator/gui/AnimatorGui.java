@@ -65,6 +65,7 @@ public class AnimatorGui extends JFrame {
 					desktop.browse(uri);
 					return;
 				} catch (Exception e) {
+					// TODO what do do in case of exception?
 				}
 			}
 		}
@@ -90,6 +91,7 @@ public class AnimatorGui extends JFrame {
 		this();
 		final ErrorContainer errorContainer = new ErrorContainer();
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				loadFile(fileName, errorContainer);
 			}
@@ -151,6 +153,7 @@ public class AnimatorGui extends JFrame {
 		pack();
 
 		addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent e) {
 				new MenuActions.CloseAction().actionPerformed(null);
 			}

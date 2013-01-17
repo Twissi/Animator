@@ -9,10 +9,12 @@ public class IniConfigurationTest extends TestCase {
 	
 	private IniConf conf;
 	
+	@Override
 	protected void setUp() {
 		conf = new IniConf("/test_animatorconf.ini"); 
 	}
 	
+	@Override
 	protected void tearDown() {
 		conf = null;
 	}

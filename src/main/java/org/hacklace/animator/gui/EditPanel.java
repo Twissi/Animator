@@ -90,7 +90,7 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 	 * @return
 	 */
 	@SuppressWarnings("unused")
-	private JLabel createDebugLabel(String text, Color color, int minWidth,
+	private static JLabel createDebugLabel(String text, Color color, int minWidth,
 			int minHeight) {
 		JLabel label = new JLabel(text);
 		label.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -169,6 +169,7 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 	 * @param panel
 	 */
 	protected void addMoreComponents(JPanel panel) {
+		// by default do nothing
 	}
 
 	/**
@@ -282,6 +283,7 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 		showErrors(errorContainer);
 	}
 
+	@Override
 	public void showErrors(ErrorContainer errorContainer) {
 		errorArea.setText(errorContainer.toString());
 	}
@@ -299,6 +301,7 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 	 * override this if you want to react on a change of the raw text
 	 */
 	public void onRawTextChanged() {
+		// by default do nothing
 	}
 
 	/**
@@ -306,6 +309,7 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 	 * The buffer must not be touched anymore after this because we switch
 	 * them(!)
 	 */
+	@Override
 	public void saveBuffer() {
 		HacklaceConfigManager cm = AnimatorGui.getInstance()
 				.getHacklaceConfigManager();
@@ -328,21 +332,25 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 		AnimatorGui.getInstance().getHomePanel().updateList(cm.getList(), true);
 	}
 
+	@Override
 	public void onSpeedChanged(Speed newSpeed) {
 		buffer.setSpeed(newSpeed);
 		updateRawTextFields();
 	}
 
+	@Override
 	public void onDelayChanged(Delay newDelay) {
 		buffer.setDelay(newDelay);
 		updateRawTextFields();
 	}
 
+	@Override
 	public void onDirectionChanged(Direction newDirection) {
 		buffer.setDirection(newDirection);
 		updateRawTextFields();
 	}
 
+	@Override
 	public void onStepChanged(StepWidth newStepWidth) {
 		buffer.setStepWidth(newStepWidth);
 		ledPanel.setSpacing(newStepWidth == StepWidth.FIVE);
@@ -354,7 +362,9 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 		return buffer;
 	}
 
+	@Override
 	public void onLedChange(int column, int row, boolean newValue) {
+		// some subclasses don't need this method so do nothing
 	}
 
 	protected void startPlaying() {
@@ -373,6 +383,7 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 		stopPlaying();
 	}
 
+	@Override
 	public DisplayBuffer getBuffer() {
 		return buffer;
 	}

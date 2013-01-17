@@ -21,6 +21,7 @@ public class BinExporterTest extends TestCase {
 	private HacklaceConfigManager manager;
 	private BinExporter binExporter;
 	
+	@Override
 	protected void setUp() throws IOException {
 		manager = new HacklaceConfigManager();
 		output = File.createTempFile("test.bin", null);
@@ -31,6 +32,7 @@ public class BinExporterTest extends TestCase {
 		binExporter = new BinExporter();
 	}
 	
+	@Override
 	protected void tearDown() {
 		output.delete();
 		exampleConf = null;

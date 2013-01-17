@@ -35,7 +35,6 @@ public class FlashExporter {
 		deviceName = conf.device();
 	}
 
-	@SuppressWarnings("unchecked")
 	public CommPortIdentifier getPortIdentifier(String deviceName)
 			throws PortUnreachableException {
 		Enumeration<CommPortIdentifier> portList;
@@ -60,10 +59,6 @@ public class FlashExporter {
 		sp.setSerialPortParams(conf.baud(), SerialPort.DATABITS_8,
 				SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 		return sp;
-	}
-
-	private void close() {
-
 	}
 
 	/**
@@ -96,7 +91,6 @@ public class FlashExporter {
 		writeTo(inputStream, serialOut);
 		serialOut.close();
 		serialPort.close();
-		close();
 	}
 
 	public void write(String rawString)
@@ -107,7 +101,6 @@ public class FlashExporter {
 		writeTo(rawString, serialOut);
 		serialOut.close();
 		serialPort.close();
-		close();
 	}
 
 	/**
@@ -162,8 +155,6 @@ public class FlashExporter {
 		writeTo(stream, outFile);
 	}
 
-	@SuppressWarnings("unchecked")
-	// TODO Add help that user has to be part of the corresponding group
 	public LinkedList<CommPortIdentifier> listPorts() {
 		Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier
 				.getPortIdentifiers();
@@ -175,7 +166,6 @@ public class FlashExporter {
 		return ports;
 	}
 
-	@SuppressWarnings("unchecked")
 	public ArrayList<String> listDeviceNames() {
 		ArrayList<String> result = new ArrayList<String>();
 		Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier

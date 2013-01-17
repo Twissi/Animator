@@ -12,16 +12,19 @@ public class SimpleChar extends TextElement {
 		this.c = c;
 	}
 
+	@Override
 	public int[] getAnimationBytes() {
 		if (aniBytes == null)
 			aniBytes = FontUtil.getMinimumBytesForChar(c);
 		return aniBytes;
 	}
 
+	@Override
 	public String getRawString() {
 		return "" + c;
 	}
 
+	@Override
 	public boolean isValid(ErrorContainer errorContainer) {
 		return FontUtil.isValidHacklaceChar(c, errorContainer);
 	}

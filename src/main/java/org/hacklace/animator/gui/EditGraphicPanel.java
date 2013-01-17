@@ -16,11 +16,10 @@ import org.hacklace.animator.enums.StepWidth;
 import org.hacklace.animator.gui.actions.CopyAndInsertFrameActionListener;
 import org.hacklace.animator.gui.actions.CopyAndReplaceFrameActionListener;
 import org.hacklace.animator.gui.actions.DeleteFrameActionListener;
-import org.hacklace.animator.gui.actions.LedObserver;
 import org.hacklace.animator.gui.actions.PositionSlideObserver;
 import org.hacklace.animator.gui.actions.RawInputDirectModeApplyActionListener;
 
-public class EditGraphicPanel extends EditPanel implements LedObserver {
+public class EditGraphicPanel extends EditPanel {
 
 	private static final long serialVersionUID = -8224406641046738423L;
 
@@ -59,6 +58,7 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 
 		private static final long serialVersionUID = 8053267966478142682L;
 
+		@Override
 		void setText(int pos) {
 			setText("Copy frame " + pos + " to " + (pos + 1) + " and replace");
 		}
@@ -68,6 +68,7 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 
 		private static final long serialVersionUID = 8053267966478142682L;
 
+		@Override
 		void setText(int pos) {
 			setText("Copy frame " + pos + " to " + (pos + 1)
 					+ " and move frames right");
@@ -78,6 +79,7 @@ public class EditGraphicPanel extends EditPanel implements LedObserver {
 
 		private static final long serialVersionUID = 8053267966478142682L;
 
+		@Override
 		void setText(int pos) {
 			setText("Delete frame " + pos + " and move frames left");
 		}

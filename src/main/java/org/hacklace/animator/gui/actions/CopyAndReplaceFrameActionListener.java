@@ -9,6 +9,7 @@ public class CopyAndReplaceFrameActionListener extends AbstractFrameActionListen
 		super(editGraphicPanel);
 	}
 
+	@Override
 	protected void specificAction(GraphicDisplayBuffer buffer, int currentFramePos) {
 		buffer.copyAndReplaceFrame(currentFramePos);
 	}

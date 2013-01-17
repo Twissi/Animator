@@ -124,6 +124,7 @@ public class ModusByte implements Cloneable {
 		this.bits |= speed.value;
 	}
 
+	@Override
 	public ModusByte clone() {
 		ModusByte copy = new ModusByte();
 		copy.bits = this.bits;

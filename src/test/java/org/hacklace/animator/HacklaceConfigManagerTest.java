@@ -13,6 +13,7 @@ public class HacklaceConfigManagerTest extends TestCase {
 	private File output;
 	private HacklaceConfigManager manager;
 
+	@Override
 	protected void setUp() throws IOException {
 		manager = new HacklaceConfigManager();
 
@@ -21,6 +22,7 @@ public class HacklaceConfigManagerTest extends TestCase {
 		exampleConf = new File(url.getFile());
 	}
 
+	@Override
 	protected void tearDown() {
 		output.delete();
 		exampleConf = null;

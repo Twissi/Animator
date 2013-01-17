@@ -49,9 +49,9 @@ public class MenuActions {
 		AnimatorGui app = AnimatorGui.getInstance();
 		HacklaceConfigManager cm = app.getHacklaceConfigManager();
 		HomePanel homePanel = AnimatorGui.getInstance().getHomePanel();
+		InputStream stream = null;
 		try {
-			InputStream stream = AnimatorGui.class
-					.getResourceAsStream(fileName);
+			stream = AnimatorGui.class.getResourceAsStream(fileName);
 			cm.clear();
 			cm.readStream(stream, errorContainer);
 			homePanel.clear();
@@ -63,6 +63,13 @@ public class MenuActions {
 					JOptionPane.ERROR_MESSAGE);
 			ex.printStackTrace();
 			AnimatorGui.getInstance().getHomePanel().reset();
+		} finally {
+			if (stream != null)
+				try {
+					stream.close();
+				} catch (IOException ex) {
+					// do nothing
+				}
 		}
 	}
 

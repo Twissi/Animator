@@ -116,6 +116,7 @@ public class LedPanel extends JPanel implements LedObserver {
 	 * This bubbles the change events from leds to the ledPanel's registered
 	 * observers
 	 */
+	@Override
 	public void onLedChange(int column, int row, boolean newValue) {
 		for (LedObserver o : observerList) {
 			o.onLedChange(column, row, newValue);

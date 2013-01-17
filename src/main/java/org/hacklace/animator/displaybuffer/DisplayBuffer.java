@@ -74,6 +74,7 @@ public abstract class DisplayBuffer implements Cloneable {
 		return "DisplayBuffer";
 	}
 
+	@Override
 	public DisplayBuffer clone() {
 		try {
 			DisplayBuffer copy = (DisplayBuffer) super.clone();
