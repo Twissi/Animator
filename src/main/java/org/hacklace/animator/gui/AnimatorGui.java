@@ -209,11 +209,11 @@ public class AnimatorGui extends JFrame {
 	 * @param fileName
 	 * @return
 	 */
-	public static AnimatorGui getInstance(String fileName) {
-		if (instance == null) {
-			instance = new AnimatorGui(fileName);
+	public static void createInstanceForFilename(String fileName) {
+		if (instance != null) {
+			throw new RuntimeException("AnimatorGui.createInstanceForFilename must not be called if an instance already exists");
 		}
-		return instance;
+		instance = new AnimatorGui(fileName);
 	}
 
 	public void loadFile(String fileName, ErrorContainer errorContainer) {
