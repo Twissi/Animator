@@ -262,17 +262,15 @@ public class FontUtil {
 	public static boolean isValidSpecialChar(char c,
 			ErrorContainer errorContainer) {
 		int index = c + SPECIAL_CHAR_OFFSET;
-		if (index >= LOWEST_SPECIAL_INDEX && index <= HIGHEST_INDEX) {
+		if (index >= LOWEST_INDEX && index <= HIGHEST_INDEX) {
 			return true;
 		} else {
 			errorContainer
 					.addError("^"
 							+ c
-							+ " is not valid. Must be between ^"
-							+ (char) (FontUtil.LOWEST_SPECIAL_INDEX - FontUtil.SPECIAL_CHAR_OFFSET)
-							+ " and ^"
+							+ " is not valid. Must be lower than or equal to ^"
 							+ (char) (FontUtil.HIGHEST_INDEX - FontUtil.SPECIAL_CHAR_OFFSET)
-							+ " (inclusive).");
+							+ ".");
 			return false;
 		}
 	}
