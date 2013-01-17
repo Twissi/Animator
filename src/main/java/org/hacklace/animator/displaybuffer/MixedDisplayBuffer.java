@@ -7,7 +7,7 @@ import org.hacklace.animator.enums.AnimationType;
 
 public class MixedDisplayBuffer extends TextDisplayBuffer {
 
-	private RestOfConfigLine restOfLine;
+	//private RestOfConfigLine restOfLine;
 	private boolean[] clickEditable;
 
 	public MixedDisplayBuffer(FullConfigLine fullLine,

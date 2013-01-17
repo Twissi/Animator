@@ -8,7 +8,7 @@ import org.hacklace.animator.enums.AnimationType;
 
 public class TextDisplayBuffer extends DisplayBuffer implements Size {
 
-	private RestOfConfigLine restOfLine; 
+	protected RestOfConfigLine restOfLine; 
 
 	public TextDisplayBuffer() {
 		super();

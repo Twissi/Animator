@@ -33,7 +33,9 @@ public class EditTextPanel extends EditPanel {
 	public EditTextPanel(DisplayBuffer displayBuffer) {
 		super(displayBuffer);
 		ledPanel.setEnabled(false);
-		textEditField.setText(((TextDisplayBuffer) getBuffer()).getText());
+		TextDisplayBuffer textDisplayBuffer = (TextDisplayBuffer) getBuffer();
+		String text = textDisplayBuffer.getText();
+		textEditField.setText(text);
 	}
 
 	@Override
