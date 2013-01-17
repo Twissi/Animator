@@ -3,7 +3,7 @@ package org.hacklace.animator.gui;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.MixedDisplayBuffer;
 
-public class EditMixedPanel extends EditPanel {
+public class EditMixedPanel extends EditTextPanel {
 
 	private static final long serialVersionUID = 4181833851656176456L;
 

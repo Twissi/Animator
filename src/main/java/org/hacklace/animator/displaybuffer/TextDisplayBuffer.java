@@ -1,6 +1,7 @@
 package org.hacklace.animator.displaybuffer;
 
 import org.hacklace.animator.ErrorContainer;
+import org.hacklace.animator.ModusByte;
 import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.configuration.RestOfConfigLine;
 import org.hacklace.animator.enums.AnimationType;
@@ -11,6 +12,11 @@ public class TextDisplayBuffer extends DisplayBuffer implements Size {
 
 	public TextDisplayBuffer() {
 		super();
+		setText("", new ErrorContainer()); // initializes data
+	}
+	
+	protected TextDisplayBuffer(ModusByte modusByte) {
+		super(modusByte);
 		setText("", new ErrorContainer()); // initializes data
 	}
 
