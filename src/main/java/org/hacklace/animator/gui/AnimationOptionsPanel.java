@@ -45,13 +45,13 @@ public class AnimationOptionsPanel extends JPanel {
 		directionPanel.add(new JLabel("Direction:"));
 		directionButtons = new ButtonGroup();
 		directionUni = new JRadioButton("Unidirectional");
-		directionUni.addActionListener(new DirectionListener(optionsObserver,
-				Direction.FORWARD));
+		directionUni.addActionListener(new DirectionListener(Direction.FORWARD,
+				optionsObserver));
 		directionButtons.add(directionUni);
 		directionPanel.add(directionUni);
 		directionBi = new JRadioButton("Bidirectional");
-		directionBi.addActionListener(new DirectionListener(optionsObserver,
-				Direction.BIDIRECTIONAL));
+		directionBi.addActionListener(new DirectionListener(Direction.BIDIRECTIONAL,
+				optionsObserver));
 		directionButtons.add(directionBi);
 		directionPanel.add(directionBi);
 
@@ -63,13 +63,13 @@ public class AnimationOptionsPanel extends JPanel {
 		stepWidthPanel.add(new JLabel("StepWidth:"));
 		stepButtons = new ButtonGroup();
 		stepOne = new JRadioButton("1");
-		stepOne.addActionListener(new StepWidthListener(optionsObserver,
-				StepWidth.ONE));
+		stepOne.addActionListener(new StepWidthListener(StepWidth.ONE,
+				optionsObserver));
 		stepButtons.add(stepOne);
 		stepWidthPanel.add(stepOne);
 		stepFive = new JRadioButton("5");
-		stepFive.addActionListener(new StepWidthListener(optionsObserver,
-				StepWidth.FIVE));
+		stepFive.addActionListener(new StepWidthListener(StepWidth.FIVE,
+				optionsObserver));
 		stepButtons.add(stepFive);
 		stepWidthPanel.add(stepFive);
 		return stepWidthPanel;
@@ -100,15 +100,15 @@ public class AnimationOptionsPanel extends JPanel {
 		speedSlider.setPaintTicks(true);
 		speedSlider.setSnapToTicks(true);
 		speedSlider.setMinorTickSpacing(1);
-		speedSlider.addChangeListener(new SpeedChangeListener(optionsObserver,
-				speedSlider));
+		speedSlider.addChangeListener(new SpeedChangeListener(speedSlider,
+				optionsObserver));
 		add(speedSlider);
 		add(new JLabel("Delay:"));
 		delaySlider = new JSlider(0, Delay.values().length - 1);
 		delaySlider.setPaintTicks(true);
 		delaySlider.setSnapToTicks(true);
 		delaySlider.setMinorTickSpacing(1);
-		delaySlider.addChangeListener(new DelayChangeListener(optionsObserver, delaySlider));
+		delaySlider.addChangeListener(new DelayChangeListener(delaySlider, optionsObserver));
 		add(delaySlider);
 		add(createDirectionPanel(optionsObserver));
 		add(createStepWidthPanel(optionsObserver));
