@@ -8,6 +8,7 @@ import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.ModusByte;
 import org.hacklace.animator.configuration.DirectMode;
 import org.hacklace.animator.configuration.FullConfigLine;
+import org.hacklace.animator.gui.AnimatorGui;
 import org.hacklace.animator.gui.EditPanel;
 
 public class RawInputDirectModeApplyActionListener extends AbstractRawInputApplyActionListener {
@@ -15,9 +16,9 @@ public class RawInputDirectModeApplyActionListener extends AbstractRawInputApply
 	private JTextField rawInputRestOfLineTextField;
 
 	public RawInputDirectModeApplyActionListener(JTextField rawInputRestOfLineTextField,
-			EditPanel editPanel) {
+			EditPanel editPanel, AnimatorGui animatorGui) {
+		super(editPanel, animatorGui);
 		this.rawInputRestOfLineTextField = rawInputRestOfLineTextField;
-		this.editPanel = editPanel;
 	}
 
 	@Override
@@ -28,7 +29,7 @@ public class RawInputDirectModeApplyActionListener extends AbstractRawInputApply
 		ErrorContainer errorContainer = new ErrorContainer();
 		bufferFromString(fullLine, errorContainer);
 		if (errorContainer.containsFailure()) {
-			// TODO display error
+			editPanel.showErrors(errorContainer);
 		}
 	}
 }

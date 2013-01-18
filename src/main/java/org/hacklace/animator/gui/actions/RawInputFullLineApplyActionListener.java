@@ -6,6 +6,7 @@ import javax.swing.JTextField;
 
 import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.configuration.FullConfigLine;
+import org.hacklace.animator.gui.AnimatorGui;
 import org.hacklace.animator.gui.EditPanel;
 
 public class RawInputFullLineApplyActionListener extends
@@ -14,9 +15,9 @@ public class RawInputFullLineApplyActionListener extends
 	private JTextField rawInputFullLineTextField;
 
 	public RawInputFullLineApplyActionListener(
-			JTextField rawInputFullLineTextField, EditPanel editPanel) {
+			JTextField rawInputFullLineTextField, EditPanel editPanel, AnimatorGui animatorGui) {
+		super(editPanel, animatorGui);
 		this.rawInputFullLineTextField = rawInputFullLineTextField;
-		this.editPanel = editPanel;
 	}
 
 	@Override
@@ -26,7 +27,7 @@ public class RawInputFullLineApplyActionListener extends
 		ErrorContainer errorContainer = new ErrorContainer();
 		bufferFromString(fullLine, errorContainer);
 		if (errorContainer.containsFailure()) {
-			// TODO display error
+			editPanel.showErrors(errorContainer);
 		}
 	}
 }

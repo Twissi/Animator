@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.hacklace.animator.ErrorContainer;
+import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.configuration.FullConfigLine;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.GraphicDisplayBuffer;
@@ -31,8 +32,8 @@ public class EditGraphicPanel extends EditPanel {
 
 	private DeleteFrameButton deleteFrameButton;
 
-	public EditGraphicPanel(DisplayBuffer displayBuffer) {
-		super(displayBuffer);
+	public EditGraphicPanel(DisplayBuffer displayBuffer, HomePanel homePanel, AnimatorGui animatorGui, HacklaceConfigManager configManager) {
+		super(displayBuffer, homePanel, animatorGui, configManager);
 	}
 
 	abstract class CopyDeleteFrameButton extends JButton implements
@@ -133,7 +134,7 @@ public class EditGraphicPanel extends EditPanel {
 		rawInputPanel.add(rawInputDirectModeTextField, c);
 		JButton button = new JButton("Apply");
 		button.addActionListener(new RawInputDirectModeApplyActionListener(
-				rawInputDirectModeTextField, this));
+				rawInputDirectModeTextField, this, animatorGui));
 		c.gridx = 2;
 		rawInputPanel.add(button, c);
 

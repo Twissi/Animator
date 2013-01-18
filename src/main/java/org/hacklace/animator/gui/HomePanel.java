@@ -54,10 +54,10 @@ public class HomePanel extends JPanel {
 		add(new JButton(new AnimationListActions.MoveUpAction(this)), c);
 		add(new JButton(new AnimationListActions.MoveDownAction(this)), c);
 		add(new JButton(new AnimationListActions.CopyAnimationAction(this)), c);
-		add(new JButton(new AnimationListActions.RemoveAction(this)), c);
+		add(new JButton(new AnimationListActions.RemoveAction(this, animatorGui)), c);
 		c.fill = GridBagConstraints.NONE;
 		c.gridx = 0;
-		add(new JButton(new AnimationListActions.AddAction(this)), c);
+		add(new JButton(new AnimationListActions.AddAction(this, animatorGui)), c);
 		sizeInfoLabel = new JLabel("");
 		add(sizeInfoLabel, c);
 		updateSizeInfoLabel();

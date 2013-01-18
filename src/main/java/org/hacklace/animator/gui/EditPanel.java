@@ -64,16 +64,23 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 	private static final String BUTTON_TEXT_PLAY = "Play";
 	private static final String BUTTON_TEXT_STOP = "Stop";
 
-	public static EditPanel factory(DisplayBuffer displayBuffer) {
+	private HomePanel homePanel;
+
+	protected AnimatorGui animatorGui;
+
+	private HacklaceConfigManager configManager;
+
+	public static EditPanel factory(DisplayBuffer displayBuffer,
+			HomePanel homePanel, AnimatorGui animatorGui, HacklaceConfigManager configManager) {
 		switch (displayBuffer.getAnimationType()) {
 		case TEXT:
-			return new EditTextPanel(displayBuffer);
+			return new EditTextPanel(displayBuffer, homePanel, animatorGui, configManager);
 		case GRAPHIC:
-			return new EditGraphicPanel(displayBuffer);
+			return new EditGraphicPanel(displayBuffer, homePanel, animatorGui, configManager);
 		case REFERENCE:
-			return new EditReferencePanel(displayBuffer);
+			return new EditReferencePanel(displayBuffer, homePanel, animatorGui, configManager);
 		case MIXED:
-			return new EditMixedPanel(displayBuffer);
+			return new EditMixedPanel(displayBuffer, homePanel, animatorGui, configManager);
 		}
 		return null;
 	}
@@ -90,8 +97,8 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 	 * @return
 	 */
 	@SuppressWarnings("unused")
-	private static JLabel createDebugLabel(String text, Color color, int minWidth,
-			int minHeight) {
+	private static JLabel createDebugLabel(String text, Color color,
+			int minWidth, int minHeight) {
 		JLabel label = new JLabel(text);
 		label.setBorder(BorderFactory.createLineBorder(Color.black));
 		label.setBackground(color);
@@ -99,11 +106,16 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 		return label;
 	}
 
-	protected EditPanel(DisplayBuffer displayBuffer) {
+	protected EditPanel(DisplayBuffer displayBuffer, HomePanel homePanel,
+			AnimatorGui animatorGui, HacklaceConfigManager configManager) {
+		this.homePanel = homePanel;
+		this.animatorGui = animatorGui;
+		this.configManager = configManager;
 		buffer = displayBuffer.clone();
 		origBuffer = displayBuffer;
 		// common components for all types of edit panels
-		optionsPanel = new AnimationOptionsPanel((OptionsObserver) this, (SaveObserver) this);
+		optionsPanel = new AnimationOptionsPanel((OptionsObserver) this,
+				(SaveObserver) this, animatorGui);
 		rawInputPanel = createRawInputPanel();
 
 		setLayout(new GridBagLayout());
@@ -204,7 +216,7 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 		rawInputPanel.add(rawInputRestOfLineTextField, c);
 		JButton button = new JButton("Apply");
 		button.addActionListener(new RawInputRestOfLineApplyActionListener(
-				rawInputRestOfLineTextField, this));
+				rawInputRestOfLineTextField, this, animatorGui));
 		c.gridx = 2;
 		rawInputPanel.add(button, c);
 
@@ -218,7 +230,7 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 		rawInputPanel.add(rawInputFullLineTextField, c);
 		button = new JButton("Apply");
 		button.addActionListener(new RawInputFullLineApplyActionListener(
-				rawInputFullLineTextField, this));
+				rawInputFullLineTextField, this, animatorGui));
 		c.gridx = 2;
 		rawInputPanel.add(button, c);
 
@@ -311,15 +323,13 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 	 */
 	@Override
 	public void saveBuffer() {
-		HacklaceConfigManager cm = AnimatorGui.getInstance()
-				.getHacklaceConfigManager();
-		List<DisplayBuffer> list = cm.getList();
+		List<DisplayBuffer> list = configManager.getList();
 		int origBufferIndex = list.indexOf(origBuffer);
 		if (origBufferIndex == -1) {
 			// the buffer could not be found. This means, it has been replaced
 			// during editing (see issue #91). We'll replace it for an easy fix
 			// until we have refactored all the other stuff
-			origBufferIndex = AnimatorGui.getInstance().getHomePanel()
+			origBufferIndex = homePanel
 					.getSelectedIndex();
 		}
 		list.set(origBufferIndex, buffer);
@@ -329,7 +339,7 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 		origBuffer = null;
 		// refresh list on home page because it contains the text for
 		// TextDisplayBuffers
-		AnimatorGui.getInstance().getHomePanel().updateList(cm.getList(), true);
+		homePanel.updateList(configManager.getList(), true);
 	}
 
 	@Override

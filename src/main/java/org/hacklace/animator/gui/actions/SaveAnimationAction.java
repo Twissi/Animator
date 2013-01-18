@@ -12,12 +12,14 @@ public class SaveAnimationAction extends AbstractAction {
 
 	private static final long serialVersionUID = -5813301123661228603L;
 	private SaveObserver editPanel;
+	private AnimatorGui animatorGui;
 
 	public SaveAnimationAction(
-			SaveObserver optionsObserver) {
+			SaveObserver saveObserver, AnimatorGui animatorGui) {
 		super("Save");
 
-		this.editPanel = optionsObserver;
+		this.editPanel = saveObserver;
+		this.animatorGui = animatorGui;
 	}
 
 	@Override
@@ -28,7 +30,7 @@ public class SaveAnimationAction extends AbstractAction {
 
 		if (isSaveAble) {
 			editPanel.saveBuffer();
-			AnimatorGui.getInstance().endEditMode();
+			animatorGui.endEditMode();
 		} else {
 			editPanel.showErrors(errorContainer);
 			JOptionPane.showMessageDialog(null,

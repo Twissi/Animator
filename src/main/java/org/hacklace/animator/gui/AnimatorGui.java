@@ -30,15 +30,13 @@ public class AnimatorGui extends JFrame {
 
 	private static final long serialVersionUID = 2757544085601062109L;
 
-	public static AnimatorGui instance;
-
 	private File currentFile;
 
 	private HomePanel homePanel;
 	private EditPanel editPanel = null;
 	private Container contentPane;
 
-	private HacklaceConfigManager hacklaceConfigManager;
+	private final HacklaceConfigManager hacklaceConfigManager;
 
 	private static IniConf iniConf = new IniConf();
 
@@ -48,7 +46,18 @@ public class AnimatorGui extends JFrame {
 	public AnimatorGui() {
 		hacklaceConfigManager = new HacklaceConfigManager();
 		initComponents();
-		setVisible(true);
+		super.setVisible(true);
+	}
+
+	public AnimatorGui(final String fileName) {
+		this();
+		final ErrorContainer errorContainer = new ErrorContainer();
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				loadFile(fileName, errorContainer);
+			}
+		});
 	}
 
 	/**
@@ -87,17 +96,6 @@ public class AnimatorGui extends JFrame {
 		}
 	}
 
-	public AnimatorGui(final String fileName) {
-		this();
-		final ErrorContainer errorContainer = new ErrorContainer();
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				loadFile(fileName, errorContainer);
-			}
-		});
-	}
-
 	public File getCurrentFile() {
 		return currentFile;
 	}
@@ -122,25 +120,25 @@ public class AnimatorGui extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		// file menu
 		JMenu menuFile = new JMenu("File");
-		menuFile.add(new JMenuItem(new MenuActions.NewAction()));
-		menuFile.add(new JMenuItem(new MenuActions.OpenAction()));
-		menuFile.add(new JMenuItem(new MenuActions.SaveAction()));
-		menuFile.add(new JMenuItem(new MenuActions.SaveAsAction()));
-		menuFile.add(new JMenuItem(new MenuActions.FlashAction()));
-		menuFile.add(new JMenuItem(new MenuActions.ExportBinAction()));
+		menuFile.add(new JMenuItem(new MenuActions.NewAction(this, hacklaceConfigManager)));
+		menuFile.add(new JMenuItem(new MenuActions.OpenAction(this, hacklaceConfigManager)));
+		menuFile.add(new JMenuItem(new MenuActions.SaveAction(this, hacklaceConfigManager)));
+		menuFile.add(new JMenuItem(new MenuActions.SaveAsAction(this, hacklaceConfigManager)));
+		menuFile.add(new JMenuItem(new MenuActions.FlashAction(this, hacklaceConfigManager)));
+		menuFile.add(new JMenuItem(new MenuActions.ExportBinAction(hacklaceConfigManager)));
 		// menuFile.add(new JMenuItem(new MenuActions.ExportGifAction()));
-		menuFile.add(new JMenuItem(new MenuActions.CloseAction()));
+		menuFile.add(new JMenuItem(new MenuActions.CloseAction(this)));
 		menuBar.add(menuFile);
 		// help menu
 		JMenu menuHelp = new JMenu("Help");
-		menuHelp.add(new JMenuItem(new MenuActions.HelpAction()));
-		menuHelp.add(new JMenuItem(new MenuActions.LoadExampleAction()));
-		menuHelp.add(new JMenuItem(new MenuActions.LoadDefaultAction()));
+		menuHelp.add(new JMenuItem(new MenuActions.HelpAction(this)));
+		menuHelp.add(new JMenuItem(new MenuActions.LoadExampleAction(this, hacklaceConfigManager)));
+		menuHelp.add(new JMenuItem(new MenuActions.LoadDefaultAction(this, hacklaceConfigManager)));
 		menuBar.add(menuHelp);
 		//
 		setJMenuBar(menuBar);
 
-		contentPane = this.getContentPane();
+		contentPane = super.getContentPane();
 		homePanel = new HomePanel(hacklaceConfigManager, this);
 		contentPane.add(homePanel);
 
@@ -155,14 +153,10 @@ public class AnimatorGui extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				new MenuActions.CloseAction().actionPerformed(null);
+				new MenuActions.CloseAction(AnimatorGui.this).actionPerformed(null);
 			}
 		});
 
-	}
-
-	public HacklaceConfigManager getHacklaceConfigManager() {
-		return hacklaceConfigManager;
 	}
 
 	public void endEditMode() {
@@ -177,7 +171,7 @@ public class AnimatorGui extends JFrame {
 	}
 
 	public void startEditMode(DisplayBuffer displayBuffer) {
-		editPanel = EditPanel.factory(displayBuffer);
+		editPanel = EditPanel.factory(displayBuffer, homePanel, this, hacklaceConfigManager);
 		if (editPanel == null) {
 			JOptionPane
 					.showMessageDialog(
@@ -188,32 +182,6 @@ public class AnimatorGui extends JFrame {
 		}
 		homePanel.setVisible(false);
 		contentPane.add(editPanel);
-	}
-
-	/**
-	 * Singleton
-	 * 
-	 * @return
-	 */
-	public static AnimatorGui getInstance() {
-		if (instance == null) {
-			instance = new AnimatorGui();
-		}
-		return instance;
-	}
-
-	/**
-	 * Singleton which can be used to directly load an animation file whose name
-	 * was passed on the command line
-	 * 
-	 * @param fileName
-	 * @return
-	 */
-	public static void createInstanceForFilename(String fileName) {
-		if (instance != null) {
-			throw new RuntimeException("AnimatorGui.createInstanceForFilename must not be called if an instance already exists");
-		}
-		instance = new AnimatorGui(fileName);
 	}
 
 	public void loadFile(String fileName, ErrorContainer errorContainer) {

@@ -8,13 +8,15 @@ import org.hacklace.animator.gui.AnimatorGui;
 
 public class CancelEditAction extends AbstractAction {
 	private static final long serialVersionUID = 8730578405697706858L;
+	private AnimatorGui animatorGui;
 
-	public CancelEditAction() {
+	public CancelEditAction(AnimatorGui animatorGui) {
 		super("Cancel");
+		this.animatorGui = animatorGui;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		AnimatorGui.getInstance().endEditMode();
+		animatorGui.endEditMode();
 	}
 }

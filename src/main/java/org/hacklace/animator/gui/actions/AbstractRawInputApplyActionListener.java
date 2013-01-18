@@ -15,9 +15,15 @@ public abstract class AbstractRawInputApplyActionListener implements
 		ActionListener {
 
 	protected EditPanel editPanel;
+	protected AnimatorGui animatorGui;
+	
+	protected AbstractRawInputApplyActionListener(EditPanel editPanel, AnimatorGui animatorGui) {
+		this.editPanel = editPanel;
+		this.animatorGui = animatorGui;
+	}
 
 	@Override
-	abstract public void actionPerformed(ActionEvent arg0);
+	abstract public void actionPerformed(ActionEvent event);
 
 	protected void bufferFromString(FullConfigLine fullLine,
 			ErrorContainer errorContainer) {
@@ -35,8 +41,8 @@ public abstract class AbstractRawInputApplyActionListener implements
 				editPanel.onRawTextChanged();
 			} else {
 				// different type of animation, switch editors
-				AnimatorGui.getInstance().endEditMode();
-				AnimatorGui.getInstance().startEditMode(newBuffer);
+				animatorGui.endEditMode();
+				animatorGui.startEditMode(newBuffer);
 			}
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(null, "Invalid raw string supplied. "

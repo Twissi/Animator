@@ -44,41 +44,17 @@ public class MenuActions {
 		return confirm(confirmationText, confirmationTitle);
 	}
 
-	private static void loadHacklaceConfigFileAsResource(String fileName,
-			ErrorContainer errorContainer) {
-		AnimatorGui app = AnimatorGui.getInstance();
-		HacklaceConfigManager cm = app.getHacklaceConfigManager();
-		HomePanel homePanel = AnimatorGui.getInstance().getHomePanel();
-		InputStream stream = null;
-		try {
-			stream = AnimatorGui.class.getResourceAsStream(fileName);
-			cm.clear();
-			cm.readStream(stream, errorContainer);
-			homePanel.clear();
-			homePanel.updateList(cm.getList(), false);
-			AnimatorGui.getInstance().setCurrentFile(null);
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null,
-					"Cannot read from file. Error: " + ex, "Error",
-					JOptionPane.ERROR_MESSAGE);
-			ex.printStackTrace();
-			AnimatorGui.getInstance().getHomePanel().reset();
-		} finally {
-			if (stream != null)
-				try {
-					stream.close();
-				} catch (IOException ex) {
-					// do nothing
-				}
-		}
-	}
 
 	private abstract static class AbstractLoadExample extends AbstractAction {
 
 		private static final long serialVersionUID = 3429284491017128252L;
+		private AnimatorGui animatorGui;
+		private HacklaceConfigManager configManager;
 
-		public AbstractLoadExample(String s) {
+		public AbstractLoadExample(String s, AnimatorGui animatorGui, HacklaceConfigManager configManager) {
 			super(s);
+			this.animatorGui = animatorGui;
+			this.configManager = configManager;
 		}
 
 		@Override
@@ -89,11 +65,38 @@ public class MenuActions {
 				return;
 			ErrorContainer errorContainer = new ErrorContainer();
 			loadHacklaceConfigFileAsResource(resource, errorContainer);
-			AnimatorGui app = AnimatorGui.getInstance();
-			app.endEditMode();
-			app.setCurrentFile(null);
+			animatorGui.endEditMode();
+			animatorGui.setCurrentFile(null);
 			// TODO display errors from errorContainer
 		}
+		
+		private void loadHacklaceConfigFileAsResource(String fileName,
+				ErrorContainer errorContainer) {
+			HomePanel homePanel = animatorGui.getHomePanel();
+			InputStream stream = null;
+			try {
+				stream = AnimatorGui.class.getResourceAsStream(fileName);
+				configManager.clear();
+				configManager.readStream(stream, errorContainer);
+				homePanel.clear();
+				homePanel.updateList(configManager.getList(), false);
+				animatorGui.setCurrentFile(null);
+			} catch (Exception ex) {
+				JOptionPane.showMessageDialog(null,
+						"Cannot read from file. Error: " + ex, "Error",
+						JOptionPane.ERROR_MESSAGE);
+				ex.printStackTrace();
+				animatorGui.getHomePanel().reset();
+			} finally {
+				if (stream != null)
+					try {
+						stream.close();
+					} catch (IOException ex) {
+						// do nothing
+					}
+			}
+		}
+
 
 	}
 
@@ -101,8 +104,8 @@ public class MenuActions {
 
 		private static final long serialVersionUID = -8252301301328863615L;
 
-		public LoadDefaultAction() {
-			super("Load default configuration");
+		public LoadDefaultAction(AnimatorGui animatorGui, HacklaceConfigManager configManager) {
+			super("Load default configuration", animatorGui, configManager);
 		}
 
 		@Override
@@ -116,8 +119,8 @@ public class MenuActions {
 
 		private static final long serialVersionUID = 5758517032413260605L;
 
-		public LoadExampleAction() {
-			super("Load example configuration");
+		public LoadExampleAction(AnimatorGui animatorGui, HacklaceConfigManager configManager) {
+			super("Load example configuration", animatorGui, configManager);
 		}
 
 		@Override
@@ -146,9 +149,11 @@ public class MenuActions {
 	public static class ExportBinAction extends AbstractAction {
 
 		private static final long serialVersionUID = 3972006266609060565L;
+		private HacklaceConfigManager configManager;
 
-		public ExportBinAction() {
+		public ExportBinAction(HacklaceConfigManager configManager) {
 			super("Export *.bin");
+			this.configManager = configManager;
 		}
 
 		@Override
@@ -157,11 +162,9 @@ public class MenuActions {
 			File saveAsFile = chooser.outputFile();
 			if (saveAsFile == null)
 				return; // cancelled
-			AnimatorGui app = AnimatorGui.getInstance();
-			HacklaceConfigManager cm = app.getHacklaceConfigManager();
 			BinExporter binExporter = new BinExporter();
 			try {
-				binExporter.write(cm.getRawString(), saveAsFile);
+				binExporter.write(configManager.getRawString(), saveAsFile);
 			} // Java 7: (IOException | UnsupportedCommOperationException |
 				// PortInUseException ex)
 			catch (IOException ex) {
@@ -175,16 +178,18 @@ public class MenuActions {
 	public static class FlashAction extends AbstractAction {
 
 		private static final long serialVersionUID = 3492735544537440621L;
+		private AnimatorGui animatorGui;
+		private HacklaceConfigManager configManager;
 
-		public FlashAction() {
+		public FlashAction(AnimatorGui animatorGui, HacklaceConfigManager configManager) {
 			super("Flash hacklace");
+			this.animatorGui = animatorGui;
+			this.configManager = configManager;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			AnimatorGui animatorGui = AnimatorGui.getInstance();
-			HacklaceConfigManager cm = animatorGui.getHacklaceConfigManager();
-			int bytesUsed = cm.getNumBytes();
+			int bytesUsed = configManager.getNumBytes();
 			int maxBytes = AnimatorGui.getIniConf().maxBytes();
 			if (bytesUsed > maxBytes) {
 				JOptionPane.showMessageDialog( //
@@ -258,7 +263,7 @@ public class MenuActions {
 			flashExporter.setDeviceName(port);
 
 			try {
-				flashExporter.write(cm.getRawString());
+				flashExporter.write(configManager.getRawString());
 				JOptionPane.showMessageDialog(null, // parent
 						"Hacklace has been flashed.", // message
 						"Flashed", // title
@@ -280,9 +285,13 @@ public class MenuActions {
 
 	public static class SaveAsAction extends AbstractAction {
 		private static final long serialVersionUID = 3973336765387195380L;
+		private AnimatorGui animatorGui;
+		private HacklaceConfigManager configManager;
 
-		public SaveAsAction() {
+		public SaveAsAction(AnimatorGui animatorGui, HacklaceConfigManager configManager) {
 			super("Save *.hack file as");
+			this.animatorGui = animatorGui;
+			this.configManager = configManager;
 		}
 
 		@Override
@@ -291,24 +300,26 @@ public class MenuActions {
 			File saveAsFile = chooser.outputFile();
 			if (saveAsFile == null)
 				return; // cancelled
-			AnimatorGui app = AnimatorGui.getInstance();
-			HacklaceConfigManager cm = app.getHacklaceConfigManager();
 			try {
-				cm.writeFile(saveAsFile);
-				AnimatorGui.getInstance().setCurrentFile(saveAsFile);
+				configManager.writeFile(saveAsFile);
+				animatorGui.setCurrentFile(saveAsFile);
 			} catch (IOException e1) {
 				JOptionPane.showMessageDialog(null, "Cannot write to file.",
 						"Error", JOptionPane.ERROR_MESSAGE);
-				AnimatorGui.getInstance().getHomePanel().reset();
+				animatorGui.getHomePanel().reset();
 			}
 		}
 	}
 
 	public static class OpenAction extends AbstractAction {
 		private static final long serialVersionUID = 6197663976216625203L;
+		private AnimatorGui animatorGui;
+		private HacklaceConfigManager configManager;
 
-		public OpenAction() {
+		public OpenAction(AnimatorGui animatorGui, HacklaceConfigManager configManager) {
 			super("Open *.hack file");
+			this.animatorGui = animatorGui;
+			this.configManager = configManager;
 		}
 
 		@Override
@@ -317,22 +328,20 @@ public class MenuActions {
 			File openFile = chooser.inputFile();
 			if (openFile == null)
 				return; // cancelled
-			AnimatorGui app = AnimatorGui.getInstance();
-			HacklaceConfigManager cm = app.getHacklaceConfigManager();
-			HomePanel homePanel = AnimatorGui.getInstance().getHomePanel();
+			HomePanel homePanel = animatorGui.getHomePanel();
 			ErrorContainer errorContainer = new ErrorContainer();
 			try {
-				cm.clear();
-				cm.readFile(openFile, errorContainer);
+				configManager.clear();
+				configManager.readFile(openFile, errorContainer);
 				homePanel.clear();
-				homePanel.updateList(cm.getList(), false);
-				app.setCurrentFile(openFile);
-				app.endEditMode();
+				homePanel.updateList(configManager.getList(), false);
+				animatorGui.setCurrentFile(openFile);
+				animatorGui.endEditMode();
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(null, "Cannot read from file.",
 						"Error", JOptionPane.ERROR_MESSAGE);
-				app.getHomePanel().reset();
-				app.endEditMode();
+				animatorGui.getHomePanel().reset();
+				animatorGui.endEditMode();
 			}
 			JOptionPane.showMessageDialog(null, "Problems in file"
 					+ errorContainer.toString(), "Error",
@@ -342,76 +351,85 @@ public class MenuActions {
 
 	public static class SaveAction extends AbstractAction {
 		private static final long serialVersionUID = 3973336765387195380L;
+		private AnimatorGui animatorGui;
+		private HacklaceConfigManager configManager;
 
-		public SaveAction() {
+		public SaveAction(AnimatorGui animatorGui, HacklaceConfigManager configManager) {
 			super("Save *.hack file");
+			this.animatorGui = animatorGui;
+			this.configManager = configManager;
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent e) {
-			AnimatorGui app = AnimatorGui.getInstance();
-			HacklaceConfigManager cm = app.getHacklaceConfigManager();
-			if (app.getCurrentFile() != null) {
+		public void actionPerformed(ActionEvent event) {
+			if (animatorGui.getCurrentFile() != null) {
 				try {
-					cm.writeFile(app.getCurrentFile());
+					configManager.writeFile(animatorGui.getCurrentFile());
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(null,
 							"Cannot write to file.", "Error",
 							JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
-				new SaveAsAction().actionPerformed(e);
+				new SaveAsAction(animatorGui, configManager).actionPerformed(event);
 			}
 		}
 	}
 
 	public static class CloseAction extends AbstractAction {
 		private static final long serialVersionUID = 7738025108677393058L;
+		private AnimatorGui animatorGui;
 
-		public CloseAction() {
+		public CloseAction(AnimatorGui animatorGui) {
 			super("Close");
+			this.animatorGui = animatorGui;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (!confirm("Do you really want to quit?", "Quit?"))
 				return;
-			AnimatorGui.getInstance().endEditMode();
-			AnimatorGui.getInstance().dispose();
+			animatorGui.endEditMode();
+			animatorGui.dispose();
 		}
 	}
 
 	public static class HelpAction extends AbstractAction {
 
 		private static final long serialVersionUID = 6474820875394474686L;
+		private AnimatorGui animatorGui;
 
-		public HelpAction() {
+		public HelpAction(AnimatorGui animatorGui) {
 			super("Help");
+			this.animatorGui = animatorGui;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			AnimatorGui.getInstance().showHelp();
+			animatorGui.showHelp();
 		}
 	}
 
 	public static class NewAction extends AbstractAction {
 
 		private static final long serialVersionUID = -1969161857609413789L;
+		private AnimatorGui animatorGui;
+		private HacklaceConfigManager configManager;
 
-		public NewAction() {
+		public NewAction(AnimatorGui animatorGui, HacklaceConfigManager configManager) {
 			super("New");
+			this.animatorGui = animatorGui;
+			this.configManager = configManager;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (!confirm())
 				return;
-			AnimatorGui app = AnimatorGui.getInstance();
-			app.getHomePanel().clear();
-			app.getHacklaceConfigManager().clear();
-			app.endEditMode();
-			app.setCurrentFile(null);
+			animatorGui.getHomePanel().clear();
+			configManager.clear();
+			animatorGui.endEditMode();
+			animatorGui.setCurrentFile(null);
 		}
 	}
 

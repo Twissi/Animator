@@ -19,6 +19,7 @@ import javax.swing.text.PlainDocument;
 
 import org.hacklace.animator.ErrorContainer;
 import org.hacklace.animator.FontUtil;
+import org.hacklace.animator.HacklaceConfigManager;
 import org.hacklace.animator.displaybuffer.DisplayBuffer;
 import org.hacklace.animator.displaybuffer.TextDisplayBuffer;
 
@@ -30,8 +31,8 @@ public class EditTextPanel extends EditPanel {
 	private JPanel textPanel;
 	private JPanel virtualKeyboardPanel;
 
-	public EditTextPanel(DisplayBuffer displayBuffer) {
-		super(displayBuffer);
+	public EditTextPanel(DisplayBuffer displayBuffer, HomePanel homePanel, AnimatorGui animatorGui, HacklaceConfigManager configManager) {
+		super(displayBuffer, homePanel, animatorGui, configManager);
 		ledPanel.setEnabled(false);
 		TextDisplayBuffer textDisplayBuffer = (TextDisplayBuffer) getBuffer();
 		String text = textDisplayBuffer.getText();

@@ -20,17 +20,19 @@ public class AnimationListActions {
 	public static class AddAction extends AbstractAction {
 		private static final long serialVersionUID = 1859804910358647446L;
 		private HomePanel homePanel;
+		private AnimatorGui animatorGui;
 
-		public AddAction(HomePanel homePanel) {
+		public AddAction(HomePanel homePanel, AnimatorGui animatorGui) {
 			super("Create");
 			this.homePanel = homePanel;
+			this.animatorGui = animatorGui;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			AnimationType[] options = AnimationType.values();
 			AnimationType result = (AnimationType) JOptionPane.showInputDialog(
-					AnimatorGui.getInstance(),
+					animatorGui,
 					"Which type of animation would you like to create?",
 					"Animation type", JOptionPane.QUESTION_MESSAGE, null,
 					options, options[0]);
@@ -46,7 +48,7 @@ public class AnimationListActions {
 				buffer = new TextDisplayBuffer();
 				break;
 			case REFERENCE:
-				PredefinedAnimation reference = AskForReferenceHelper.askForReference();
+				PredefinedAnimation reference = AskForReferenceHelper.askForReference(animatorGui);
 				if (reference == null)
 					return; // cancel
 				buffer = new ReferenceDisplayBuffer(reference);
@@ -63,10 +65,12 @@ public class AnimationListActions {
 	public static class RemoveAction extends AbstractAction {
 		private static final long serialVersionUID = 8727232876038260461L;
 		private HomePanel homePanel;
+		private AnimatorGui animatorGui;
 
-		public RemoveAction(HomePanel homePanel) {
+		public RemoveAction(HomePanel homePanel, AnimatorGui animatorGui) {
 			super("Delete");
 			this.homePanel = homePanel;
+			this.animatorGui = animatorGui;
 		}
 
 		@Override
@@ -74,7 +78,7 @@ public class AnimationListActions {
 			if (!homePanel.isValidSelection())
 				return;
 			int answer = JOptionPane.showConfirmDialog(
-					AnimatorGui.getInstance(),
+					animatorGui,
 					"Do you really want to delete this animation?",
 					"Confirm delete", JOptionPane.YES_NO_OPTION);
 			if (answer == JOptionPane.YES_OPTION) {

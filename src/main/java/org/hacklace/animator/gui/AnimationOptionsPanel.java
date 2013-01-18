@@ -32,8 +32,10 @@ public class AnimationOptionsPanel extends JPanel {
 	private JRadioButton stepOne;
 	private JRadioButton stepFive;
 	private ButtonGroup stepButtons;
+	private AnimatorGui animatorGui;
 
-	public AnimationOptionsPanel(OptionsObserver optionsObserver, SaveObserver saveObserver) {
+	public AnimationOptionsPanel(OptionsObserver optionsObserver, SaveObserver saveObserver, AnimatorGui animatorGui) {
+		this.animatorGui = animatorGui;
 		removeAll();
 		initComponents(optionsObserver, saveObserver);
 	}
@@ -110,9 +112,9 @@ public class AnimationOptionsPanel extends JPanel {
 		add(delaySlider);
 		add(createDirectionPanel(optionsObserver));
 		add(createStepWidthPanel(optionsObserver));
-		JButton saveButton = new JButton(new SaveAnimationAction(saveObserver));
+		JButton saveButton = new JButton(new SaveAnimationAction(saveObserver, animatorGui));
 		add(saveButton);
-		JButton cancelButton = new JButton(new CancelEditAction());
+		JButton cancelButton = new JButton(new CancelEditAction(animatorGui));
 		add(cancelButton);
 	}
 }
