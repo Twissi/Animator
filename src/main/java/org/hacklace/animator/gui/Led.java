@@ -2,6 +2,8 @@ package org.hacklace.animator.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JButton;
 
@@ -14,7 +16,20 @@ public class Led extends JButton implements LedInterface {
 	public final int row;
 	public final int column;
 	private boolean on;
-	private LedObserver observer;
+	private List<LedObserver> observerList;
+
+	public Led(int row, int column, LedObserver o) {
+		setOpaque(true);
+		setBackground(Color.WHITE);
+		this.row = row;
+		this.column = column;
+		observerList = new LinkedList<LedObserver>();
+		addObserver(o);
+	}
+
+	public void addObserver(LedObserver o) {
+		observerList.add(o);
+	}
 
 	private void set() {
 		on = true;
@@ -33,15 +48,10 @@ public class Led extends JButton implements LedInterface {
 		} else {
 			set();
 		}
-		observer.onLedChange(column, row, on);
-	}
-	
-	public Led(int row, int column, LedObserver o) {
-		setOpaque(true);
-		setBackground(Color.WHITE);
-		this.row = row;
-		this.column = column;
-		this.observer = o;
+		// there is currently only one observer, the EditPanel
+		for (LedObserver o : observerList) {
+			o.onLedChange(column, row, on);
+		}
 	}
 
 	@Override

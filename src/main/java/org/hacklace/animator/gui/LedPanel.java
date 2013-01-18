@@ -118,6 +118,7 @@ public class LedPanel extends JPanel implements LedObserver {
 	 */
 	@Override
 	public void onLedChange(int column, int row, boolean newValue) {
+		// currently there is just one observer, the EditPanel
 		for (LedObserver o : observerList) {
 			o.onLedChange(column, row, newValue);
 		}
