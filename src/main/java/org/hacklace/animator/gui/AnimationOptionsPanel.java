@@ -112,7 +112,7 @@ public class AnimationOptionsPanel extends JPanel {
 		add(delaySlider);
 		add(createDirectionPanel(optionsObserver));
 		add(createStepWidthPanel(optionsObserver));
-		JButton saveButton = new JButton(new SaveAnimationAction(saveObserver, animatorGui));
+		JButton saveButton = new JButton(new SaveAnimationAction(saveObserver));
 		add(saveButton);
 		JButton cancelButton = new JButton(new CancelEditAction(animatorGui));
 		add(cancelButton);

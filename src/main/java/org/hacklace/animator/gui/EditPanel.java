@@ -12,6 +12,7 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
@@ -71,16 +72,21 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 	private HacklaceConfigManager configManager;
 
 	public static EditPanel factory(DisplayBuffer displayBuffer,
-			HomePanel homePanel, AnimatorGui animatorGui, HacklaceConfigManager configManager) {
+			HomePanel homePanel, AnimatorGui animatorGui,
+			HacklaceConfigManager configManager) {
 		switch (displayBuffer.getAnimationType()) {
 		case TEXT:
-			return new EditTextPanel(displayBuffer, homePanel, animatorGui, configManager);
+			return new EditTextPanel(displayBuffer, homePanel, animatorGui,
+					configManager);
 		case GRAPHIC:
-			return new EditGraphicPanel(displayBuffer, homePanel, animatorGui, configManager);
+			return new EditGraphicPanel(displayBuffer, homePanel, animatorGui,
+					configManager);
 		case REFERENCE:
-			return new EditReferencePanel(displayBuffer, homePanel, animatorGui, configManager);
+			return new EditReferencePanel(displayBuffer, homePanel,
+					animatorGui, configManager);
 		case MIXED:
-			return new EditMixedPanel(displayBuffer, homePanel, animatorGui, configManager);
+			return new EditMixedPanel(displayBuffer, homePanel, animatorGui,
+					configManager);
 		}
 		return null;
 	}
@@ -321,7 +327,6 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 	 * The buffer must not be touched anymore after this because we switch
 	 * them(!)
 	 */
-	@Override
 	public void saveBuffer() {
 		List<DisplayBuffer> list = configManager.getList();
 		int origBufferIndex = list.indexOf(origBuffer);
@@ -329,8 +334,7 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 			// the buffer could not be found. This means, it has been replaced
 			// during editing (see issue #91). We'll replace it for an easy fix
 			// until we have refactored all the other stuff
-			origBufferIndex = homePanel
-					.getSelectedIndex();
+			origBufferIndex = homePanel.getSelectedIndex();
 		}
 		list.set(origBufferIndex, buffer);
 		// null the buffer references - we rather have a NullpointerException
@@ -410,6 +414,23 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 		this.currentPosition = newPosition;
 		updateUiFromDisplayBuffer();
 		ledPanel.setOffset(currentPosition);
+	}
+
+	@Override
+	public void onSaveAnimation() {
+		ErrorContainer errorContainer = new ErrorContainer();
+
+		boolean isSaveAble = this.getBuffer().isSaveable(errorContainer);
+
+		if (isSaveAble) {
+			this.saveBuffer();
+			animatorGui.endEditMode();
+		} else {
+			this.showErrors(errorContainer);
+			JOptionPane.showMessageDialog(null, "The animation cannot be saved because there are errors. \n(See log at the bottom of the screen.)",
+					"Error saving", JOptionPane.ERROR_MESSAGE);
+
+		}
 	}
 
 }
