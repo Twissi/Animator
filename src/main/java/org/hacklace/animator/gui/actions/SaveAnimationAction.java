@@ -11,14 +11,14 @@ import org.hacklace.animator.gui.AnimatorGui;
 public class SaveAnimationAction extends AbstractAction {
 
 	private static final long serialVersionUID = -5813301123661228603L;
-	private SaveObserver editPanel;
+	private SaveObserver saveObserver;
 	private AnimatorGui animatorGui;
 
 	public SaveAnimationAction(
 			SaveObserver saveObserver, AnimatorGui animatorGui) {
 		super("Save");
 
-		this.editPanel = saveObserver;
+		this.saveObserver = saveObserver;
 		this.animatorGui = animatorGui;
 	}
 
@@ -26,13 +26,13 @@ public class SaveAnimationAction extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		ErrorContainer errorContainer = new ErrorContainer();
 
-		boolean isSaveAble = editPanel.getBuffer().isSaveable(errorContainer);
+		boolean isSaveAble = saveObserver.getBuffer().isSaveable(errorContainer);
 
 		if (isSaveAble) {
-			editPanel.saveBuffer();
+			saveObserver.saveBuffer();
 			animatorGui.endEditMode();
 		} else {
-			editPanel.showErrors(errorContainer);
+			saveObserver.showErrors(errorContainer);
 			JOptionPane.showMessageDialog(null,
 					"The buffer cannot be saved.", "Error saving",
 					JOptionPane.ERROR_MESSAGE);
