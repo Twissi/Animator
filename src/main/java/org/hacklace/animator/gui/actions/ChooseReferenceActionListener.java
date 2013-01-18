@@ -20,7 +20,7 @@ public class ChooseReferenceActionListener implements ActionListener {
 	}
 	
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
+	public void actionPerformed(ActionEvent event) {
 		PredefinedAnimation answer = AskForReferenceHelper.askForReference(animatorGui);
 		if (answer == null) // clicked cancel
 			return;

@@ -153,7 +153,7 @@ public class AnimationListActions {
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent arg0) {
+		public void actionPerformed(ActionEvent event) {
 			if (!homePanel.isValidSelection())
 				return;
 

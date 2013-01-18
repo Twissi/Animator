@@ -21,7 +21,7 @@ public class RawInputFullLineApplyActionListener extends
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
+	public void actionPerformed(ActionEvent event) {
 		String rawString = rawInputFullLineTextField.getText();
 		FullConfigLine fullLine = new FullConfigLine(rawString);
 		ErrorContainer errorContainer = new ErrorContainer();

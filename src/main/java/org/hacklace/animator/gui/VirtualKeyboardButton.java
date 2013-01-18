@@ -45,26 +45,4 @@ public class VirtualKeyboardButton extends JButton {
 		return FontUtil.getRawStringForIndex(imageIndex);
 	}
 
-	/* TESTING:
-	public static void main(String[] args) {
-		JFrame aFrame = new JFrame();
-		aFrame.setLayout(new GridLayout());
-		aFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		aFrame.setPreferredSize(new Dimension(600, 100));
-		for (int i = 0; i < 10; i++) {
-			VirtualKeyboardButton button = new VirtualKeyboardButton(0x80 + i);
-			button.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					VirtualKeyboardButton button = (VirtualKeyboardButton) arg0
-							.getSource();
-					System.out.println("Pressed: " + button.getString());
-				}
-			});
-			aFrame.add(button);
-		}
-		aFrame.pack();
-		aFrame.setVisible(true);
-	}
-	 */
 }

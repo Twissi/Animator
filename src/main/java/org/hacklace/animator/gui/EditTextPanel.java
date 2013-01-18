@@ -58,8 +58,8 @@ public class EditTextPanel extends EditPanel {
 				"Hover over \"empty\" buttons to see the width of the space."));
 		ActionListener virtualKeyboardListener = new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				VirtualKeyboardButton vk = (VirtualKeyboardButton) arg0
+			public void actionPerformed(ActionEvent event) {
+				VirtualKeyboardButton vk = (VirtualKeyboardButton) event
 						.getSource();
 				String chars = vk.getString();
 				int pos = textEditField.getCaretPosition();

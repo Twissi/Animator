@@ -22,7 +22,7 @@ public class RawInputDirectModeApplyActionListener extends AbstractRawInputApply
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
+	public void actionPerformed(ActionEvent event) {
 		ModusByte modusByte = editPanel.getDisplayBuffer().getModusByte();
 		DirectMode directMode = new DirectMode(rawInputRestOfLineTextField.getText());
 		FullConfigLine fullLine = new FullConfigLine(modusByte, directMode);

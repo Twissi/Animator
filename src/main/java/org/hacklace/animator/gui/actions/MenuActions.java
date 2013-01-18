@@ -58,7 +58,7 @@ public class MenuActions {
 		}
 
 		@Override
-		public abstract void actionPerformed(ActionEvent arg0);
+		public abstract void actionPerformed(ActionEvent event);
 
 		protected void load(String resource) {
 			if (!confirm())
