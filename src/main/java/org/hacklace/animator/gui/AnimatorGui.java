@@ -4,6 +4,7 @@
  ******************************************************************************/
 package org.hacklace.animator.gui;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -16,11 +17,13 @@ import java.net.URL;
 import javax.help.HelpSet;
 import javax.help.HelpSetException;
 import javax.help.JHelp;
+import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
@@ -39,6 +42,7 @@ public class AnimatorGui extends JFrame {
 	private HomePanel homePanel;
 	private EditPanel editPanel = null;
 	private Container contentPane;
+	private Color ledColor = Color.green;
 
 	private final HacklaceConfigManager hacklaceConfigManager;
 
@@ -133,6 +137,20 @@ public class AnimatorGui extends JFrame {
 		// menuFile.add(new JMenuItem(new MenuActions.ExportGifAction()));
 		menuFile.add(new JMenuItem(new MenuActions.CloseAction(this)));
 		menuBar.add(menuFile);
+		// view menu
+		JMenu menuView = new JMenu("View");
+		ButtonGroup menuLedGroup = new ButtonGroup();
+		JRadioButtonMenuItem menuLedGreen = new JRadioButtonMenuItem(new MenuActions.LedColorAction(this, "Green leds", Color.green));
+		menuLedGreen.setSelected(true);
+		menuLedGroup.add(menuLedGreen);
+		menuView.add(menuLedGreen);
+		JRadioButtonMenuItem menuLedRed = new JRadioButtonMenuItem(new MenuActions.LedColorAction(this, "Red leds", Color.red));
+		menuLedGroup.add(menuLedRed);
+		menuView.add(menuLedRed);
+		JRadioButtonMenuItem menuLedBlack = new JRadioButtonMenuItem(new MenuActions.LedColorAction(this, "Black leds", Color.black));
+		menuLedGroup.add(menuLedBlack);
+		menuView.add(menuLedBlack);
+		menuBar.add(menuView);
 		// help menu
 		JMenu menuHelp = new JMenu("Help");
 		menuHelp.add(new JMenuItem(new MenuActions.HelpAction(this)));
@@ -184,6 +202,7 @@ public class AnimatorGui extends JFrame {
 							"Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
+		editPanel.setLedColor(ledColor);
 		homePanel.setVisible(false);
 		contentPane.add(editPanel);
 	}
@@ -208,5 +227,12 @@ public class AnimatorGui extends JFrame {
 
 	public static IniConf getIniConf() {
 		return iniConf;
+	}
+	
+	public void setLedColor(Color color) {
+		this.ledColor = color;
+		if (editPanel != null) {
+			editPanel.setLedColor(color);
+		}
 	}
 }

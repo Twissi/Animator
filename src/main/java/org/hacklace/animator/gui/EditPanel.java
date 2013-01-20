@@ -52,6 +52,7 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 	protected JSlider positionSlider;
 	protected JButton playButton;
 	protected Thread playThread = null;
+	protected Color ledColor = Color.green;
 
 	private DisplayBuffer buffer = null; // our internal temporary displayBuffer
 	// for editing
@@ -142,6 +143,7 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 		c.gridx = 1;
 		c.gridy = GridBagConstraints.RELATIVE;
 		ledPanel = new LedPanel(GRID_ROWS, GRID_COLS * NUM_GRIDS_TO_SHOW);
+		ledPanel.setForeground(ledColor);
 		ledPanel.addObserver(this);
 		add(ledPanel, c);
 		positionSlider = createPositionSlider();
@@ -162,6 +164,7 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 		c.gridx = 2;
 		c.gridy = 0;
 		playPanel = new LedPanel(GRID_ROWS, GRID_COLS);
+		playPanel.setForeground(ledColor);
 		playPanel.setEnabled(false);
 		playPanel.showLabels(false);
 		add(playPanel, c);
@@ -431,10 +434,19 @@ public abstract class EditPanel extends JPanel implements LedObserver,
 			animatorGui.endEditMode();
 		} else {
 			this.showErrors(errorContainer);
-			JOptionPane.showMessageDialog(null, "The animation cannot be saved because there are errors. \n(See log at the bottom of the screen.)",
-					"Error saving", JOptionPane.ERROR_MESSAGE);
+			JOptionPane
+					.showMessageDialog(
+							null,
+							"The animation cannot be saved because there are errors. \n(See log at the bottom of the screen.)",
+							"Error saving", JOptionPane.ERROR_MESSAGE);
 
 		}
+	}
+	
+	public void setLedColor(Color ledColor) {
+		this.ledColor = ledColor;
+		ledPanel.setForeground(ledColor);
+		playPanel.setForeground(ledColor);
 	}
 
 }

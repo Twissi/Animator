@@ -8,6 +8,7 @@ import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
 import gnu.io.UnsupportedCommOperationException;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -48,14 +49,14 @@ public class MenuActions {
 		return confirm(confirmationText, confirmationTitle);
 	}
 
-
 	private abstract static class AbstractLoadExample extends AbstractAction {
 
 		private static final long serialVersionUID = 3429284491017128252L;
 		private AnimatorGui animatorGui;
 		private HacklaceConfigManager configManager;
 
-		public AbstractLoadExample(String s, AnimatorGui animatorGui, HacklaceConfigManager configManager) {
+		public AbstractLoadExample(String s, AnimatorGui animatorGui,
+				HacklaceConfigManager configManager) {
 			super(s);
 			this.animatorGui = animatorGui;
 			this.configManager = configManager;
@@ -73,7 +74,7 @@ public class MenuActions {
 			animatorGui.setCurrentFile(null);
 			// TODO display errors from errorContainer
 		}
-		
+
 		private void loadHacklaceConfigFileAsResource(String fileName,
 				ErrorContainer errorContainer) {
 			HomePanel homePanel = animatorGui.getHomePanel();
@@ -101,14 +102,14 @@ public class MenuActions {
 			}
 		}
 
-
 	}
 
 	public static class LoadDefaultAction extends AbstractLoadExample {
 
 		private static final long serialVersionUID = -8252301301328863615L;
 
-		public LoadDefaultAction(AnimatorGui animatorGui, HacklaceConfigManager configManager) {
+		public LoadDefaultAction(AnimatorGui animatorGui,
+				HacklaceConfigManager configManager) {
 			super("Load default configuration", animatorGui, configManager);
 		}
 
@@ -123,7 +124,8 @@ public class MenuActions {
 
 		private static final long serialVersionUID = 5758517032413260605L;
 
-		public LoadExampleAction(AnimatorGui animatorGui, HacklaceConfigManager configManager) {
+		public LoadExampleAction(AnimatorGui animatorGui,
+				HacklaceConfigManager configManager) {
 			super("Load example configuration", animatorGui, configManager);
 		}
 
@@ -185,7 +187,8 @@ public class MenuActions {
 		private AnimatorGui animatorGui;
 		private HacklaceConfigManager configManager;
 
-		public FlashAction(AnimatorGui animatorGui, HacklaceConfigManager configManager) {
+		public FlashAction(AnimatorGui animatorGui,
+				HacklaceConfigManager configManager) {
 			super("Flash hacklace");
 			this.animatorGui = animatorGui;
 			this.configManager = configManager;
@@ -292,7 +295,8 @@ public class MenuActions {
 		private AnimatorGui animatorGui;
 		private HacklaceConfigManager configManager;
 
-		public SaveAsAction(AnimatorGui animatorGui, HacklaceConfigManager configManager) {
+		public SaveAsAction(AnimatorGui animatorGui,
+				HacklaceConfigManager configManager) {
 			super("Save *.hack file as");
 			this.animatorGui = animatorGui;
 			this.configManager = configManager;
@@ -320,7 +324,8 @@ public class MenuActions {
 		private AnimatorGui animatorGui;
 		private HacklaceConfigManager configManager;
 
-		public OpenAction(AnimatorGui animatorGui, HacklaceConfigManager configManager) {
+		public OpenAction(AnimatorGui animatorGui,
+				HacklaceConfigManager configManager) {
 			super("Open *.hack file");
 			this.animatorGui = animatorGui;
 			this.configManager = configManager;
@@ -358,7 +363,8 @@ public class MenuActions {
 		private AnimatorGui animatorGui;
 		private HacklaceConfigManager configManager;
 
-		public SaveAction(AnimatorGui animatorGui, HacklaceConfigManager configManager) {
+		public SaveAction(AnimatorGui animatorGui,
+				HacklaceConfigManager configManager) {
 			super("Save *.hack file");
 			this.animatorGui = animatorGui;
 			this.configManager = configManager;
@@ -375,7 +381,8 @@ public class MenuActions {
 							JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
-				new SaveAsAction(animatorGui, configManager).actionPerformed(event);
+				new SaveAsAction(animatorGui, configManager)
+						.actionPerformed(event);
 			}
 		}
 	}
@@ -420,7 +427,8 @@ public class MenuActions {
 		private AnimatorGui animatorGui;
 		private HacklaceConfigManager configManager;
 
-		public NewAction(AnimatorGui animatorGui, HacklaceConfigManager configManager) {
+		public NewAction(AnimatorGui animatorGui,
+				HacklaceConfigManager configManager) {
 			super("New");
 			this.animatorGui = animatorGui;
 			this.configManager = configManager;
@@ -435,6 +443,25 @@ public class MenuActions {
 			animatorGui.endEditMode();
 			animatorGui.setCurrentFile(null);
 		}
+	}
+
+	public static class LedColorAction extends AbstractAction {
+
+		private static final long serialVersionUID = -8787531585358983972L;
+		private AnimatorGui animatorGui;
+		private Color color;
+
+		public LedColorAction(AnimatorGui animatorGui, String label, Color color) {
+			super(label);
+			this.animatorGui = animatorGui;
+			this.color = color;
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			animatorGui.setLedColor(this.color);
+		}
+
 	}
 
 }

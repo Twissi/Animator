@@ -4,6 +4,7 @@
  ******************************************************************************/
 package org.hacklace.animator.gui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -154,6 +155,16 @@ public class LedPanel extends JPanel implements LedObserver {
 	public void showLabels(boolean value) {
 		for (JLabel label : frameLabels) {
 			label.setVisible(value);
+		}
+	}
+	
+	@Override
+	public void setForeground(Color fg) {
+		super.setForeground(fg);
+		for (int y = 0; y < gridRows; y++) {
+			for (int x = 0; x < gridCols; x++) {
+				leds[x][y].setForeground(fg);
+			}
 		}
 	}
 

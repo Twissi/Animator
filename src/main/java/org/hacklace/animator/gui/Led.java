@@ -6,6 +6,10 @@ package org.hacklace.animator.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.geom.Ellipse2D;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,7 +28,7 @@ public class Led extends JButton implements LedInterface {
 
 	public Led(int row, int column, LedObserver o) {
 		setOpaque(true);
-		setBackground(Color.WHITE);
+		setForeground(new Color(64, 255, 64));
 		this.row = row;
 		this.column = column;
 		observerList = new LinkedList<LedObserver>();
@@ -37,12 +41,10 @@ public class Led extends JButton implements LedInterface {
 
 	private void set() {
 		on = true;
-		setBackground(Color.BLACK);
 	}
 
 	private void unset() {
 		on = false;
-		setBackground(Color.WHITE);
 	}
 
 	@Override
@@ -75,6 +77,23 @@ public class Led extends JButton implements LedInterface {
 			set();
 		} else {
 			unset();
+		}
+	}
+
+	@Override
+	public void paint(Graphics g) {
+		super.paint(g);
+		Graphics2D g2d = ((Graphics2D) g);
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
+		Ellipse2D.Double circle = new Ellipse2D.Double(1, 1, getWidth() - 3,
+				getHeight() - 3);
+		if (on) {
+			g2d.setColor(getForeground());
+			g2d.fill(circle);
+		} else {
+			g2d.setColor(getBackground());
+			g2d.fill(circle);
 		}
 	}
 
