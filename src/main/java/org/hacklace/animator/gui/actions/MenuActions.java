@@ -5,8 +5,6 @@
 package org.hacklace.animator.gui.actions;
 
 import gnu.io.CommPortIdentifier;
-import gnu.io.PortInUseException;
-import gnu.io.UnsupportedCommOperationException;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -223,7 +221,7 @@ public class MenuActions {
 					);
 
 			// Let the user select the serial port
-			FlashExporter flashExporter = new FlashExporter();
+			final FlashExporter flashExporter = new FlashExporter();
 			ArrayList<String> ports = flashExporter.listDeviceNames();
 
 			String problemText = "Make sure you have the necessary authorizations. \n"
@@ -268,25 +266,9 @@ public class MenuActions {
 			if (port == null)
 				return; // cancelled
 			flashExporter.setDeviceName(port);
-
-			try {
-				flashExporter.write(configManager.getRawString());
-				JOptionPane.showMessageDialog(null, // parent
-						"Hacklace has been flashed.", // message
-						"Flashed", // title
-						JOptionPane.INFORMATION_MESSAGE); // type
-			} // Java 7: (IOException | UnsupportedCommOperationException |
-				// PortInUseException ex)
-			catch (IOException ex) {
-				JOptionPane.showMessageDialog(null, "Error flashing hacklace: "
-						+ ex, "Error", JOptionPane.ERROR_MESSAGE);
-			} catch (UnsupportedCommOperationException ex) {
-				JOptionPane.showMessageDialog(null, "Error flashing hacklace: "
-						+ ex, "Error", JOptionPane.ERROR_MESSAGE);
-			} catch (PortInUseException ex) {
-				JOptionPane.showMessageDialog(null, "Error flashing hacklace: "
-						+ ex, "Error", JOptionPane.ERROR_MESSAGE);
-			}
+			
+			FlashThread worker = new FlashThread(configManager, animatorGui, flashExporter);
+			worker.execute();
 		}
 	}
 
@@ -456,7 +438,7 @@ public class MenuActions {
 			this.animatorGui = animatorGui;
 			this.color = color;
 		}
-		
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			animatorGui.setLedColor(this.color);
