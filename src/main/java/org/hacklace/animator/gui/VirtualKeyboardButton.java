@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JButton;
 
+import org.hacklace.animator.ConversionUtil;
 import org.hacklace.animator.FontUtil;
 
 public class VirtualKeyboardButton extends JButton {
@@ -19,20 +20,22 @@ public class VirtualKeyboardButton extends JButton {
 	private int imageIndex;
 	private BufferedImage image;
 
-	public VirtualKeyboardButton(int index) {
+	private static int COLS = AnimatorGui.getIniConf().columns(); // 5
+	private static int ROWS = AnimatorGui.getIniConf().rows(); // 7
+
+	public VirtualKeyboardButton(int indexInCharset) {
 		super();
 		setPreferredSize(new Dimension(24, 24));
 		setFocusable(false);
-		imageIndex = index;
-		image = new BufferedImage(5, 7, BufferedImage.TYPE_INT_ARGB);
+		imageIndex = indexInCharset;
+		image = new BufferedImage(COLS, ROWS, BufferedImage.TYPE_INT_ARGB);
 		// paint the font data to the image
-		int[] animationBytes = FontUtil.getFiveBytesForIndex(index);
-		for (int i = 0; i < animationBytes.length; i++) {
-			for (int bit = 0; bit < 7; bit++) {
-				if (i < animationBytes.length) {
-					if ((animationBytes[i] & (int) Math.pow(2, bit)) != 0) {
-						image.setRGB(i, bit, Color.black.getRGB());
-					}
+		int[] animationBytes = FontUtil.getFiveBytesForIndex(indexInCharset);
+		for (int col = 0; col < animationBytes.length; col++) {
+			for (int row = 0; row < ROWS; row++) {
+				if (ConversionUtil.isBitSet(animationBytes[col], row)) {
+					image.setRGB(col, row, Color.black.getRGB());
+
 				}
 			}
 		}
@@ -41,11 +44,16 @@ public class VirtualKeyboardButton extends JButton {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(image, 4, 4, getWidth() - 4, getHeight() - 4, 0, 0, 5, 7,
-				null);
+		g.drawImage(image, // 
+				4, 4, // x, y of top left corner of the destination rectangle
+				getWidth() - 4, getHeight() - 4, // bottom right corner of
+													// destination rectangle
+				0, 0, // x, y of top left corner of source rectangle 
+				5, 7, // x, y of bottom right corner of source rectangle
+				null); // observer to be notified as more of the image is scaled
 	}
 
-	public String getString() {
+	public String getRawString() {
 		return FontUtil.getRawStringForIndex(imageIndex);
 	}
 

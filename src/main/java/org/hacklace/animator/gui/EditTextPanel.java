@@ -65,7 +65,7 @@ public class EditTextPanel extends EditPanel {
 			public void actionPerformed(ActionEvent event) {
 				VirtualKeyboardButton vk = (VirtualKeyboardButton) event
 						.getSource();
-				String chars = vk.getString();
+				String chars = vk.getRawString();
 				int pos = textEditField.getCaretPosition();
 				try {
 					ErrorContainer errorContainer = new ErrorContainer();

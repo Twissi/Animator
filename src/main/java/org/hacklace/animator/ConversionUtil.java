@@ -147,7 +147,7 @@ public class ConversionUtil {
 		return convertBooleanArrayToByte(array) == 0;
 	}
 
-	public static boolean isBitSet(byte bits, int index) {
+	public static boolean isBitSet(int bits, int index) {
 		final byte mask = (byte) Math.pow(2, index);
 		byte result = (byte) (mask & bits);
 		if (result == 0) {
