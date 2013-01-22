@@ -66,10 +66,10 @@ public class LedPanel extends JPanel implements LedObserver {
 		// add leds
 		for (c.gridy = 0; c.gridy < gridRows; c.gridy++) {
 			for (c.gridx = 0; c.gridx < gridCols; c.gridx++) {
-				Led b = new Led(c.gridy, c.gridx, this);
-				b.addActionListener(new ToggleLedActionListener(b));
-				leds[c.gridx][c.gridy] = b;
-				add(b, c);
+				Led led = new Led(c.gridy, c.gridx, this);
+				led.addMouseListener(new ToggleLedActionListener(led));
+				leds[c.gridx][c.gridy] = led;
+				add(led, c);
 			}
 		}
 		// add labels for frame number

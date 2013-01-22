@@ -62,12 +62,13 @@ public class Led extends JButton implements LedInterface {
 
 	@Override
 	public Dimension getPreferredSize() {
-		Dimension d = super.getPreferredSize();
-		if (d.width > d.height) {
-			d.width = d.height;
-		} else if (d.height > d.width) {
-			d.height = d.width;
-		}
+		Dimension d = new Dimension(10,10);
+//      make square
+//		if (d.width > d.height) {
+//			d.width = d.height;
+//		} else if (d.height > d.width) {
+//			d.height = d.width;
+//		}
 		return d;
 	}
 
