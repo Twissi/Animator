@@ -25,3 +25,11 @@ Build the jar:
 Build the documentation:
 	mvn pre-site
 
+
+PortInUse Exception under Mac OS
+================================
+
+If you get the error message "Error flashing hacklace: gnu.io.PortInUseException: Unknown Application" while trying to flash the hacklace try this:
+
+1. Add directory **lock** under ~/dev
+2. Set write permissions of **lock** for your user
